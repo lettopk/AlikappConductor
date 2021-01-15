@@ -36,15 +36,14 @@
             android:name=".onAppKilled"
             android:stopWithTask="false" />
 
-        <activity android:name=".CustomerLoginActivity" />
-        <activity android:name=".CustomerMapActivity" />
-        <activity android:name=".MainActivity" >
+        <activity android:name=".CustomerLoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".CustomerMapActivity" />
         <activity android:name=".CustomerSettingsActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".HistorySingleActivity" />
