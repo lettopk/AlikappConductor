@@ -144,20 +144,22 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/radioGroup"
                 android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/UberX"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="Taller" />
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="UberX"
-                    android:id="@+id/UberX"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="UberBlack"
+                    android:text="Mecanico"
                     android:id="@+id/UberBlack"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="UberXl"
+                    android:visibility="invisible"
                     android:id="@+id/UberXl"/>
             </RadioGroup>
 
@@ -165,7 +167,7 @@
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="call Uber"
+                android:text=""
                 android:id="@+id/request"/>
         </LinearLayout>
     </LinearLayout>
