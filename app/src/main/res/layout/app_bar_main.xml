@@ -168,6 +168,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="LLamar mecanico"
+                android:textColor="#e4e3e3"
+                android:background="@drawable/boton_emergencia"
                 android:id="@+id/request"/>
         </LinearLayout>
     </LinearLayout>
