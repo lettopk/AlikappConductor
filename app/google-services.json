@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "563131900463",
+    "project_id": "alikapp-7ff31",
+    "storage_bucket": "alikapp-7ff31.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563131900463:android:ccc6e56f014c88668ddcda",
+        "android_client_info": {
+          "package_name": "com.Alikapp.alikappconductor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "563131900463-nd5u2irmbf9jhg17efq7h14bh2tfj6ah.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Alikapp.alikappconductor",
+            "certificate_hash": "9a4f964663a6b07b66e32a42df733d79c9fd2748"
+          }
+        },
+        {
+          "client_id": "563131900463-qt3muf2ska2u73oe45p138v266ep7m5m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUuMcVAhNY7ffPa3wRR3JcGOkGI0QziCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "563131900463-qt3muf2ska2u73oe45p138v266ep7m5m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
