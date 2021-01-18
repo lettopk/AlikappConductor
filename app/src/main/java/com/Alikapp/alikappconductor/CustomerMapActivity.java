@@ -366,7 +366,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if (distance<100){
                         mRequest.setText("Driver's Here");
                     }else{
-                        mRequest.setText("Driver Found: " + String.valueOf(distance));
+                        mRequest.setText("Driver Found: " + String.valueOf((distance)/1000)+"Km");
                     }
 
 
