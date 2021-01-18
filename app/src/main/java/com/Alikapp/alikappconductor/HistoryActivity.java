@@ -55,7 +55,6 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-
         mBalance = findViewById(R.id.balance);
         mPayout = findViewById(R.id.payout);
         mPayoutEmail = findViewById(R.id.payoutEmail);
