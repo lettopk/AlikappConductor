@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Looper;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.content.ContextCompat;
@@ -272,17 +273,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                     DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
                                     String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    HashMap map = new HashMap();
+                                    HashMap<String, Object> map = new HashMap<String, Object>();
                                     map.put("customerRideId", customerId);
                                     map.put("destination", destination);
                                     map.put("destinationLat", destinationLatLng.latitude);
                                     map.put("destinationLng", destinationLatLng.longitude);
                                     driverRef.updateChildren(map);
-
-                                    getDriverLocation();
-                                    getDriverInfo();
-                                    getHasRideEnded();
-                                    mRequest.setText("Looking for Driver Location....");
+                                    getConfirmacion();
                                 }
                             }
                         }
@@ -318,6 +315,37 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
     }
+
+    private void getConfirmacion() {
+        DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
+        mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && requestBol){
+                    java.util.Map<String, Object> map = (java.util.Map<String, Object>) snapshot.getValue();
+                    String A = map.get("Enable").toString();
+                    System.out.println(A);
+                    if(A.equals("Si")){
+                        getDriverLocation();
+                        getDriverInfo();
+                        getHasRideEnded();
+                        mRequest.setText("Looking for Driver Location....");
+                    } else if (A.equals("No")) {
+                        driverFound = false;
+                        getClosestDriver();
+                    } else {
+                        getConfirmacion();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     /*-------------------------------------------- Map specific functions -----
     |  Function(s) getDriverLocation
     |
