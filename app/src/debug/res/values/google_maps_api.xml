@@ -5,6 +5,7 @@
     To get one, follow this link, follow the directions and press "Create" at the end:
 
 
+
     https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=BF:90:D0:EA:DC:36:29:73:F8:4E:A1:6E:2C:9A:D6:4F:90:1F:30:26%3Bcom.Alikapp.alikappconductor
 
 
@@ -15,7 +16,9 @@
 
     SHA-1 certificate fingerprint:
 
+
     BF:90:D0:EA:DC:36:29:73:F8:4E:A1:6E:2C:9A:D6:4F:90:1F:30:26
+
 
 
     Alternatively, follow the directions here:
