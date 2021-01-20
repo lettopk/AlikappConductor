@@ -17,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class CostumerRegistroActivity extends AppCompatActivity {
 
-    private EditText mEmail, mPassword, mNombre, mIdentificacion, mNumeroCelular, mTipoVehiculo, mMarca, mReferencia;
+    private EditText mEmail, mPassword;
     private Button mRegistration;
 
     private FirebaseAuth mAuth;
@@ -29,15 +29,9 @@ public class CostumerRegistroActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-
-        mNombre = (EditText) findViewById(R.id.Et_nombre);
-        mIdentificacion =(EditText) findViewById(R.id.Et_identificacion);
-        mNumeroCelular = (EditText) findViewById(R.id.Et_numtelefonico);
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
-        mTipoVehiculo =(EditText) findViewById(R.id.Et_tipovehiculo);
-        mMarca =(EditText) findViewById(R.id.Et_marca);
-        mReferencia=(EditText) findViewById(R.id.Et_referencia);
+
 
 
         mRegistration = (Button) findViewById(R.id.registration);
@@ -47,7 +41,7 @@ public class CostumerRegistroActivity extends AppCompatActivity {
             public void onClick(android.view.View v) {
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
-                final String nombre = mNombre.getText().toString();
+
 
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(CostumerRegistroActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
