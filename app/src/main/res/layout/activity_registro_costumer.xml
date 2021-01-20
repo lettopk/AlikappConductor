@@ -12,49 +12,14 @@
     
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="115dp"
+        android:layout_height="200dp"
         android:src="@drawable/logo"
         />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
 
-    <EditText
-        android:id="@+id/Et_nombre"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="2dp"
-        android:backgroundTint="#E4E3E3"
-        android:drawableStart="@drawable/ic_user"
-        android:drawableLeft="@drawable/ic_user"
-        android:fontFamily="@font/abeezee"
-        android:hint=" Nombre"
-        android:inputType="text"
-        android:textColorHint="#E4E3E3"
-        android:textSize="18sp" />
-    <EditText
-        android:id="@+id/Et_identificacion"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#E4E3E3"
-        android:fontFamily="@font/abeezee"
-        android:hint=" Identificacion"
-        android:drawableStart="@drawable/ic_identificacion"
-        android:textSize="18sp"
-        android:layout_margin="2dp"
-        android:inputType="number"
-        android:textColorHint="#E4E3E3"
-        android:drawableLeft="@drawable/ic_identificacion" />
-    <EditText
-        android:id="@+id/Et_numtelefonico"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#E4E3E3"
-        android:fontFamily="@font/abeezee"
-        android:hint=" Numero Celular"
-        android:drawableStart="@drawable/ic_telefono"
-        android:textSize="18sp"
-        android:layout_margin="2dp"
-        android:inputType="text"
-        android:textColorHint="#E4E3E3"
-        android:drawableLeft="@drawable/ic_telefono" />
+
 
     <EditText
         android:id="@+id/Et_correo"
@@ -99,60 +64,7 @@
         android:drawableLeft="@drawable/ic_password" />
 
 
-    <EditText
-        android:id="@+id/Et_tipovehiculo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#E4E3E3"
-        android:fontFamily="@font/abeezee"
-        android:hint=" Tipo de vehiculo"
-        android:drawableStart="@drawable/ic_vehiculo"
-        android:textSize="18sp"
-        android:layout_margin="2dp"
-        android:inputType="text"
-        android:textColorHint="#E4E3E3"
-        android:drawableLeft="@drawable/ic_vehiculo" />
 
-    <EditText
-        android:id="@+id/Et_marca"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#E4E3E3"
-        android:fontFamily="@font/abeezee"
-        android:hint=" Marca"
-        android:drawableStart="@drawable/ic_vehiculo"
-        android:textSize="18sp"
-        android:layout_margin="2dp"
-        android:inputType="text"
-        android:textColorHint="#E4E3E3"
-        android:drawableLeft="@drawable/ic_vehiculo" />
-    <EditText
-        android:id="@+id/Et_referencia"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#E4E3E3"
-        android:fontFamily="@font/abeezee"
-        android:hint=" Referencia"
-        android:drawableStart="@drawable/ic_vehiculo"
-        android:textSize="18sp"
-        android:layout_margin="2dp"
-        android:inputType="text"
-        android:textColorHint="#E4E3E3"
-        android:drawableLeft="@drawable/ic_vehiculo" />
-
-    <EditText
-        android:id="@+id/Et_modelo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#E4E3E3"
-        android:fontFamily="@font/abeezee"
-        android:hint=" Modelo"
-        android:drawableStart="@drawable/ic_vehiculo"
-        android:textSize="18sp"
-        android:layout_margin="2dp"
-        android:inputType="text"
-        android:textColorHint="#E4E3E3"
-        android:drawableLeft="@drawable/ic_vehiculo" />
 
     <Button
         android:id="@+id/btnRegusuario"
