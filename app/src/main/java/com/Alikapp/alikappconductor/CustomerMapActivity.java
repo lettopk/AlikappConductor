@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Looper;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.content.ContextCompat;
@@ -119,6 +120,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mLogout = (Button) findViewById(R.id.logout);
         mRequest = (Button) findViewById(R.id.request);
+        mRequest.setText("call Uber");
         mSettings = (Button) findViewById(R.id.settings);
         mHistory = (Button) findViewById(R.id.history);
 
@@ -138,8 +140,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onClick(android.view.View v) {
 
                 if (requestBol){
-                    endRide();
+                    try {
+                        endRide();
 
+                    } catch (Exception e) {
+                        finRide();
+                        CustomerMapActivity.super.onRestart();
+                        Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
+                    }
 
                 }else{
                     int selectId = mRadioGroup.getCheckedRadioButtonId();
@@ -227,6 +235,39 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     }
 
+    private void finRide() {
+        requestBol = false;
+        geoQuery.removeAllListeners();
+
+        if (driverFoundID != null){
+            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
+            driverRef.removeValue();
+            driverFoundID = null;
+
+        }
+        driverFound = false;
+        radius = 1;
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.removeLocation(userId);
+
+        if(pickupMarker != null){
+            pickupMarker.remove();
+        }
+        if (mDriverMarker != null){
+            mDriverMarker.remove();
+        }
+        mRequest.setText("call Uber");
+
+        mDriverInfo.setVisibility(android.view.View.GONE);
+        mDriverName.setText("");
+        mDriverPhone.setText("");
+        mDriverCar.setText("Destination: --");
+        mDriverProfileImage.setImageResource(R.mipmap.ic_default_user);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -272,17 +313,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                     DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
                                     String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    HashMap map = new HashMap();
+                                    HashMap<String, Object> map = new HashMap<String, Object>();
                                     map.put("customerRideId", customerId);
                                     map.put("destination", destination);
                                     map.put("destinationLat", destinationLatLng.latitude);
                                     map.put("destinationLng", destinationLatLng.longitude);
                                     driverRef.updateChildren(map);
-
-                                    getDriverLocation();
-                                    getDriverInfo();
-                                    getHasRideEnded();
-                                    mRequest.setText("Looking for Driver Location....");
+                                    getConfirmacion();
                                 }
                             }
                         }
@@ -318,6 +355,54 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
     }
+
+    private void getConfirmacion() {
+        DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
+        mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && requestBol){
+                    java.util.Map<String, Object> map = (java.util.Map<String, Object>) snapshot.getValue();
+                    String A = map.get("Enable").toString();
+                    System.out.println(A);
+                    System.out.println(driverFoundID);
+                    if(A.equals("Si")){
+                        getDriverLocation();
+                        getDriverInfo();
+                        getHasRideEnded();
+                        mRequest.setText("Looking for Driver Location....");
+                    } else if (A.equals("No")) {
+                        driverFound = false;
+                        requestBol = true;
+
+                        int selectId = mRadioGroup.getCheckedRadioButtonId();
+                        final RadioButton radioButton = (RadioButton) findViewById(selectId);
+                        if (radioButton.getText() == null){
+                            return;
+                        }
+                        requestService = radioButton.getText().toString();
+                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                        GeoFire geoFire = new GeoFire(ref);
+                        geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                        pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
+                        mRequest.setText("Getting your Driver....");
+
+                        getClosestDriver();
+                    } else {
+                        getConfirmacion();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     /*-------------------------------------------- Map specific functions -----
     |  Function(s) getDriverLocation
     |

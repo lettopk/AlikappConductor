@@ -57,7 +57,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
     private RatingBar mRatingBar;
 
-    private Button mPay;
+    //private Button mPay;
 
     private DatabaseReference historyRideInfoDb;
 
@@ -73,9 +73,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_single);
 
-        Intent intent = new Intent(this, PayPalService.class);
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-        startService(intent);
+        //Intent intent = new Intent(this, PayPalService.class);
+       // intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        //startService(intent);
 
         polylines = new ArrayList<>();
 
@@ -95,7 +95,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
 
-        mPay = findViewById(R.id.pay);
+        //mPay = findViewById(R.id.pay);
 
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -163,7 +163,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
     private void displayCustomerRelatedObjects() {
         mRatingBar.setVisibility(android.view.View.VISIBLE);
-        mPay.setVisibility(android.view.View.VISIBLE);
+        //mPay.setVisibility(android.view.View.VISIBLE);
         mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -171,7 +171,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                 DatabaseReference mDriverRatingDb = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("rating");
                 mDriverRatingDb.child(rideId).setValue(rating);
             }
-        });
+        });/*
         if(customerPaid){
             mPay.setEnabled(false);
         }else{
@@ -182,9 +182,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
             public void onClick(android.view.View view) {
                 payPalPayment();
             }
-        });
+        });*/
     }
-
+/*
     private int PAYPAL_REQUEST_CODE = 1;
     private static PayPalConfiguration config = new PayPalConfiguration()
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
@@ -234,7 +234,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
     protected void onDestroy() {
         stopService(new Intent(this, PayPalService.class));
         super.onDestroy();
-    }
+    }*/
 
 
 
