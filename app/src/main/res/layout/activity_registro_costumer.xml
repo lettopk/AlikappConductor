@@ -9,15 +9,18 @@
     android:background="#204051"
     tools:context=".CostumerRegistroActivity">
 
-    
     <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="25dp"/>
+    <ImageView
+
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:src="@drawable/logo"
         />
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="180dp"/>
 
 
 
@@ -71,6 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/boton_ingreso"
+        android:textSize="18dp"
         android:text="Registro de Usuario"
         android:textColor="#204051"
         />
