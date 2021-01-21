@@ -36,18 +36,17 @@
             android:name=".onAppKilled"
             android:stopWithTask="false" />
 
-<<<<<<< HEAD
+
         <activity android:name=".CustomerLoginActivity">
-=======
-        <activity android:name=".CustomerLoginActivity" >
->>>>>>> 5656ae9f16a4ce1af2f63731f03e719aadbf53ac
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CustomerMapActivity" />
+        <activity android:name=".CustomerMapActivity"
+                  android:screenOrientation="locked"
+                 />
         <activity android:name=".CustomerSettingsActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".HistorySingleActivity" />

@@ -275,10 +275,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
     }
     private void getRouteToMarker() {
         com.directions.route.Routing routing = new com.directions.route.Routing.Builder()
-<<<<<<< HEAD
                 .key("AIzaSyC5qe0PdRWO9qvCo4rNuyNrXyf8K06SbbI")
-=======
->>>>>>> 5656ae9f16a4ce1af2f63731f03e719aadbf53ac
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
                 .withListener(this)
                 .alternativeRoutes(false)

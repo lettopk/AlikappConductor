@@ -35,12 +35,9 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:26.2.0')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-<<<<<<< HEAD
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
-=======
-    androidTestCompile('androidx.test.espresso:espresso-core:3.1.0', {
->>>>>>> 5656ae9f16a4ce1af2f63731f03e719aadbf53ac
+
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
@@ -48,15 +45,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-<<<<<<< HEAD
+
     implementation 'com.google.firebase:firebase-core:18.0.1'
     implementation 'com.google.firebase:firebase-database:19.6.0'
     implementation 'com.google.firebase:firebase-auth:20.0.2'
-=======
-    implementation 'com.google.firebase:firebase-core:18.0.0'
-    implementation 'com.google.firebase:firebase-database:19.6.0'
-    implementation 'com.google.firebase:firebase-auth:20.0.1'
->>>>>>> 5656ae9f16a4ce1af2f63731f03e719aadbf53ac
+
     implementation 'com.google.firebase:firebase-storage:19.2.1'
     implementation 'com.google.firebase:firebase-messaging:21.0.1'
     implementation 'com.firebase:geofire-android:3.0.0'
@@ -77,11 +70,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.3.2'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-<<<<<<< HEAD
     testImplementation 'junit:junit:4.13.1'
-=======
-    testImplementation 'junit:junit:4.12'
->>>>>>> 5656ae9f16a4ce1af2f63731f03e719aadbf53ac
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
