@@ -137,23 +137,34 @@
         <LinearLayout
             android:background="@android:color/white"
             android:orientation="vertical"
+            android:backgroundTint="#204051"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+
+            >
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/radioGroup"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background=""
+                >
 
                 <RadioButton
                     android:id="@+id/UberX"
-                    android:layout_width="150dp"
+                    android:shadowColor="#e4e3e3"
+                    android:outlineAmbientShadowColor="#e4e3e3"
+                    android:layout_width="175dp"
                     android:layout_height="wrap_content"
-                    android:text="Taller" />
+                    android:text="@string/taller"
+                    android:textSize="20sp"
+                    android:textColor="#e4e3e3"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mecanico"
+                    android:text="@string/mecanico"
+                    android:textSize="20sp"
+                    android:textColor="#e4e3e3"
                     android:id="@+id/UberBlack"/>
                 <RadioButton
                     android:layout_width="wrap_content"
