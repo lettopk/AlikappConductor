@@ -2,9 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-<<<<<<< HEAD
-    <mapping directory="$PROJECT_DIR$/Alikapp mecanico sha repetido" vcs="" />
-=======
->>>>>>> 5656ae9f16a4ce1af2f63731f03e719aadbf53ac
   </component>
 </project>
