@@ -150,28 +150,32 @@
                 android:background=""
                 >
 
-                <RadioButton
-                    android:id="@+id/UberX"
-                    android:shadowColor="#e4e3e3"
-                    android:outlineAmbientShadowColor="#e4e3e3"
-                    android:layout_width="175dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/taller"
-                    android:textSize="20sp"
-                    android:textColor="#e4e3e3"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
+                <me.omidh.liquidradiobutton.LiquidRadioButton
+                    android:id="@+id/Mecanico"
+                    android:layout_width="134dp"
                     android:layout_height="wrap_content"
                     android:text="@string/mecanico"
-                    android:textSize="20sp"
-                    android:textColor="#e4e3e3"
-                    android:id="@+id/UberBlack"/>
-                <RadioButton
+                    android:textColor="#E4E3E3"
+                    android:textSize="18sp"
+                    app:lrb_checkedColor=""
+                    app:lrb_explodeCount="6"
+                    app:lrb_inAnimDuration="600"
+                    app:lrb_innerCircleRadius="6dp"
+                    app:lrb_outAnimDuration="600"
+                    app:lrb_outterPadding="4dp"
+                    app:lrb_strokeRadius="18dp"
+                    app:lrb_strokeWidth="5dp"
+                    app:lrb_unCheckedColor="@color/black" />
+
+                <me.omidh.liquidradiobutton.LiquidRadioButton                    android:id="@+id/Taller"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="UberXl"
-                    android:visibility="invisible"
-                    android:id="@+id/UberXl"/>
+                    android:text="Taller"
+                    android:textSize="20sp"
+                    android:textColor="#e4e3e3"/>
+
+
+
             </RadioGroup>
 
             <Button
