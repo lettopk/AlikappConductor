@@ -152,7 +152,7 @@
 
                 <me.omidh.liquidradiobutton.LiquidRadioButton
                     android:layout_width="134dp"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
                     android:text="@string/mecanico"
                     android:id="@+id/Mecanico"
                     android:textColor="@color/black"
@@ -172,7 +172,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/taller"
                     android:id="@+id/Taller"
-                    android:textColor="#E4E3E3"
+                    android:textColor="@color/black"
                     android:textSize="18sp"
                     app:lrb_checkedColor="@color/AlikappBlue"
                     app:lrb_explodeCount="6"
@@ -189,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/Grua"
                     android:id="@+id/Grua"
-                    android:textColor="#E4E3E3"
+                    android:textColor="@color/black"
                     android:textSize="18sp"
                     app:lrb_checkedColor="@color/AlikappBlue"
                     app:lrb_explodeCount="6"

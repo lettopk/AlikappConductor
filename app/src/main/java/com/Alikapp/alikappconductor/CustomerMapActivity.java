@@ -115,7 +115,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
 
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
-        mRadioGroup.check(R.id.UberX);
+        mRadioGroup.check(R.id.Mecanico);
 
         mLogout = (Button) findViewById(R.id.logout);
         mRequest = (Button) findViewById(R.id.request);
