@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
@@ -144,6 +145,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         endRide();
 
                     } catch (Exception e) {
+                        romper = true;
                         finRide();
                         CustomerMapActivity.super.onRestart();
                         Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
@@ -174,6 +176,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     mRequest.setText("Getting your Driver....");
 
                     getClosestDriver();
+                    tiempoEspera();
+                    romper = false;
                 }
             }
         });
@@ -233,6 +237,26 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         /*NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);*/
         NavigationUI.setupWithNavController(navigationView, navController);
 
+    }
+
+    private void tiempoEspera() {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finalizarEspera();
+            }
+        }, 60000);
+    }
+    private Boolean romper = true;
+    private void finalizarEspera() {
+        System.out.println("finalizarEspera");
+        if(!romper){
+            finRide();
+            CustomerMapActivity.super.onRestart();
+            romper = true;
+            Toast.makeText(this,"No hay mecánicos cerca",Toast.LENGTH_LONG).show();
+        }
     }
 
     private void finRide() {
@@ -357,50 +381,64 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void getConfirmacion() {
-        DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
-        mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists() && requestBol){
-                    java.util.Map<String, Object> map = (java.util.Map<String, Object>) snapshot.getValue();
-                    String A = map.get("Enable").toString();
-                    System.out.println(A);
-                    System.out.println(driverFoundID);
-                    if(A.equals("Si")){
-                        getDriverLocation();
-                        getDriverInfo();
-                        getHasRideEnded();
-                        mRequest.setText("Looking for Driver Location....");
-                    } else if (A.equals("No")) {
-                        driverFound = false;
-                        requestBol = true;
+        try{
+            DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
+            mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists() && requestBol){
+                        java.util.Map<String, Object> map = (java.util.Map<String, Object>) snapshot.getValue();
+                        String A = map.get("Enable").toString();
+                        System.out.println(A);
+                        System.out.println(driverFoundID);
+                        if(A.equals("Si")){
+                            romper = true;
+                            getDriverLocation();
+                            getDriverInfo();
+                            getHasRideEnded();
+                            mRequest.setText("Looking for Driver Location....");
+                        } else if (A.equals("No")) {
+                            driverFound = false;
+                            requestBol = true;
 
-                        int selectId = mRadioGroup.getCheckedRadioButtonId();
-                        final RadioButton radioButton = (RadioButton) findViewById(selectId);
-                        if (radioButton.getText() == null){
-                            return;
+                            int selectId = mRadioGroup.getCheckedRadioButtonId();
+                            final RadioButton radioButton = (RadioButton) findViewById(selectId);
+                            if (radioButton.getText() == null){
+                                return;
+                            }
+                            requestService = radioButton.getText().toString();
+                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                            GeoFire geoFire = new GeoFire(ref);
+                            geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                            pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
+                            mRequest.setText("Getting your Driver....");
+
+                            getClosestDriver();
+                        } else {
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(A.equals("Espera")){
+                                        getConfirmacion();
+                                    }
+                                }
+                            }, 1000);
                         }
-                        requestService = radioButton.getText().toString();
-                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                        GeoFire geoFire = new GeoFire(ref);
-                        geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                        pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
-                        mRequest.setText("Getting your Driver....");
-
-                        getClosestDriver();
-                    } else {
-                        getConfirmacion();
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            CustomerMapActivity.super.onRestart();
+            e.printStackTrace();
+        }
     }
 
     /*-------------------------------------------- Map specific functions -----
