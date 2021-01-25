@@ -168,11 +168,22 @@
                     app:lrb_unCheckedColor="@color/black" />
 
                 <me.omidh.liquidradiobutton.LiquidRadioButton                    android:id="@+id/Taller"
-                    android:layout_width="wrap_content"
+                    android:backgroundTint=""
+                    android:layout_width="134dp"
                     android:layout_height="wrap_content"
-                    android:text="Taller"
-                    android:textSize="20sp"
-                    android:textColor="#e4e3e3"/>
+                    android:text="@string/taller"
+                    android:textColor="#E4E3E3"
+                    android:textSize="18sp"
+                    app:lrb_checkedColor=""
+                    app:lrb_explodeCount="6"
+                    app:lrb_inAnimDuration="600"
+                    app:lrb_innerCircleRadius="6dp"
+                    app:lrb_outAnimDuration="600"
+                    app:lrb_outterPadding="4dp"
+                    app:lrb_strokeRadius="18dp"
+                    app:lrb_strokeWidth="5dp"
+                    app:lrb_unCheckedColor="@color/black"
+                    />
 
 
 
