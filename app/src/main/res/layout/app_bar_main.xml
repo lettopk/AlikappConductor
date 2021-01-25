@@ -135,37 +135,84 @@
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
-            android:background="@android:color/white"
+            android:background="@android:color/transparent"
             android:orientation="vertical"
+            android:backgroundTint="#204051"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+
+            >
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/radioGroup"
-                android:orientation="horizontal">
-                <RadioButton
-                    android:layout_width="wrap_content"
+                android:orientation="horizontal"
+
+                >
+
+                <me.omidh.liquidradiobutton.LiquidRadioButton
+                    android:layout_width="134dp"
                     android:layout_height="wrap_content"
-                    android:text="UberX"
-                    android:id="@+id/UberX"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
+                    android:text="@string/mecanico"
+                    android:id="@+id/Mecanico"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:lrb_checkedColor="@color/AlikappBlue"
+                    app:lrb_explodeCount="6"
+                    app:lrb_inAnimDuration="600"
+                    app:lrb_innerCircleRadius="6dp"
+                    app:lrb_outAnimDuration="600"
+                    app:lrb_outterPadding="4dp"
+                    app:lrb_strokeRadius="18dp"
+                    app:lrb_strokeWidth="5dp"
+                    app:lrb_unCheckedColor="@color/black" />
+
+                <me.omidh.liquidradiobutton.LiquidRadioButton
+                    android:layout_width="134dp"
                     android:layout_height="wrap_content"
-                    android:text="UberBlack"
-                    android:id="@+id/UberBlack"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
+                    android:text="@string/taller"
+                    android:id="@+id/Taller"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:lrb_checkedColor="@color/AlikappBlue"
+                    app:lrb_explodeCount="6"
+                    app:lrb_inAnimDuration="600"
+                    app:lrb_innerCircleRadius="6dp"
+                    app:lrb_outAnimDuration="600"
+                    app:lrb_outterPadding="4dp"
+                    app:lrb_strokeRadius="18dp"
+                    app:lrb_strokeWidth="5dp"
+                    app:lrb_unCheckedColor="@color/black"
+                    />
+                <me.omidh.liquidradiobutton.LiquidRadioButton
+                    android:layout_width="134dp"
                     android:layout_height="wrap_content"
-                    android:text="UberXl"
-                    android:id="@+id/UberXl"/>
+                    android:text="@string/Grua"
+                    android:id="@+id/Grua"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:lrb_checkedColor="@color/AlikappBlue"
+                    app:lrb_explodeCount="6"
+                    app:lrb_inAnimDuration="600"
+                    app:lrb_innerCircleRadius="6dp"
+                    app:lrb_outAnimDuration="600"
+                    app:lrb_outterPadding="4dp"
+                    app:lrb_strokeRadius="18dp"
+                    app:lrb_strokeWidth="5dp"
+                    app:lrb_unCheckedColor="@color/black"
+                    />
+
+
+
             </RadioGroup>
 
             <Button
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="call Uber"
+                android:text="LLamar mecanico"
+                android:textColor="#e4e3e3"
+                android:background="@drawable/boton_emergencia"
                 android:id="@+id/request"/>
         </LinearLayout>
     </LinearLayout>

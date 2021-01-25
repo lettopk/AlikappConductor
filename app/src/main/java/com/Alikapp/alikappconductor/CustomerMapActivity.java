@@ -117,7 +117,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
 
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
-        mRadioGroup.check(R.id.UberX);
+        mRadioGroup.check(R.id.Mecanico);
 
         mLogout = (Button) findViewById(R.id.logout);
         mRequest = (Button) findViewById(R.id.request);
@@ -173,7 +173,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                     pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
 
-                    mRequest.setText("Getting your Driver....");
+                    mRequest.setText("Buscando Mecanico");
 
                     getClosestDriver();
                     tiempoEspera();
@@ -343,7 +343,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     map.put("destinationLat", destinationLatLng.latitude);
                                     map.put("destinationLng", destinationLatLng.longitude);
                                     driverRef.updateChildren(map);
+
                                     getConfirmacion();
+
                                 }
                             }
                         }
@@ -487,7 +489,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     float distance = loc1.distanceTo(loc2);
 
                     if (distance<100){
-                        mRequest.setText("Driver's Here");
+                        mRequest.setText("Su Mecanico esta Aquí");
                     }else{
                         mRequest.setText("Driver Found: " + String.valueOf(distance));
                     }
@@ -599,7 +601,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         if (mDriverMarker != null){
             mDriverMarker.remove();
         }
-        mRequest.setText("call Uber");
+        mRequest.setText("Pedir Ayuda");
 
         mDriverInfo.setVisibility(android.view.View.GONE);
         mDriverName.setText("");
