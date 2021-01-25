@@ -31,19 +31,25 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <service
             android:name=".onAppKilled"
             android:stopWithTask="false" />
 
-        <activity android:name=".CustomerLoginActivity" >
+
+        <activity android:name=".CustomerLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CustomerMapActivity" />
+        <activity android:name=".CustomerMapActivity"
+                  android:screenOrientation="locked"
+                 />
         <activity android:name=".CustomerSettingsActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".HistorySingleActivity" />
