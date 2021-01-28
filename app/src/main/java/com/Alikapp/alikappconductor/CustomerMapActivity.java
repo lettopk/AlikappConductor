@@ -14,12 +14,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.content.ContextCompat;
 
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -48,6 +54,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -59,6 +66,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -68,7 +76,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mLogout, mRequest, mSettings, mHistory;
+    private Button mLogout, mRequest, mSettings, mHistory, mDesplegar;
+
+    private EditText mDescripcion;
+
+    private TextView mLongDescrip;
 
     private LatLng pickupLocation;
 
@@ -92,6 +104,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private RatingBar mRatingBar;
     private AppBarConfiguration mAppBarConfiguration;
+    private BottomSheetBehavior mBottomSheetBehavior;
 
     @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
@@ -125,6 +138,71 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mSettings = (Button) findViewById(R.id.settings);
         mHistory = (Button) findViewById(R.id.history);
 
+        View bottomSheet = findViewById(R.id.bottom_sheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View BottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        //mTextViewState.setText("collapsado");
+                        break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        //mTextViewState.setText("Dragging...");
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        //mTextViewState.setText("expandido");
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        mDesplegar.setVisibility(View.VISIBLE);
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        //mTextViewState.setText("settling...");
+                        break;
+                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+            }
+        });
+
+        mDesplegar = findViewById(R.id.desplegarCuadro);
+        mDesplegar.setVisibility(View.VISIBLE);
+        mDesplegar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                mDesplegar.setVisibility(View.GONE);
+            }
+        });
+
+        mDescripcion = findViewById(R.id.descripcion);
+        mLongDescrip = findViewById(R.id.longDescrip);
+        final int maximum_character = 250;
+        mDescripcion.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maximum_character)});
+
+        mDescripcion.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mLongDescrip.setText(" "+String.valueOf(maximum_character - mDescripcion.getText().length()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         mLogout.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
@@ -150,7 +228,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         CustomerMapActivity.super.onRestart();
                         Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
                     }
-
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }else{
                     int selectId = mRadioGroup.getCheckedRadioButtonId();
 
@@ -178,6 +256,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     getClosestDriver();
                     tiempoEspera();
                     romper = false;
+
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
+                    Map usuarioInfo = new HashMap();
+                    usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
+                    enableReference.updateChildren(usuarioInfo);
                 }
             }
         });
