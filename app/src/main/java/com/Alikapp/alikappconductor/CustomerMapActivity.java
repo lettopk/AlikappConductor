@@ -194,7 +194,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mLongDescrip.setText(" "+String.valueOf(maximum_character - mDescripcion.getText().length()));
+                mLongDescrip.setText(""+String.valueOf(maximum_character - mDescripcion.getText().length()));
             }
 
             @Override
@@ -230,39 +230,43 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }else{
-                    int selectId = mRadioGroup.getCheckedRadioButtonId();
+                    if (!mLongDescrip.getText().equals("250")){
+                        int selectId = mRadioGroup.getCheckedRadioButtonId();
 
-                    final RadioButton radioButton = (RadioButton) findViewById(selectId);
+                        final RadioButton radioButton = (RadioButton) findViewById(selectId);
 
-                    if (radioButton.getText() == null){
-                        return;
+                        if (radioButton.getText() == null){
+                            return;
+                        }
+
+                        requestService = radioButton.getText().toString();
+
+                        requestBol = true;
+
+                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                        GeoFire geoFire = new GeoFire(ref);
+                        geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+
+                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                        pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+
+                        mRequest.setText("Buscando Mecanico");
+
+                        getClosestDriver();
+                        tiempoEspera();
+                        romper = false;
+
+                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
+                        Map usuarioInfo = new HashMap();
+                        usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
+                        enableReference.updateChildren(usuarioInfo);
+                    } else {
+                        Toast.makeText(CustomerMapActivity.this, "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
                     }
-
-                    requestService = radioButton.getText().toString();
-
-                    requestBol = true;
-
-                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                    GeoFire geoFire = new GeoFire(ref);
-                    geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-
-                    pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
-
-                    mRequest.setText("Buscando Mecanico");
-
-                    getClosestDriver();
-                    tiempoEspera();
-                    romper = false;
-
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
-                    Map usuarioInfo = new HashMap();
-                    usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
-                    enableReference.updateChildren(usuarioInfo);
                 }
             }
         });
