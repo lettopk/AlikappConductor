@@ -46,6 +46,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,6 +60,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -74,13 +77,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private Boolean requestBol = false;
 
-    private Marker pickupMarker;
+    private Marker pickupMarker, tallerMarker;
 
     private SupportMapFragment mapFragment;
 
     private String destination, requestService;
 
-    private LatLng destinationLatLng;
+    private LatLng destinationLatLng, tallerLatLng;
 
     private LinearLayout mDriverInfo;
 
@@ -232,7 +235,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void run() {
                 finalizarEspera();
             }
-        }, 60000);
+        }, 240000);
     }
     private Boolean romper = true;
     private void finalizarEspera() {
@@ -617,6 +620,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getApplicationContext(), R.raw.map_style));
+        getTallerAround();
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
@@ -776,4 +781,64 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
     }
+
+    boolean getTallerStarted = false;
+       private void getTallerAround(){
+        getTallerStarted = true;
+        DatabaseReference tallerLocation = FirebaseDatabase.getInstance().getReference().child("Taller").child("stiv");
+
+        tallerLocation.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+                    double locationLat = 0;
+                    double locationLng = 0;
+                    String nombre = null;
+                    String especialidad = null;
+                    if (map.get("nombre") != null){
+                        nombre = map.get("nombre").toString();
+                    }
+                    if (map.get("especialidad") != null){
+                        especialidad = map.get("especialidad").toString();
+                    }
+                    if (map.get("a") != null) {
+                        locationLat = Double.parseDouble(map.get("a").toString());
+
+                    }
+                    if (map.get("b") != null) {
+                        locationLng = Double.parseDouble(map.get("b").toString());
+
+                    }
+
+                    tallerLatLng = new LatLng(locationLat,locationLng);
+                    tallerMarker = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(nombre + " especialidad: " + especialidad).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                    mMap.getUiSettings().setMapToolbarEnabled(true);
+                    mMap.setPadding(0,0,0,250);
+                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            Toast.makeText(CustomerMapActivity.this,"si funciona", Toast.LENGTH_LONG).show();
+                            return false;
+                        }
+                    });
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+
+
+
+    }
+
+
 }
