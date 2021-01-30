@@ -621,6 +621,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getApplicationContext(), R.raw.map_style));
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                if(tallerMarker != null){
+                    tallerMarker.remove();
+                }
+                getTallerAround();
+            }
+        });
         getTallerAround();
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -783,61 +792,80 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     boolean getTallerStarted = false;
-       private void getTallerAround(){
-        getTallerStarted = true;
-        DatabaseReference tallerLocation = FirebaseDatabase.getInstance().getReference().child("Taller").child("stiv");
-
-        tallerLocation.addValueEventListener(new ValueEventListener() {
+    GeoQuery geoRequest;
+    private void getTallerAround(){
+        DatabaseReference TalleresLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+        GeoFire geoFire = new GeoFire(TalleresLocation);
+        float expo = (float) (17.2247 - 0.6867*mMap.getCameraPosition().zoom);
+        float radio = (float) Math.exp(expo)/1000;
+        LatLng latLatLng = new LatLng(mMap.getCameraPosition().target.latitude, mMap.getCameraPosition().target.longitude);
+        geoRequest = geoFire.queryAtLocation(new GeoLocation(latLatLng.latitude, latLatLng.longitude), radio);
+        geoRequest.removeAllListeners();
+        geoRequest.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
-                    double locationLat = 0;
-                    double locationLng = 0;
-                    String nombre = null;
-                    String especialidad = null;
-                    if (map.get("nombre") != null){
-                        nombre = map.get("nombre").toString();
-                    }
-                    if (map.get("especialidad") != null){
-                        especialidad = map.get("especialidad").toString();
-                    }
-                    if (map.get("a") != null) {
-                        locationLat = Double.parseDouble(map.get("a").toString());
-
-                    }
-                    if (map.get("b") != null) {
-                        locationLng = Double.parseDouble(map.get("b").toString());
-
-                    }
-
-                    tallerLatLng = new LatLng(locationLat,locationLng);
-                    tallerMarker = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(nombre + " especialidad: " + especialidad).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
-                    mMap.getUiSettings().setMapToolbarEnabled(true);
-                    mMap.setPadding(0,0,0,250);
-                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            public void onKeyEntered(String key, GeoLocation location) {
+                System.out.println(key);
+                if(key != null){
+                    DatabaseReference Tallersitos = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child(key).child("l");
+                    Tallersitos.addValueEventListener(new ValueEventListener() {
                         @Override
-                        public boolean onMarkerClick(Marker marker) {
-                            Toast.makeText(CustomerMapActivity.this,"si funciona", Toast.LENGTH_LONG).show();
-                            return false;
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()){
+                                java.util.List<Object> map = (java.util.List<Object>) snapshot.getValue();
+                                double locationLat = 0;
+                                double locationLng = 0;
+                                if (map.get(0) != null) {
+                                    locationLat = Double.parseDouble(map.get(0).toString());
+
+                                }
+                                if (map.get(1) != null) {
+                                    locationLng = Double.parseDouble(map.get(1).toString());
+
+                                }
+
+                                tallerLatLng = new LatLng(locationLat,locationLng);
+                                tallerMarker = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                                mMap.getUiSettings().setMapToolbarEnabled(true);
+                                mMap.setPadding(0,0,0,250);
+                                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                    @Override
+                                    public boolean onMarkerClick(Marker marker) {
+                                        Toast.makeText(CustomerMapActivity.this,"si funciona", Toast.LENGTH_LONG).show();
+                                        return false;
+                                    }
+                                });
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
                         }
                     });
-
                 }
+            }
+
+            @Override
+            public void onKeyExited(String key) {
 
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
 
             }
         });
-
-
-
-
-
-
     }
 
 
