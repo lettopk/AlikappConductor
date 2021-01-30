@@ -28,6 +28,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.directions.route.AbstractRouting;
+import com.directions.route.Routing;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -77,7 +79,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private Boolean requestBol = false;
 
-    private Marker pickupMarker, tallerMarker;
+    private Marker pickupMarker;
 
     private SupportMapFragment mapFragment;
 
@@ -624,13 +626,23 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
-                if(tallerMarker != null){
-                    tallerMarker.remove();
+                if(tallerMarker1 != null){
+                    tallerMarker1.remove();
+                    tallerMarker1 = null;
                 }
-                getTallerAround();
+                if(tallerMarker2 != null){
+                    tallerMarker2.remove();
+                    tallerMarker2 = null;
+                }
+                final Handler handler =new Handler();
+                handler.postDelayed(new Runnable(){
+                    @Override
+                    public void run() {
+                        getTallerAround();
+                    }
+                }, 1000);
             }
         });
-        getTallerAround();
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
@@ -662,6 +674,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lat,15));
             }
         });
+        getTallerAround();
     }
 
     LocationCallback mLocationCallback = new LocationCallback(){
@@ -792,6 +805,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     boolean getTallerStarted = false;
+    private Marker tallerMarker1, tallerMarker2;
     GeoQuery geoRequest;
     private void getTallerAround(){
         DatabaseReference TalleresLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
@@ -824,7 +838,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 }
 
                                 tallerLatLng = new LatLng(locationLat,locationLng);
-                                tallerMarker = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                                if(tallerMarker1 == null){
+                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                                } else if(tallerMarker2 == null){
+                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                                }
                                 mMap.getUiSettings().setMapToolbarEnabled(true);
                                 mMap.setPadding(0,0,0,250);
                                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
