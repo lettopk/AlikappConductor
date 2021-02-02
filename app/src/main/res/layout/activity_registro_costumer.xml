@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp"
+    android:background="#204051"
+    tools:context=".CostumerRegistroActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="25dp"/>
+    <ImageView
+
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/logo"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"/>
+
+
+
+    <EditText
+        android:id="@+id/Et_correo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#E4E3E3"
+        android:fontFamily="@font/abeezee"
+        android:hint=" Email"
+        android:drawableStart="@drawable/ic_mail"
+        android:textSize="18sp"
+        android:layout_margin="2dp"
+        android:inputType="textEmailAddress"
+        android:textColorHint="#E4E3E3"
+        android:drawableLeft="@drawable/ic_mail" />
+
+
+    <EditText
+        android:id="@+id/Et_newpass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#E4E3E3"
+        android:fontFamily="@font/abeezee"
+        android:hint=" Contraseña"
+        android:drawableStart="@drawable/ic_password"
+        android:textSize="18sp"
+        android:layout_margin="2dp"
+        android:inputType="textPassword"
+        android:textColorHint="#E4E3E3"
+        android:drawableLeft="@drawable/ic_password" />
+    <EditText
+        android:id="@+id/Et_vnewpass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#E4E3E3"
+        android:fontFamily="@font/abeezee"
+        android:hint=" Valide contraseña"
+        android:drawableStart="@drawable/ic_password"
+        android:textSize="18sp"
+        android:layout_margin="2dp"
+        android:inputType="textPassword"
+        android:textColorHint="#E4E3E3"
+        android:drawableLeft="@drawable/ic_password" />
+
+
+
+
+    <Button
+        android:id="@+id/btnRegusuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/boton_ingreso"
+        android:textSize="18dp"
+        android:text="Registro de Usuario"
+        android:textColor="#204051"
+        />
+
+</LinearLayout>

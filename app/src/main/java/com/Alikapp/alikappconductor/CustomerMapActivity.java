@@ -570,7 +570,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if (distance<100){
                         mRequest.setText("Su Mecanico esta Aquí");
                     }else{
+
                         mRequest.setText("Mecanico Encontrado: " + String.valueOf((distance)/1000)+" Kms");
+
                     }
 
 
