@@ -25,7 +25,7 @@
 
 
     <EditText
-        android:id="@+id/Et_correo"
+        android:id="@+id/et_correo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#E4E3E3"
@@ -40,7 +40,7 @@
 
 
     <EditText
-        android:id="@+id/Et_newpass"
+        android:id="@+id/et_newpass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#E4E3E3"
