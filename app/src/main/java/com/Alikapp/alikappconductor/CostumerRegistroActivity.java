@@ -1,31 +1,28 @@
 package com.Alikapp.alikappconductor;
 
-import android.content.Intent;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class CostumerRegistroActivity extends AppCompatActivity {
 
-    private EditText mEmail, mPassword;
-    private Button mRegistration;
+     EditText mEmail, mPassword;
+     Button mRegistration;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_login);
+        setContentView(R.layout.activity_registro_costumer);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -34,7 +31,7 @@ public class CostumerRegistroActivity extends AppCompatActivity {
 
 
 
-        mRegistration = (Button) findViewById(R.id.registration);
+        mRegistration = (Button) findViewById(R.id.btnRegusuario);
 
         mRegistration.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
