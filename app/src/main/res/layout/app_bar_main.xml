@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:map="http://schemas.android.com/apk/res-auto"
-    tools:context="com.Alikapp.alikappconductor.CustomerMapActivity">
+    tools:context=".CustomerMapActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -149,7 +149,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/radioGroup"
                         android:orientation="horizontal"
-                        android:visibility="invisible"
+
                         >
 
                         <me.omidh.liquidradiobutton.LiquidRadioButton
