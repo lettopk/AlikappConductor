@@ -34,6 +34,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.directions.route.AbstractRouting;
+import com.directions.route.Routing;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -52,6 +54,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -66,6 +69,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -92,7 +96,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private String destination, requestService;
 
-    private LatLng destinationLatLng;
+    private LatLng destinationLatLng, tallerLatLng;
 
     private LinearLayout mDriverInfo;
 
@@ -321,7 +325,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void run() {
                 finalizarEspera();
             }
-        }, 60000);
+        }, 240000);
     }
     private Boolean romper = true;
     private void finalizarEspera() {
@@ -706,6 +710,27 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getApplicationContext(), R.raw.map_style));
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                if(tallerMarker1 != null){
+                    tallerMarker1.remove();
+                    tallerMarker1 = null;
+                }
+                if(tallerMarker2 != null){
+                    tallerMarker2.remove();
+                    tallerMarker2 = null;
+                }
+                final Handler handler =new Handler();
+                handler.postDelayed(new Runnable(){
+                    @Override
+                    public void run() {
+                        getTallerAround();
+                    }
+                }, 1000);
+            }
+        });
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
@@ -737,6 +762,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lat,15));
             }
         });
+        getTallerAround();
     }
 
     LocationCallback mLocationCallback = new LocationCallback(){
@@ -865,4 +891,88 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
     }
+
+    boolean getTallerStarted = false;
+    private Marker tallerMarker1, tallerMarker2;
+    GeoQuery geoRequest;
+    private void getTallerAround(){
+        DatabaseReference TalleresLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+        GeoFire geoFire = new GeoFire(TalleresLocation);
+        float expo = (float) (17.2247 - 0.6867*mMap.getCameraPosition().zoom);
+        float radio = (float) Math.exp(expo)/1000;
+        LatLng latLatLng = new LatLng(mMap.getCameraPosition().target.latitude, mMap.getCameraPosition().target.longitude);
+        geoRequest = geoFire.queryAtLocation(new GeoLocation(latLatLng.latitude, latLatLng.longitude), radio);
+        geoRequest.removeAllListeners();
+        geoRequest.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                System.out.println(key);
+                if(key != null){
+                    DatabaseReference Tallersitos = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child(key).child("l");
+                    Tallersitos.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()){
+                                java.util.List<Object> map = (java.util.List<Object>) snapshot.getValue();
+                                double locationLat = 0;
+                                double locationLng = 0;
+                                if (map.get(0) != null) {
+                                    locationLat = Double.parseDouble(map.get(0).toString());
+
+                                }
+                                if (map.get(1) != null) {
+                                    locationLng = Double.parseDouble(map.get(1).toString());
+
+                                }
+
+                                tallerLatLng = new LatLng(locationLat,locationLng);
+                                if(tallerMarker1 == null){
+                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                                } else if(tallerMarker2 == null){
+                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                                }
+                                mMap.getUiSettings().setMapToolbarEnabled(true);
+                                mMap.setPadding(0,0,0,250);
+                                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                    @Override
+                                    public boolean onMarkerClick(Marker marker) {
+                                        Toast.makeText(CustomerMapActivity.this,"si funciona", Toast.LENGTH_LONG).show();
+                                        return false;
+                                    }
+                                });
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+    }
+
+
 }
