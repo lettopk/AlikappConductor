@@ -1088,6 +1088,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             polylines.clear();
         }
     }
+    
 
 }
 
