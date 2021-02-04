@@ -80,4 +80,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+//chat con firebase
+    implementation 'de.hdodenhof:circleimageview:3.1.0'//imagenes circulares
+    implementation 'com.github.bumptech.glide:glide:4.9.0'//recorte de imagen
 }
