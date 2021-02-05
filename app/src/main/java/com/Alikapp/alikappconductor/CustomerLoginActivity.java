@@ -65,7 +65,7 @@ public class CustomerLoginActivity extends AppCompatActivity {
                             if(!task.isSuccessful()){
                                 transitionButton.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
                                 Toast.makeText(CustomerLoginActivity.this, "sign in error", Toast.LENGTH_SHORT).show();
-                            } 
+                            }
                         }
                     });
                 }catch (Exception e){
