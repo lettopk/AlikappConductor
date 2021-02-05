@@ -958,11 +958,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                 }
 
-                                tallerLatLng = new LatLng(locationLat, locationLng);
-                                if (tallerMarker1 == null) {
-                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
-                                } else if (tallerMarker2 == null) {
-                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                                tallerLatLng = new LatLng(locationLat,locationLng);
+                                if(tallerMarker1 == null){
+                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_taller)));
+                                } else if(tallerMarker2 == null){
+                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_taller)));
                                 }
                                 mMap.getUiSettings().setMapToolbarEnabled(true);
                                 mMap.setPadding(0, 0, 0, 250);
@@ -1054,6 +1054,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             for (Polyline poly : polylines) {
                 poly.remove();
 
+
             }
         }
 
@@ -1071,7 +1072,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             Polyline polyline = mMap.addPolyline(polyOptions);
             polylines.add(polyline);
 
-            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
         }
     }
 

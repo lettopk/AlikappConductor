@@ -7,6 +7,7 @@
     tools:context="com.Alikapp.alikappconductor.CustomerLoginActivity"
     android:orientation="vertical"
     android:background="#e4e3e3"
+    android:layout_gravity="center"
     >
 
     <LinearLayout
@@ -14,26 +15,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#e4e3e3"
+        android:padding="30dp"
         android:orientation="vertical"
-        android:padding="50dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="346dp"
-            android:layout_height="201dp"
-            android:src="@mipmap/logo_alikapp"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.88"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.78"
-            tools:ignore="MissingConstraints"
+            <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            />
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="200dp"
+                    android:src="@mipmap/logo_alikapp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
             android:id="@+id/email"
@@ -55,23 +57,50 @@
             android:textColor="#204051"
             android:textColorHint="#204051" />
 
-        <Button
-            android:id="@+id/login"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.royrodriguez.transitionbutton.TransitionButton
+                android:id="@+id/logint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/boton_login"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="Login"
+                android:textColor="@android:color/white"
+                app:defaultColor="#204051"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:loaderColor="#e4e3e3" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/boton_login"
-            android:text="login" />
+            android:orientation="vertical"
+            android:padding="20dp"
+            >
 
-        <Button
-            android:id="@+id/registration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/boton_login"
-            android:text="registrarse"
+            <Button
 
-            />
+                android:id="@+id/registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/boton_login"
+                android:text="registrarse"
+
+                />
+
+        </LinearLayout>
 
         <ImageView
             android:layout_width="10dp"
