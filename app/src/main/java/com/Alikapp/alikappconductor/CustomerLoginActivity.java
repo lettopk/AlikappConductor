@@ -32,50 +32,6 @@ public class CustomerLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_login);
 
-        transitionButton = findViewById(R.id.logint);
-        transitionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start the loading animation when the user tap the button
-                transitionButton.startAnimation();
-
-                final String email = mEmail.getText().toString();
-                final String password = mPassword.getText().toString();
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(CustomerLoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@androidx.annotation.NonNull com.google.android.gms.tasks.Task<AuthResult> task) {
-                        if(!task.isSuccessful()){
-                            Toast.makeText(CustomerLoginActivity.this, "sign in error", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-                // Do your networking task or background work here.
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        boolean isSuccessful = true;
-
-                        // Choose a stop animation if your call was succesful or not
-                        if (isSuccessful) {
-                            transitionButton.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND, new TransitionButton.OnAnimationStopEndListener() {
-                                @Override
-                                public void onAnimationStopEnd() {
-                                    Intent intent = new Intent(getBaseContext(), CustomerMapActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                    startActivity(intent);
-                                }
-                            });
-                        } else {
-                            transitionButton.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
-                        }
-                    }
-                }, 6000);
-            }
-        });
-
-
         mAuth = FirebaseAuth.getInstance();
 
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -91,6 +47,34 @@ public class CustomerLoginActivity extends AppCompatActivity {
             }
         };
 
+        mEmail = (EditText) findViewById(R.id.email);
+        mPassword = (EditText) findViewById(R.id.password);
+
+        transitionButton = findViewById(R.id.logint);
+        transitionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the loading animation when the user tap the button
+                transitionButton.startAnimation();
+                try {
+                    final String email = mEmail.getText().toString();
+                    final String password = mPassword.getText().toString();
+                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(CustomerLoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@androidx.annotation.NonNull com.google.android.gms.tasks.Task<AuthResult> task) {
+                            if(!task.isSuccessful()){
+                                transitionButton.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
+                                Toast.makeText(CustomerLoginActivity.this, "sign in error", Toast.LENGTH_SHORT).show();
+                            } 
+                        }
+                    });
+                }catch (Exception e){
+                    transitionButton.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
+                    Toast.makeText(CustomerLoginActivity.this, "Ingrese un usuario y contraseña", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
 
         //ir a pagina de registro mediante boton registro
         mRegistration =(Button)findViewById(R.id.registration);
@@ -102,9 +86,6 @@ public class CustomerLoginActivity extends AppCompatActivity {
                 startActivity(registrop);
             }
         });
-
-        mEmail = (EditText) findViewById(R.id.email);
-        mPassword = (EditText) findViewById(R.id.password);
 
 
     }
