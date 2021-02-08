@@ -65,6 +65,7 @@ public class Chat extends AppCompatActivity {
     private String NOMBRE_USUARIO;
     private String telefonoLlamar;
     private String conductorID;
+    private  String nombreConductor;
 
     private static final int PHOTO_SEND =1;
     public static final String NODO_MENSAJES = "mensajes";
@@ -114,7 +115,7 @@ public class Chat extends AppCompatActivity {
         btnEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//enviado de mensaje
-                databaseReference.push().setValue(new MensajeEnviar(txtMensaje.getText().toString(),nombre.getText().toString(),"","1", ServerValue.TIMESTAMP));
+                databaseReference.push().setValue(new MensajeEnviar(txtMensaje.getText().toString(),nombreConductor.toString(),"","1", ServerValue.TIMESTAMP));
                 txtMensaje.setText("");
             }
         });
@@ -192,7 +193,7 @@ public class Chat extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()){
                         Uri uri =task.getResult();
-                        MensajeEnviar m = new MensajeEnviar(NOMBRE_USUARIO+" te ha enviado una foto",uri.toString(), nombre.getText().toString(),"","2",ServerValue.TIMESTAMP);
+                        MensajeEnviar m = new MensajeEnviar(nombreConductor+" te ha enviado una foto",uri.toString(), nombreConductor.toString(),"","2",ServerValue.TIMESTAMP);
                         databaseReference.push().setValue(m);
                     }
                 }
@@ -226,12 +227,11 @@ public class Chat extends AppCompatActivity {
 
     private void getUserInfo (){
 
-        DatabaseReference mMecanicoDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_ID);
+        DatabaseReference mMecanicoDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorID);
         mMecanicoDatabase.addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()) {
-                        System.out.println("si entra");
                         java.util.Map<String, Object> map = (java.util.Map<String, Object>) dataSnapshot.getValue();
                         if (map.get("name") != null) {
                             NOMBRE_USUARIO = map.get("name").toString();
@@ -246,6 +246,21 @@ public class Chat extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        DatabaseReference mConductorDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_ID);
+        mConductorDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    java.util.Map<String, Object> map = (java.util.Map<String, Object>) dataSnapshot.getValue();
+                    if (map.get("name") != null) {
+                        nombreConductor = map.get("name").toString();
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 }
