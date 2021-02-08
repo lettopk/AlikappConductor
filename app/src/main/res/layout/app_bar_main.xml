@@ -106,17 +106,24 @@
                         android:orientation="horizontal"
                         android:background="@android:color/white"
                         android:visibility="gone">
+
                         <ImageView
                             android:layout_width="100sp"
                             android:layout_height="100sp"
                             android:id="@+id/driverProfileImage"
                             android:src="@mipmap/ic_default_user"
                             android:padding="20sp"/>
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:paddingLeft="40sp">
+                            <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Chat"
+                            android:id="@+id/mChat"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -193,6 +200,7 @@
                             android:id="@+id/Grua"
                             android:textColor="@color/black"
                             android:textSize="18sp"
+                            android:visibility="gone"
                             app:lrb_checkedColor="@color/AlikappBlue"
                             app:lrb_explodeCount="6"
                             app:lrb_inAnimDuration="600"

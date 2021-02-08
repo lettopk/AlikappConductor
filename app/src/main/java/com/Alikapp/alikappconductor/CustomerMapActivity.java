@@ -35,7 +35,10 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
 import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -57,6 +60,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -72,7 +77,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, RoutingListener {
 
     private GoogleMap mMap;
     Location mLastLocation;
@@ -80,7 +85,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mLogout, mRequest, mSettings, mHistory, mDesplegar;
+    private Button mLogout, mRequest, mSettings, mHistory, mDesplegar, mChat;
 
     private EditText mDescripcion;
 
@@ -100,7 +105,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private LinearLayout mDriverInfo;
 
-    private ImageView mDriverProfileImage;
+    public ImageView mDriverProfileImage;
 
     private android.widget.TextView mDriverName, mDriverPhone, mDriverCar;
 
@@ -137,10 +142,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mRadioGroup.check(R.id.Mecanico);
 
         mLogout = (Button) findViewById(R.id.logout);
+        mChat =(Button) findViewById(R.id.mChat);
         mRequest = (Button) findViewById(R.id.request);
         mRequest.setText("Pedir Ayuda");
         mSettings = (Button) findViewById(R.id.settings);
         mHistory = (Button) findViewById(R.id.history);
+
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -207,6 +214,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
+        //getUserInfo();
+
         mLogout.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
@@ -215,6 +224,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 startActivity(intent);
                 finish();
                 return;
+            }
+        });
+
+        mChat.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                Intent intent = new Intent(CustomerMapActivity.this, Chat.class);
+                //intent.putExtra("nombrechat", mName);
+                CustomerMapActivity.this.startActivity(intent);
             }
         });
 
@@ -369,6 +387,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverPhone.setText("");
         mDriverCar.setText("Destination: --");
         mDriverProfileImage.setImageResource(R.mipmap.ic_default_user);
+        erasePolylines();
     }
 
     @Override
@@ -549,9 +568,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     double locationLng = 0;
                     if(map.get(0) != null){
                         locationLat = Double.parseDouble(map.get(0).toString());
+                        DriverlocationLat = Double.parseDouble(map.get(0).toString());
                     }
                     if(map.get(1) != null){
                         locationLng = Double.parseDouble(map.get(1).toString());
+                        DriverlocationLng = Double.parseDouble(map.get(1).toString());
                     }
                     LatLng driverLatLng = new LatLng(locationLat,locationLng);
                     if(mDriverMarker != null){
@@ -576,8 +597,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
 
 
+                    if(requestService.equals("Taller")){
+                        getRouteToMarker(new LatLng(DriverlocationLat, DriverlocationLng),
+                                new  LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                    } else {
+                        getRouteToMarker( new  LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()),
+                                new LatLng(DriverlocationLat, DriverlocationLng));
+                    }
 
-                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Su Mecanico").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mecanico)));
+                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Su Mecanico")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mecanico)));
                 }
 
             }
@@ -689,6 +718,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverPhone.setText("");
         mDriverCar.setText("Destination: --");
         mDriverProfileImage.setImageResource(R.mipmap.ic_default_user);
+        erasePolylines();
     }
 
     /*-------------------------------------------- Map specific functions -----
@@ -892,6 +922,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             }
         });
+
     }
 
     boolean getTallerStarted = false;
@@ -909,12 +940,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 System.out.println(key);
-                if(key != null){
+                if (key != null) {
                     DatabaseReference Tallersitos = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child(key).child("l");
                     Tallersitos.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()){
+                            if (snapshot.exists()) {
                                 java.util.List<Object> map = (java.util.List<Object>) snapshot.getValue();
                                 double locationLat = 0;
                                 double locationLng = 0;
@@ -934,11 +965,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_taller)));
                                 }
                                 mMap.getUiSettings().setMapToolbarEnabled(true);
-                                mMap.setPadding(0,0,0,250);
+                                mMap.setPadding(0, 0, 0, 250);
                                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                     @Override
                                     public boolean onMarkerClick(Marker marker) {
-                                        Toast.makeText(CustomerMapActivity.this,"si funciona", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(CustomerMapActivity.this, "si funciona", Toast.LENGTH_LONG).show();
                                         return false;
                                     }
                                 });
@@ -951,30 +982,117 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                         }
                     });
+
                 }
-            }
-
-            @Override
-            public void onKeyExited(String key) {
 
             }
+                @Override
+                public void onKeyExited(String key) {
 
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
+                }
 
-            }
+                @Override
+                public void onKeyMoved(String key, GeoLocation location) {
 
-            @Override
-            public void onGeoQueryReady() {
+                }
 
-            }
+                @Override
+                public void onGeoQueryReady() {
 
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
+                }
 
-            }
+                @Override
+                public void onGeoQueryError(DatabaseError error) {
+
+                }
+
         });
     }
 
 
+    private void getRouteToMarker(LatLng puntoA, LatLng puntoB) {
+        final Handler handler =new Handler();
+        handler.postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                if (puntoA != null && puntoB != null && mLastLocation != null && requestBol) {
+                    System.out.println(mLastLocation);
+                    Routing routing = new Routing.Builder()
+                            .key("AIzaSyC5qe0PdRWO9qvCo4rNuyNrXyf8K06SbbI")
+                            .travelMode(AbstractRouting.TravelMode.DRIVING)
+                            .withListener(CustomerMapActivity.this)
+                            .alternativeRoutes(false)
+                            .waypoints(puntoB, puntoA)
+                            .build();
+                    routing.execute();
+                }
+            }
+        }, 1000);
+
+    }
+    private double DriverlocationLat = 0;
+    private double DriverlocationLng = 0;
+    private List<Polyline> polylines;
+    private static final int[] COLORS = new int[]{R.color.black};
+    @Override
+    public void onRoutingFailure(RouteException e) {
+        if (e != null) {
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
+        if (polylines != null) {
+            for (Polyline poly : polylines) {
+                poly.remove();
+
+
+            }
+        }
+
+        polylines = new ArrayList<>();
+        //add route(s) to the map.
+        for (int i = 0; i < route.size(); i++) {
+
+            //In case of more than 5 alternative routes
+            int colorIndex = i % COLORS.length;
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(route.get(i).getPoints());
+            Polyline polyline = mMap.addPolyline(polyOptions);
+            polylines.add(polyline);
+
+            //Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRoutingCancelled() {
+
+    }
+
+    private void erasePolylines() {
+        if(polylines != null){
+            for (Polyline line : polylines) {
+                line.remove();
+            }
+            polylines.clear();
+        }
+    }
+
+
 }
+
+
+
+

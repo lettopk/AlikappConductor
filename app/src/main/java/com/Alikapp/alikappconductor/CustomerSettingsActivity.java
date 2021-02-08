@@ -90,7 +90,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             }
         });
     }
-    private void getUserInfo(){
+    public void getUserInfo(){
         mCustomerDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -150,6 +150,8 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                     return;
                 }
             });
+
+            //Carga de foto de perfil
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
