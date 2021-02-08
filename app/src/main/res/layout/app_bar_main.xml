@@ -200,6 +200,7 @@
                             android:id="@+id/Grua"
                             android:textColor="@color/black"
                             android:textSize="18sp"
+                            android:visibility="gone"
                             app:lrb_checkedColor="@color/AlikappBlue"
                             app:lrb_explodeCount="6"
                             app:lrb_inAnimDuration="600"
