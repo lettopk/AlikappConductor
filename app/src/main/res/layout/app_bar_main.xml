@@ -93,9 +93,9 @@
                 map:behavior_peekHeight="100dp">
 
                 <LinearLayout
-                    android:background="@android:color/transparent"
+                    android:background="@color/AlikappGris"
                     android:orientation="vertical"
-                    android:backgroundTint="#204051"
+                    android:backgroundTint="@color/AlikappGris"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" >
                     <LinearLayout
@@ -241,14 +241,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="bottom">
+
             <Button
-                android:layout_gravity="bottom"
+                android:id="@+id/desplegarCuadro"
                 android:layout_width="70sp"
-                android:layout_height="wrap_content"
-                android:text="E"
-                android:textColor="#e4e3e3"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
                 android:background="@drawable/boton_emergencia"
-                android:id="@+id/desplegarCuadro" />
+                android:text="E"
+                android:textColor="#e4e3e3" />
         </LinearLayout>
     </LinearLayout>
 
