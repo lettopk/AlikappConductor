@@ -41,6 +41,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.paypal.android.sdk.u;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static com.Alikapp.alikappconductor.CustomerMapActivity.driver_ID;
 import static java.nio.file.Paths.get;
 
 public class Chat extends AppCompatActivity {
@@ -60,8 +64,10 @@ public class Chat extends AppCompatActivity {
     private StorageReference storageReference;
     private String NOMBRE_USUARIO;
     private String telefonoLlamar;
+    private String conductorID;
 
     private static final int PHOTO_SEND =1;
+    public static final String NODO_MENSAJES = "mensajes";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,10 +81,14 @@ public class Chat extends AppCompatActivity {
         btnLlamar = (Button) findViewById(R.id.btnLlamar);
 
         fotoPerfil.setImageResource(R.mipmap.ic_default_user);
-
+        conductorID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         database =FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("Chat1");//Sala de chat
+        //databaseReference = database.getReference(Chat.NODO_MENSAJES+"/"+conductorID+"/"+driver_ID);//Sala de chat
+        databaseReference = database.getReference("Chat1");
         storage = FirebaseStorage.getInstance();
+
+
+
 
         adapter = new AdapterMensajes(this);
         LinearLayoutManager l = new LinearLayoutManager(this);
@@ -216,8 +226,8 @@ public class Chat extends AppCompatActivity {
     }
 
     private void getUserInfo (){
-        String conductorID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference mConductorDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorID);
+
+        DatabaseReference mConductorDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(driver_ID);
         mConductorDatabase.addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

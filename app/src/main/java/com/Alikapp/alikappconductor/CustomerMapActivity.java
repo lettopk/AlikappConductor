@@ -406,6 +406,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private int radius = 1;
     private Boolean driverFound = false;
     private String driverFoundID;
+    public static String driver_ID = "driver_ID";
 
     GeoQuery geoQuery;
     private void getClosestDriver(){
@@ -441,6 +442,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     map.put("destinationLat", destinationLatLng.latitude);
                                     map.put("destinationLng", destinationLatLng.longitude);
                                     driverRef.updateChildren(map);
+
+                                    driver_ID = customerId;
 
                                     getConfirmacion();
 
