@@ -443,8 +443,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     map.put("destinationLng", destinationLatLng.longitude);
                                     driverRef.updateChildren(map);
 
-                                    driver_ID = customerId;
-
                                     getConfirmacion();
 
                                 }
@@ -499,6 +497,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             getDriverLocation();
                             getDriverInfo();
                             getHasRideEnded();
+                            driver_ID = driverFoundID;
                             mRequest.setText("Buscando la Ubicacion de su Mecanico....");
                         } else if (A.equals("No")) {
                             driverFound = false;

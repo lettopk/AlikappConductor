@@ -83,10 +83,9 @@ public class Chat extends AppCompatActivity {
         fotoPerfil.setImageResource(R.mipmap.ic_default_user);
         conductorID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         database =FirebaseDatabase.getInstance();
-        //databaseReference = database.getReference(Chat.NODO_MENSAJES+"/"+conductorID+"/"+driver_ID);//Sala de chat
-        databaseReference = database.getReference("Chat1");
+        databaseReference = database.getReference(Chat.NODO_MENSAJES+"/"+conductorID+driver_ID);//Sala de chat
+        //databaseReference = database.getReference("Chat1");
         storage = FirebaseStorage.getInstance();
-
 
 
 
@@ -227,23 +226,23 @@ public class Chat extends AppCompatActivity {
 
     private void getUserInfo (){
 
-        DatabaseReference mConductorDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(driver_ID);
-        mConductorDatabase.addValueEventListener(new ValueEventListener(){
+        DatabaseReference mMecanicoDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_ID);
+        mMecanicoDatabase.addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    System.out.println("si entra");
-                    java.util.Map<String, Object> map = (java.util.Map<String, Object>) dataSnapshot.getValue();
-                    if (map.get("name") != null) {
-                        NOMBRE_USUARIO = map.get("name").toString();
-                        nombre.setText(NOMBRE_USUARIO);
-                    }
-                    if(map.get("phone")!=null){
-                        telefonoLlamar = map.get("phone").toString();
+                    if(dataSnapshot.exists()) {
+                        System.out.println("si entra");
+                        java.util.Map<String, Object> map = (java.util.Map<String, Object>) dataSnapshot.getValue();
+                        if (map.get("name") != null) {
+                            NOMBRE_USUARIO = map.get("name").toString();
+                            nombre.setText(NOMBRE_USUARIO);
+                        }
+                        if(map.get("phone")!=null){
+                            telefonoLlamar = map.get("phone").toString();
+                        }
                     }
                 }
-            }
-            @Override
+                @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
