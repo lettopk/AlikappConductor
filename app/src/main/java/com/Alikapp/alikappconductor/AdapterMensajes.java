@@ -33,10 +33,13 @@ List<MensajeRecibir> listMensaje = new ArrayList<>();
     @NonNull
     @Override
     public HolderMensajes onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //crear una vista
-        View v = LayoutInflater.from(c).inflate(R.layout.card_view_mensajes,parent,false);
-        //enviar lista
-        return new HolderMensajes(v);
+        View view;
+        if(viewType==1){
+            view = LayoutInflater.from(c).inflate(R.layout.card_view_mensajes_emisor,parent,false);
+        }else{
+            view = LayoutInflater.from(c).inflate(R.layout.card_view_mensajes_receptor,parent,false);
+        }
+        return new HolderMensajes(view);
     }
 
     @Override//que se setea cuando llega el objeto
@@ -62,4 +65,18 @@ List<MensajeRecibir> listMensaje = new ArrayList<>();
     public int getItemCount() {
         return listMensaje.size();
     } //Tamaño de la lista
+
+    @Override
+    public int getItemViewType(int position) {
+        // return super.getItemViewType(position);
+        if(listMensaje.get(position).getNombre()!=null){
+            if(listMensaje.get(position).getNombre().equals(Chat.getnombreconductor)){
+                return 1;
+            }else{
+                return -1;
+            }
+        }else{
+            return -1;
+        }
+    }
 }
