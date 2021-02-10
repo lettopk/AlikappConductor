@@ -13,22 +13,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.transition.ChangeImageTransform;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,15 +34,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.paypal.android.sdk.u;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static com.Alikapp.alikappconductor.CustomerMapActivity.driver_ID;
 import static java.nio.file.Paths.get;
 
 public class Chat extends AppCompatActivity {
+    public static String getnombreconductor ="";
     private ImageView fotoPerfil;
     private TextView nombre;
     private RecyclerView rvMensajes;
@@ -254,6 +246,7 @@ public class Chat extends AppCompatActivity {
                     java.util.Map<String, Object> map = (java.util.Map<String, Object>) dataSnapshot.getValue();
                     if (map.get("name") != null) {
                         nombreConductor = map.get("name").toString();
+                        getnombreconductor = nombreConductor;
                     }
                 }
             }
