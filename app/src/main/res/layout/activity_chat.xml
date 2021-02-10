@@ -28,7 +28,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#E4E3E3"
             android:layout_weight="1"
-            android:text=""/>
+            android:text="RECEPTOR"/>
         <Button
             android:id="@+id/btnLlamar"
             android:layout_width="wrap_content"

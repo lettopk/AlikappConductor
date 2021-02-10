@@ -406,6 +406,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private int radius = 1;
     private Boolean driverFound = false;
     private String driverFoundID;
+    public static String driver_ID = "driver_ID";
 
     GeoQuery geoQuery;
     private void getClosestDriver(){
@@ -496,6 +497,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             getDriverLocation();
                             getDriverInfo();
                             getHasRideEnded();
+                            driver_ID = driverFoundID;
                             mRequest.setText("Buscando la Ubicacion de su Mecanico....");
                         } else if (A.equals("No")) {
                             driverFound = false;
