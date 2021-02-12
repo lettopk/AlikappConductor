@@ -219,7 +219,7 @@ public class Chat extends AppCompatActivity {
 
     private void getUserInfo (){
 
-        DatabaseReference mMecanicoDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorID);
+        DatabaseReference mMecanicoDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_ID);
         mMecanicoDatabase.addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -238,7 +238,7 @@ public class Chat extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        DatabaseReference mConductorDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_ID);
+        DatabaseReference mConductorDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorID);
         mConductorDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
