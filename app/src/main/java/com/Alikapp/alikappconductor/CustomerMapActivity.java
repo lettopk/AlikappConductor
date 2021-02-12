@@ -85,7 +85,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mLogout, mRequest, mSettings, mHistory, mDesplegar;
+    private Button mLogout, mRequest, mSettings, mHistory, mDesplegar, mChat;
 
     private EditText mDescripcion;
 
@@ -105,7 +105,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private LinearLayout mDriverInfo;
 
-    private ImageView mDriverProfileImage;
+    public ImageView mDriverProfileImage;
 
     private android.widget.TextView mDriverName, mDriverPhone, mDriverCar;
 
@@ -142,10 +142,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mRadioGroup.check(R.id.Mecanico);
 
         mLogout = (Button) findViewById(R.id.logout);
+        mChat =(Button) findViewById(R.id.mChat);
         mRequest = (Button) findViewById(R.id.request);
         mRequest.setText("Pedir Ayuda");
         mSettings = (Button) findViewById(R.id.settings);
         mHistory = (Button) findViewById(R.id.history);
+
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -212,6 +214,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
+        //getUserInfo();
+
         mLogout.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
@@ -220,6 +224,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 startActivity(intent);
                 finish();
                 return;
+            }
+        });
+
+        mChat.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                Intent intent = new Intent(CustomerMapActivity.this, Chat.class);
+                //intent.putExtra("nombrechat", mName);
+                CustomerMapActivity.this.startActivity(intent);
             }
         });
 
@@ -393,6 +406,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private int radius = 1;
     private Boolean driverFound = false;
     private String driverFoundID;
+    public static String driver_ID = "driver_ID";
 
     GeoQuery geoQuery;
     private void getClosestDriver(){
@@ -483,6 +497,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             getDriverLocation();
                             getDriverInfo();
                             getHasRideEnded();
+                            driver_ID = driverFoundID;
                             mRequest.setText("Buscando la Ubicacion de su Mecanico....");
                         } else if (A.equals("No")) {
                             driverFound = false;
@@ -909,6 +924,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             }
         });
+
     }
 
     boolean getTallerStarted = false;
@@ -926,12 +942,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 System.out.println(key);
-                if(key != null){
+                if (key != null) {
                     DatabaseReference Tallersitos = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child(key).child("l");
                     Tallersitos.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()){
+                            if (snapshot.exists()) {
                                 java.util.List<Object> map = (java.util.List<Object>) snapshot.getValue();
                                 double locationLat = 0;
                                 double locationLng = 0;
@@ -946,16 +962,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                 tallerLatLng = new LatLng(locationLat,locationLng);
                                 if(tallerMarker1 == null){
-                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_taller)));
                                 } else if(tallerMarker2 == null){
-                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_taller)));
                                 }
                                 mMap.getUiSettings().setMapToolbarEnabled(true);
-                                mMap.setPadding(0,0,0,250);
+                                mMap.setPadding(0, 0, 0, 250);
                                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                     @Override
                                     public boolean onMarkerClick(Marker marker) {
-                                        Toast.makeText(CustomerMapActivity.this,"si funciona", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(CustomerMapActivity.this, "si funciona", Toast.LENGTH_LONG).show();
                                         return false;
                                     }
                                 });
@@ -968,30 +984,33 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                         }
                     });
+
                 }
-            }
-
-            @Override
-            public void onKeyExited(String key) {
 
             }
+                @Override
+                public void onKeyExited(String key) {
 
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
+                }
 
-            }
+                @Override
+                public void onKeyMoved(String key, GeoLocation location) {
 
-            @Override
-            public void onGeoQueryReady() {
+                }
 
-            }
+                @Override
+                public void onGeoQueryReady() {
 
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
+                }
 
-            }
+                @Override
+                public void onGeoQueryError(DatabaseError error) {
+
+                }
+
         });
     }
+
 
     private void getRouteToMarker(LatLng puntoA, LatLng puntoB) {
         final Handler handler =new Handler();
@@ -1037,6 +1056,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             for (Polyline poly : polylines) {
                 poly.remove();
 
+
             }
         }
 
@@ -1054,7 +1074,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             Polyline polyline = mMap.addPolyline(polyOptions);
             polylines.add(polyline);
 
-            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1071,4 +1091,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             polylines.clear();
         }
     }
+
+
 }
+
+
+
+

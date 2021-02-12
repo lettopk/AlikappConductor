@@ -60,8 +60,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/fab_margin"
                 app:backgroundTint="#204051"
-                app:fabCustomSize="50dp"
-                app:maxImageSize="30dp"
+                android:src="@drawable/ic_btnhamburguesa"
+                app:fabCustomSize="40dp"
+                app:maxImageSize="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -93,9 +94,9 @@
                 map:behavior_peekHeight="100dp">
 
                 <LinearLayout
-                    android:background="@android:color/transparent"
+                    android:background="@color/AlikappGris"
                     android:orientation="vertical"
-                    android:backgroundTint="#204051"
+                    android:backgroundTint="@color/AlikappGris"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" >
                     <LinearLayout
@@ -106,17 +107,24 @@
                         android:orientation="horizontal"
                         android:background="@android:color/white"
                         android:visibility="gone">
+
                         <ImageView
                             android:layout_width="100sp"
                             android:layout_height="100sp"
                             android:id="@+id/driverProfileImage"
                             android:src="@mipmap/ic_default_user"
                             android:padding="20sp"/>
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:paddingLeft="40sp">
+                            <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Chat"
+                            android:id="@+id/mChat"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -193,6 +201,7 @@
                             android:id="@+id/Grua"
                             android:textColor="@color/black"
                             android:textSize="18sp"
+                            android:visibility="gone"
                             app:lrb_checkedColor="@color/AlikappBlue"
                             app:lrb_explodeCount="6"
                             app:lrb_inAnimDuration="600"
@@ -236,20 +245,23 @@
             </androidx.core.widget.NestedScrollView>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_gravity="bottom">
+            android:layout_gravity="center">
+
             <Button
-                android:layout_gravity="bottom"
+                android:id="@+id/desplegarCuadro"
                 android:layout_width="70sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/boton_emergencia"
+                android:gravity="center"
                 android:text="E"
                 android:textColor="#e4e3e3"
-                android:background="@drawable/boton_emergencia"
-                android:id="@+id/desplegarCuadro" />
-        </LinearLayout>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
