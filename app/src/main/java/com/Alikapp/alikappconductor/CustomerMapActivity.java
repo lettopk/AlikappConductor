@@ -163,7 +163,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         //mTextViewState.setText("Dragging...");
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        //mTextViewState.setText("expandido");
+                        mDesplegar.setVisibility(View.GONE);
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:
                         mDesplegar.setVisibility(View.VISIBLE);
@@ -213,8 +213,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             }
         });
-
-        //getUserInfo();
 
         mLogout.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
@@ -334,6 +332,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         /*NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);*/
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        isOnService();
     }
 
     private void tiempoEspera() {
@@ -358,7 +357,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private void finRide() {
         requestBol = false;
-        geoQuery.removeAllListeners();
+        try {
+            geoQuery.removeAllListeners();
+        } catch (Exception e){
+
+        }
 
         if (driverFoundID != null){
             DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
@@ -388,6 +391,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverCar.setText("Destination: --");
         mDriverProfileImage.setImageResource(R.mipmap.ic_default_user);
         erasePolylines();
+        servicioTermina();
     }
 
     @Override
@@ -499,6 +503,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             getHasRideEnded();
                             driver_ID = driverFoundID;
                             mRequest.setText("Buscando la Ubicacion de su Mecanico....");
+                            enServicio();
                         } else if (A.equals("No")) {
                             driverFound = false;
                             requestBol = true;
@@ -677,7 +682,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 if(dataSnapshot.exists()){
 
                 }else{
-                    endRide();
+                    try {
+                        endRide();
+                    } catch (Exception e) {
+                        finRide();
+                    }
                 }
             }
 
@@ -689,7 +698,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private void endRide(){
         requestBol = false;
-        geoQuery.removeAllListeners();
+        try {
+            geoQuery.removeAllListeners();
+        } catch (Exception e){
+
+        }
         driverLocationRef.removeEventListener(driverLocationRefListener);
         driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
 
@@ -721,6 +734,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverCar.setText("Destination: --");
         mDriverProfileImage.setImageResource(R.mipmap.ic_default_user);
         erasePolylines();
+        servicioTermina();
     }
 
     /*-------------------------------------------- Map specific functions -----
@@ -1092,6 +1106,107 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
+    private void enServicio() {
+        String conductorId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorId);
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put("EnServicio", "Si");
+        usuarioInfo.put("MecanicoServicio", driverFoundID.toString());
+        usuarioInfo.put("TipoServicio", requestService);
+        enableReference.updateChildren(usuarioInfo);
+    }
+    private Boolean servicioPendiente = false;
+    private void servicioTermina() {
+        String conductorId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorId);
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put("EnServicio", "No");
+        usuarioInfo.put("MecanicoServicio", "");
+        usuarioInfo.put("TipoServicio", "");
+        enableReference.updateChildren(usuarioInfo);
+    }
+
+    private void isOnService() {
+        String conductorId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorId);
+        enableReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && !servicioPendiente) {
+                    try {
+                        java.util.Map<String, Object> map = (java.util.Map<String, Object>) snapshot.getValue();
+                        String A = map.get("EnServicio").toString();
+                        String B = map.get("MecanicoServicio").toString();
+                        String C = map.get("Descripcion").toString();
+                        String D = map.get("TipoServicio").toString();
+                        if(A != null && B != null  && C != null){
+                            DatabaseReference driverReference = FirebaseDatabase.getInstance().getReference().child("driversWorking");
+                            driverReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                                    if (datasnapshot.exists() && datasnapshot.getChildrenCount() > 0) {
+                                        java.util.Map<String, Object> map = (java.util.Map<String, Object>) datasnapshot.getValue();
+                                        if (map.get(B) != null) {
+                                            if(A.equals("Si") && !requestBol){
+                                                System.out.println("entra");
+                                                driverFoundID = B;
+                                                driver_ID = B;
+                                                mDescripcion.setText(C);
+                                                requestBol = true;
+                                                pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                                                requestService = D;
+                                                if(D.equals("Taller")){
+                                                    mRadioGroup.check(R.id.Taller);
+                                                } else if (D.equals("Mecanico")) {
+                                                    mRadioGroup.check(R.id.Mecanico);
+                                                }
+                                                mRequest.setText("Buscando la Ubicacion de su Mecanico....");
+                                                final Handler handler =new Handler();
+                                                handler.postDelayed(new Runnable(){
+                                                    @Override
+                                                    public void run() {
+                                                        getDriverLocation();
+                                                    }
+                                                }, 1000);
+                                                getDriverInfo();
+                                                getHasRideEnded();
+                                                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                                servicioPendiente = true;
+                                            } else {
+                                                Map usuarioInfo = new HashMap();
+                                                usuarioInfo.put("EnServicio", "No");
+                                                usuarioInfo.put("MecanicoServicio", "");
+                                                usuarioInfo.put("TipoServicio", "");
+                                                enableReference.updateChildren(usuarioInfo);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        Map usuarioInfo = new HashMap();
+                        usuarioInfo.put("EnServicio", "No");
+                        usuarioInfo.put("MecanicoServicio", "");
+                        usuarioInfo.put("TipoServicio", "");
+                        enableReference.updateChildren(usuarioInfo);
+                        finRide();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
 }
 
