@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +35,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
@@ -62,6 +67,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -71,11 +78,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.Alikapp.alikappconductor.notifyFirebase.tokeng;
 
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, RoutingListener {
 
@@ -114,6 +127,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private RatingBar mRatingBar;
     private AppBarConfiguration mAppBarConfiguration;
     private BottomSheetBehavior mBottomSheetBehavior;
+    private String token1;
+    private String titulo1;
+    private String detalle1;
+
+    public static String conductorUID;
+    public static String clicknotify="";
 
     @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
@@ -127,6 +146,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mapFragment.getMapAsync(this);
 
         destinationLatLng = new LatLng(0.0,0.0);
+
 
         mDriverInfo = (LinearLayout) findViewById(R.id.driverInfo);
 
@@ -147,6 +167,26 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mRequest.setText("Pedir Ayuda");
         mSettings = (Button) findViewById(R.id.settings);
         mHistory = (Button) findViewById(R.id.history);
+
+        conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+
+                            Toast.makeText(CustomerMapActivity.this,"no se pudo llamar el token",Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        guardartoken(token);
+
+                    }
+                });
+
+
 
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
@@ -335,6 +375,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         isOnService();
     }
 
+    private void guardartoken(String token) {
+        DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        ref.child("token").setValue(token);
+    }
+
     private void tiempoEspera() {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -446,6 +491,28 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     map.put("destinationLat", destinationLatLng.latitude);
                                     map.put("destinationLng", destinationLatLng.longitude);
                                     driverRef.updateChildren(map);
+                                    //llamado a la base de datos por token.
+                                    DatabaseReference tokenmecanico = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
+                                    tokenmecanico.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists() ) {
+                                                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                                                if (map.get("token") != null) {
+                                                    token1 =map.get("token").toString();
+                                                    titulo1 ="Conductor en emergencia mecanica";
+                                                    detalle1 = "Hechale una mano a este conductor";
+
+                                                    if(token1 != null){
+                                                        notificacionServicio();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                        }
+                                    });
 
                                     getConfirmacion();
 
@@ -547,6 +614,40 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             e.printStackTrace();
         }
     }
+    private void notificacionServicio() {
+
+        RequestQueue myrequest = Volley.newRequestQueue(getApplicationContext());
+        JSONObject json = new JSONObject();
+        try {
+            String token = token1;
+            json.put("to",token);
+            JSONObject notificacion = new JSONObject();
+            notificacion.put("titulo",titulo1);
+            notificacion.put("detalle",detalle1);
+            notificacion.put("info","servicio");
+
+            json.put("data",notificacion);
+
+            String URL = "https://fcm.googleapis.com/fcm/send";
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,URL,json,null,null){
+
+                @Override
+                public Map<String, String> getHeaders()  {
+                    Map<String,String> header = new HashMap<>();
+
+                    header.put("content-type","application/json");
+                    header.put("authorization","key=AAAAgx1G4i8:APA91bGtUEgaCzuxbqqh33LzQL7Lp0WNatPWJCOQFImvTWZMoverV7huSCHpaYTqW0IPMBF876wqrKyUzokjNhYZcOYeG8dgHidJqZxYblF3OjlY_p19oAZglksDsrXSeJN7sOSaMhYV");
+                    return header;
+                }
+            };
+            myrequest.add(request);
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+    }
+
 
     /*-------------------------------------------- Map specific functions -----
     |  Function(s) getDriverLocation
@@ -782,7 +883,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-
             }else{
                 checkLocationPermission();
             }
@@ -842,25 +942,25 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     |
     *-------------------------------------------------------------------*/
     private void checkLocationPermission() {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                new android.app.AlertDialog.Builder(this)
-                        .setTitle("give permission")
-                        .setMessage("give permission message")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                            }
-                        })
-                        .create()
-                        .show();
-            }
-            else{
-                ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    new android.app.AlertDialog.Builder(this)
+                            .setTitle("give permission")
+                            .setMessage("give permission message")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                                }
+                            })
+                            .create()
+                            .show();
+                } else {
+                    ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                }
             }
         }
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
@@ -879,9 +979,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         }
     }
-
-
-
 
     boolean getDriversAroundStarted = false;
     java.util.List<Marker> markers = new ArrayList<Marker>();
