@@ -20,6 +20,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,6 +39,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.Alikapp.alikappconductor.CustomerMapActivity.clicknotify;
 import static com.Alikapp.alikappconductor.CustomerMapActivity.driver_ID;
 import static java.nio.file.Paths.get;
 
@@ -58,6 +69,9 @@ public class Chat extends AppCompatActivity {
     private String telefonoLlamar;
     private String conductorID;
     private  String nombreConductor;
+    private  String token2;
+    private  String titulo2;
+    private  String detalle2;
 
     private static final int PHOTO_SEND =1;
     public static final String NODO_MENSAJES = "mensajes";
@@ -109,6 +123,29 @@ public class Chat extends AppCompatActivity {
             public void onClick(View v) {//enviado de mensaje
                 databaseReference.push().setValue(new MensajeEnviar(txtMensaje.getText().toString(),nombreConductor.toString(),"","1", ServerValue.TIMESTAMP));
                 txtMensaje.setText("");
+
+                DatabaseReference tokenmecanico = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_ID);
+                tokenmecanico.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists() ) {
+                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                            if (map.get("token") != null) {
+                                token2 =map.get("token").toString();
+                                titulo2 = nombreConductor;
+                                detalle2 = "Te ha enviado un mensaje";
+
+                                if(token2 != null){
+                                    notificacionChat();
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
             }
         });
 
@@ -255,5 +292,38 @@ public class Chat extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+
+    private void notificacionChat() {
+        RequestQueue myrequest = Volley.newRequestQueue(getApplicationContext());
+        JSONObject json = new JSONObject();
+        try {
+            String token = token2;
+            json.put("to",token);
+            JSONObject notificacion = new JSONObject();
+            notificacion.put("titulo",titulo2);
+            notificacion.put("detalle",detalle2);
+            notificacion.put("info","chat");
+
+            json.put("data",notificacion);
+
+            String URL = "https://fcm.googleapis.com/fcm/send";
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,URL,json,null,null){
+
+                @Override
+                public Map<String, String> getHeaders()  {
+                    Map<String,String> header = new HashMap<>();
+
+                    header.put("content-type","application/json");
+                    header.put("authorization","key=AAAAgx1G4i8:APA91bGtUEgaCzuxbqqh33LzQL7Lp0WNatPWJCOQFImvTWZMoverV7huSCHpaYTqW0IPMBF876wqrKyUzokjNhYZcOYeG8dgHidJqZxYblF3OjlY_p19oAZglksDsrXSeJN7sOSaMhYV");
+                    return header;
+                }
+            };
+            myrequest.add(request);
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 }
