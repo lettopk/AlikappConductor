@@ -130,6 +130,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private String token1;
     private String titulo1;
     private String detalle1;
+    private String info1;
 
     public static String conductorUID;
     public static String clicknotify="";
@@ -502,6 +503,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                     token1 =map.get("token").toString();
                                                     titulo1 ="Conductor en emergencia mecanica";
                                                     detalle1 = "Hechale una mano a este conductor";
+                                                    info1 ="pedirservicio";
 
                                                     if(token1 != null){
                                                         notificacionServicio();
@@ -624,7 +626,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             JSONObject notificacion = new JSONObject();
             notificacion.put("titulo",titulo1);
             notificacion.put("detalle",detalle1);
-            notificacion.put("info","servicio");
+            notificacion.put("info",info1);
 
             json.put("data",notificacion);
 
