@@ -37,7 +37,7 @@ import okhttp3.Response;
 
 
 public class HistoryActivity extends AppCompatActivity {
-    private String customerOrDriver, userId;
+    private String customerOrDriver, userId,nombreHistory;
 
     private RecyclerView mHistoryRecyclerView;
     private RecyclerView.Adapter mHistoryAdapter;
@@ -118,6 +118,9 @@ public class HistoryActivity extends AppCompatActivity {
                     if(dataSnapshot.child("timestamp").getValue() != null){
                         timestamp = Long.valueOf(dataSnapshot.child("timestamp").getValue().toString());
                     }
+                    if (dataSnapshot.child("nameMecanico").getValue() != null) {
+                        nombreHistory = (dataSnapshot.child("nameMecanico").getValue().toString());
+                    }
 
                     if(dataSnapshot.child("customerPaid").getValue() != null && dataSnapshot.child("driverPaidOut").getValue() == null){
                         if(dataSnapshot.child("distance").getValue() != null){
@@ -128,7 +131,7 @@ public class HistoryActivity extends AppCompatActivity {
                     }
 
 
-                    HistoryObject obj = new HistoryObject(rideId, getDate(timestamp));
+                    HistoryObject obj = new HistoryObject(rideId, getDate(timestamp),nombreHistory);
                     resultsHistory.add(obj);
                     mHistoryAdapter.notifyDataSetChanged();
                 }
