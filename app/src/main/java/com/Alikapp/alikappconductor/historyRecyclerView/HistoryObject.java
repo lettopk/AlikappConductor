@@ -7,11 +7,16 @@ package com.Alikapp.alikappconductor.historyRecyclerView;
 public class HistoryObject {
     private String rideId;
     private String time;
+    private  String nombreHistory;
 
-    public HistoryObject(String rideId, String time){
+    public HistoryObject(String rideId, String time,String nombreHistory){
+        this.nombreHistory=nombreHistory;
         this.rideId = rideId;
         this.time = time;
     }
+
+    public String getNombreHistory() { return nombreHistory; }
+    public void setNombreHistory(String nombreHistory) { this.nombreHistory = nombreHistory; }
 
     public String getRideId(){return rideId;}
     public void setRideId(String rideId) {
