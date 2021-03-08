@@ -980,8 +980,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         }
 
         mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-        mMap.setMyLocationEnabled(true);
-
+        try {
+            mMap.setMyLocationEnabled(true);
+        } catch (Exception e) {
+            checkLocationPermission();
+        }
 
         float zoom = 11;
 
