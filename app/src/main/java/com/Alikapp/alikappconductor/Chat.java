@@ -24,6 +24,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -67,6 +68,8 @@ public class Chat extends AppCompatActivity {
     private StorageReference storageReference;
     private String NOMBRE_USUARIO;
     private String telefonoLlamar;
+    private String mperfilUrl;
+    private String mperfilConducUrl;
     private String conductorID;
     private  String nombreConductor;
     private  String token2;
@@ -121,7 +124,7 @@ public class Chat extends AppCompatActivity {
         btnEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//enviado de mensaje
-                databaseReference.push().setValue(new MensajeEnviar(txtMensaje.getText().toString(),nombreConductor.toString(),"","1", ServerValue.TIMESTAMP));
+                databaseReference.push().setValue(new MensajeEnviar(txtMensaje.getText().toString(),nombreConductor.toString(),mperfilConducUrl,"1", ServerValue.TIMESTAMP));
                 txtMensaje.setText("");
 
                 DatabaseReference tokenmecanico = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_ID);
@@ -152,7 +155,7 @@ public class Chat extends AppCompatActivity {
         btnEnviarFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i =new Intent(Intent.ACTION_GET_CONTENT);
+                Intent i =new Intent(Intent.ACTION_PICK);
                 i.setType("image/jpeg");
                 i.putExtra(Intent.EXTRA_LOCAL_ONLY,true);
                 startActivityForResult(Intent.createChooser(i,"selecciona una imagen"),PHOTO_SEND);
@@ -222,7 +225,7 @@ public class Chat extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()){
                         Uri uri =task.getResult();
-                        MensajeEnviar m = new MensajeEnviar(nombreConductor+" te ha enviado una foto",uri.toString(), nombreConductor.toString(),"","2",ServerValue.TIMESTAMP);
+                        MensajeEnviar m = new MensajeEnviar(nombreConductor+" te ha enviado una foto",uri.toString(), nombreConductor.toString(),mperfilConducUrl,"2",ServerValue.TIMESTAMP);
                         databaseReference.push().setValue(m);
                     }
                 }
@@ -269,6 +272,10 @@ public class Chat extends AppCompatActivity {
                         if(map.get("phone")!=null){
                             telefonoLlamar = map.get("phone").toString();
                         }
+                        if(map.get("profileImageUrl")!=null){
+                            mperfilUrl = map.get("profileImageUrl").toString();
+                            Glide.with(getApplication()).load(mperfilUrl).into(fotoPerfil);
+                        }
                     }
                 }
                 @Override
@@ -284,6 +291,9 @@ public class Chat extends AppCompatActivity {
                     if (map.get("name") != null) {
                         nombreConductor = map.get("name").toString();
                         getnombreconductor = nombreConductor;
+                    }
+                    if(map.get("profileImageUrl")!=null){
+                        mperfilConducUrl = map.get("profileImageUrl").toString();
                     }
                 }
             }
