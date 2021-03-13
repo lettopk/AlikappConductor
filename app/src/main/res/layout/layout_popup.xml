@@ -1,21 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:gravity="center">
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:gravity="center"
+    tools:ignore="NamespaceTypo">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardBackgroundColor="#464646"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="288dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="115dp"
+        app:cardBackgroundColor="#464646"
+        app:cardCornerRadius="20dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="350dp"
+            android:layout_marginTop="15dp"
+            android:elevation="5dp"
+            android:id="@+id/cerrar"
+            android:src="@drawable/ic_baseline_close_24" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:text="Que Ayuda Necesitas?"
+            android:textColor="@color/AlikappGris"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,9 +54,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="25dp"
-                android:layout_marginBottom="25dp">
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="25dp"
+                android:orientation="vertical">
 
                 <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
                     android:id="@+id/buttonGroup_lordOfTheRings"
@@ -36,7 +65,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
                     android:background="@color/white"
@@ -56,6 +85,7 @@
                     app:rippleColor="@color/purple_700"
                     app:selectedBackground="@color/teal_200">
 
+
                     <com.addisonelliott.segmentedbutton.SegmentedButton
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -67,8 +97,8 @@
                         app:drawableGravity="top"
                         app:selectedTextColor="@color/white"
                         app:text="Mecanico"
+                        app:textSize="18dp"
                         app:textColor="@color/black" />
-
 
                     <com.addisonelliott.segmentedbutton.SegmentedButton
                         android:layout_width="0dp"
@@ -79,6 +109,7 @@
                         app:drawableGravity="top"
                         app:selectedTextColor="@color/white"
                         app:text="Taller"
+                        app:textSize="18dp"
                         app:textColor="@color/black" />
 
 
@@ -98,77 +129,85 @@
 
                 <LinearLayout
 
-                    android:orientation="vertical"
-                    android:backgroundTint="@color/AlikappGris"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/AlikappGris"
+                    android:orientation="vertical">
+
                     <LinearLayout
+                        android:id="@+id/driverInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/driverInfo"
                         android:layout_gravity="bottom"
-                        android:orientation="horizontal"
                         android:background="@android:color/white"
+                        android:orientation="horizontal"
                         android:visibility="gone">
 
                         <ImageView
+                            android:id="@+id/driverProfileImage"
                             android:layout_width="100sp"
                             android:layout_height="100sp"
-                            android:id="@+id/driverProfileImage"
-                            android:src="@mipmap/ic_default_user"
-                            android:padding="20sp"/>
+                            android:padding="20sp"
+                            android:src="@mipmap/ic_default_user" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
                             android:background="#464646"
+                            android:orientation="vertical"
                             android:paddingLeft="40sp">
+
                             <Button
+                                android:id="@+id/mChat"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Chat"
-                                android:id="@+id/mChat"/>
+                                android:text="Chat" />
+
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
                                 android:id="@+id/driverName"
-                                android:paddingBottom="10sp"
-                                android:paddingTop="20sp"/>
-                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingTop="20sp"
+                                android:paddingBottom="10sp" />
+
+                            <TextView
                                 android:id="@+id/driverPhone"
-                                android:paddingBottom="10sp"
-                                android:paddingTop="20sp"/>
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="20sp"
+                                android:paddingBottom="10sp" />
+
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
                                 android:id="@+id/driverCar"
-                                android:paddingBottom="10sp"
-                                android:paddingTop="20sp"/>
-                            <RatingBar
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingTop="20sp"
+                                android:paddingBottom="10sp" />
+
+                            <RatingBar
                                 android:id="@+id/ratingBar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:numStars="5"
-                                android:stepSize="0.1"/>
+                                android:stepSize="0.1" />
                         </LinearLayout>
                     </LinearLayout>
+
                     <RadioGroup
+                        android:id="@+id/radioGroup"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/radioGroup"
                         android:orientation="horizontal"
+                        android:visibility="invisible"
 
                         >
 
                         <me.omidh.liquidradiobutton.LiquidRadioButton
+                            android:id="@+id/Mecanico"
                             android:layout_width="134dp"
                             android:layout_height="wrap_content"
                             android:text="@string/mecanico"
-                            android:id="@+id/Mecanico"
                             android:textColor="@color/black"
                             android:textSize="20sp"
                             app:lrb_checkedColor="@color/AlikappBlue"
@@ -182,10 +221,10 @@
                             app:lrb_unCheckedColor="@color/black" />
 
                         <me.omidh.liquidradiobutton.LiquidRadioButton
+                            android:id="@+id/Taller"
                             android:layout_width="134dp"
                             android:layout_height="wrap_content"
                             android:text="@string/taller"
-                            android:id="@+id/Taller"
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             app:lrb_checkedColor="@color/AlikappBlue"
@@ -196,13 +235,13 @@
                             app:lrb_outterPadding="4dp"
                             app:lrb_strokeRadius="18dp"
                             app:lrb_strokeWidth="5dp"
-                            app:lrb_unCheckedColor="@color/black"
-                            />
+                            app:lrb_unCheckedColor="@color/black" />
+
                         <me.omidh.liquidradiobutton.LiquidRadioButton
+                            android:id="@+id/Grua"
                             android:layout_width="134dp"
                             android:layout_height="wrap_content"
                             android:text="@string/Grua"
-                            android:id="@+id/Grua"
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             android:visibility="gone"
@@ -214,41 +253,61 @@
                             app:lrb_outterPadding="4dp"
                             app:lrb_strokeRadius="18dp"
                             app:lrb_strokeWidth="5dp"
-                            app:lrb_unCheckedColor="@color/black"
-                            />
-
+                            app:lrb_unCheckedColor="@color/black" />
 
 
                     </RadioGroup>
 
-                    <Button
-                        android:layout_gravity="bottom"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="LLamar mecanico"
-                        android:textColor="#e4e3e3"
-                        android:background="@drawable/boton_emergencia"
-                        android:id="@+id/request"/>
+                        android:layout_height="wrap_content">
+
+                        <com.skyfishjy.library.RippleBackground
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/help"
+                            map:rb_color="@color/AlikappBlue"
+                            map:rb_radius="13dp"
+                            map:rb_rippleAmount="4"
+                            map:rb_duration="3000"
+                            map:rb_scale="8">
+
+                            <Button
+                                android:id="@+id/request"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="visible"
+                                android:outlineSpotShadowColor="@color/AlikappRed"
+                                android:text="E"
+                                android:background="@drawable/boton_confirmacion"
+                                android:backgroundTint="@color/AlikappBlue"
+                                android:textColor="@color/AlikappGris"
+                                android:layout_centerInParent="true"
+                                />
+                        </com.skyfishjy.library.RippleBackground>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
                     <TextView
+                        android:id="@+id/longDescrip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/longDescrip"
-                        android:textColor="@color/AlikappGris"
-                        android:text=""/>
+                        android:text=""
+                        android:textColor="@color/AlikappGris" />
 
                     <EditText
                         android:id="@+id/descripcion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLength="250"
+                        android:layout_weight="1"
                         android:background="#464646"
                         android:hint="Describe la situación, maximo 250 Caracteres"
-                        android:textColorHint="@color/AlikappGris"
-                        android:layout_weight="1"/>
+                        android:maxLength="250"
+                        android:textColorHint="@color/AlikappGris" />
 
                 </LinearLayout>
-
 
 
             </LinearLayout>

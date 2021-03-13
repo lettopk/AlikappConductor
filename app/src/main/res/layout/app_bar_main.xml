@@ -167,20 +167,36 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_gravity="center">
 
-            <Button
-                android:id="@+id/desplegarCuadro"
-                android:layout_width="70sp"
+            <com.skyfishjy.library.RippleBackground
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/boton_emergencia"
-                android:gravity="center"
-                android:text="E"
-                android:textColor="#e4e3e3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:id="@+id/content"
+                map:rb_color="@color/AlikappRed"
+                map:rb_radius="13dp"
+                map:rb_rippleAmount="4"
+                map:rb_duration="3000"
+                map:rb_scale="8">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/desplegarCuadro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:rippleColor="@color/AlikappBlue"
+                    android:outlineSpotShadowColor="@color/AlikappRed"
+                    android:text="E"
+                    android:background="@color/AlikappRed"
+                    android:backgroundTint="@color/AlikappRed"
+
+                    android:layout_centerInParent="true"
+                    />
+            </com.skyfishjy.library.RippleBackground>
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
