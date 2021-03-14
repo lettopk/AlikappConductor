@@ -406,7 +406,9 @@ public class CustomerSettingsActivity extends AppCompatActivity {
 
                     marca = (String) parts.get(i + 4);
                 }
+
                 if (parts.get(i).toString().contains("LINEA") || parts.get(i).toString().contains("LÍNEA")) {
+
 
                     linea = (String) parts.get(i + 4);
                 }
