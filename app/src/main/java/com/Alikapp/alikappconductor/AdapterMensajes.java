@@ -46,6 +46,7 @@ List<MensajeRecibir> listMensaje = new ArrayList<>();
     public void onBindViewHolder(@NonNull HolderMensajes holder, int position) {
         holder.getNombre().setText(listMensaje.get(position).getNombre());
         holder.getMensaje().setText(listMensaje.get(position).getMensaje());
+        Glide.with(c).load(listMensaje.get(position).getFotoperfil()).into(holder.getFotoMensajePerfil());
 
         if (listMensaje.get(position).getType_mensaje().equals("2")) {
             holder.getFotoMensaje().setVisibility(View.VISIBLE);
