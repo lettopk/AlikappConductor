@@ -12,9 +12,13 @@
     <string name="menu_history">History</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="Buscando">Buscando Mecanico</string>
 
     <string name="action_settings">Settings</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
+    <string name="taller">Taller</string>
+    <string name="mecanico">Mecanico</string>
+    <string name="Grua">Grua</string>
 </resources>

@@ -15,12 +15,14 @@ public class HistoryViewHolders extends RecyclerView.ViewHolder implements andro
 
     public android.widget.TextView rideId;
     public android.widget.TextView time;
+    public android.widget.TextView nombreHistory;
     public HistoryViewHolders(android.view.View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
 
         rideId = (android.widget.TextView) itemView.findViewById(R.id.rideId);
         time = (android.widget.TextView) itemView.findViewById(R.id.time);
+        nombreHistory = (android.widget.TextView) itemView.findViewById(R.id.nombreHistory);
     }
 
 

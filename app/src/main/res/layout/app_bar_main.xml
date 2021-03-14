@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     tools:context=".CustomerMapActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -59,28 +60,17 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/fab_margin"
                 app:backgroundTint="#204051"
-                app:fabCustomSize="50dp"
-                app:maxImageSize="30dp"
+                android:src="@drawable/ic_btnhamburguesa"
+                app:fabCustomSize="40dp"
+                app:maxImageSize="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
-            <androidx.cardview.widget.CardView
-                android:layout_below="@+id/buttons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20sp">
-                <fragment
-                    android:id="@+id/place_autocomplete_fragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-                    />
-            </androidx.cardview.widget.CardView>
+
         </LinearLayout>
 
     </RelativeLayout>
-
 
 
     <LinearLayout
@@ -88,86 +78,190 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="bottom">
-        <LinearLayout
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.labseon.alikapp.Activity_mapa">
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/bottom_sheet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#204051"
+                map:layout_behavior="@string/bottom_sheet_behavior"
+                map:behavior_hideable= "true"
+                map:behavior_peekHeight="100dp">
+
+                <LinearLayout
+                    android:background="@color/AlikappGris"
+                    android:orientation="vertical"
+                    android:backgroundTint="@color/AlikappGris"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/driverInfo"
+                        android:layout_gravity="bottom"
+                        android:orientation="horizontal"
+                        android:background="@android:color/white"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="100sp"
+                            android:layout_height="100sp"
+                            android:id="@+id/driverProfileImage"
+                            android:src="@mipmap/ic_default_user"
+                            android:padding="20sp"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingLeft="40sp">
+                            <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Chat"
+                            android:id="@+id/mChat"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/driverName"
+                                android:paddingBottom="10sp"
+                                android:paddingTop="20sp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/driverPhone"
+                                android:paddingBottom="10sp"
+                                android:paddingTop="20sp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/driverCar"
+                                android:paddingBottom="10sp"
+                                android:paddingTop="20sp"/>
+                            <RatingBar
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ratingBar"
+                                android:layout_gravity="center"
+                                android:numStars="5"
+                                android:stepSize="0.1"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioGroup"
+                        android:orientation="horizontal"
+
+                        >
+
+                        <me.omidh.liquidradiobutton.LiquidRadioButton
+                            android:layout_width="134dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mecanico"
+                            android:id="@+id/Mecanico"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            app:lrb_checkedColor="@color/AlikappBlue"
+                            app:lrb_explodeCount="6"
+                            app:lrb_inAnimDuration="600"
+                            app:lrb_innerCircleRadius="6dp"
+                            app:lrb_outAnimDuration="600"
+                            app:lrb_outterPadding="4dp"
+                            app:lrb_strokeRadius="18dp"
+                            app:lrb_strokeWidth="5dp"
+                            app:lrb_unCheckedColor="@color/black" />
+
+                        <me.omidh.liquidradiobutton.LiquidRadioButton
+                            android:layout_width="134dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/taller"
+                            android:id="@+id/Taller"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            app:lrb_checkedColor="@color/AlikappBlue"
+                            app:lrb_explodeCount="6"
+                            app:lrb_inAnimDuration="600"
+                            app:lrb_innerCircleRadius="6dp"
+                            app:lrb_outAnimDuration="600"
+                            app:lrb_outterPadding="4dp"
+                            app:lrb_strokeRadius="18dp"
+                            app:lrb_strokeWidth="5dp"
+                            app:lrb_unCheckedColor="@color/black"
+                            />
+                        <me.omidh.liquidradiobutton.LiquidRadioButton
+                            android:layout_width="134dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/Grua"
+                            android:id="@+id/Grua"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:visibility="gone"
+                            app:lrb_checkedColor="@color/AlikappBlue"
+                            app:lrb_explodeCount="6"
+                            app:lrb_inAnimDuration="600"
+                            app:lrb_innerCircleRadius="6dp"
+                            app:lrb_outAnimDuration="600"
+                            app:lrb_outterPadding="4dp"
+                            app:lrb_strokeRadius="18dp"
+                            app:lrb_strokeWidth="5dp"
+                            app:lrb_unCheckedColor="@color/black"
+                            />
+
+
+
+                    </RadioGroup>
+
+                    <Button
+                        android:layout_gravity="bottom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="LLamar mecanico"
+                        android:textColor="#e4e3e3"
+                        android:background="@drawable/boton_emergencia"
+                        android:id="@+id/request"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/longDescrip"
+                        android:text="250"/>
+
+                    <EditText
+                        android:id="@+id/descripcion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="250"
+                        android:hint="Describe la situación"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/driverInfo"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal"
-            android:background="@android:color/white"
-            android:visibility="gone">
-            <ImageView
-                android:layout_width="100sp"
-                android:layout_height="100sp"
-                android:id="@+id/driverProfileImage"
-                android:src="@mipmap/ic_default_user"
-                android:padding="20sp"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="40sp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/driverName"
-                    android:paddingBottom="10sp"
-                    android:paddingTop="20sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/driverPhone"
-                    android:paddingBottom="10sp"
-                    android:paddingTop="20sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/driverCar"
-                    android:paddingBottom="10sp"
-                    android:paddingTop="20sp"/>
-                <RatingBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/ratingBar"
-                    android:layout_gravity="center"
-                    android:numStars="5"
-                    android:stepSize="0.1"/>
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:background="@android:color/white"
             android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/radioGroup"
-                android:orientation="horizontal">
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="UberX"
-                    android:id="@+id/UberX"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="UberBlack"
-                    android:id="@+id/UberBlack"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="UberXl"
-                    android:id="@+id/UberXl"/>
-            </RadioGroup>
+            android:layout_gravity="center">
 
             <Button
-                android:layout_gravity="bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="call Uber"
-                android:id="@+id/request"/>
-        </LinearLayout>
+                android:id="@+id/desplegarCuadro"
+                android:layout_width="70sp"
+                android:layout_height="match_parent"
+                android:background="@drawable/boton_emergencia"
+                android:gravity="center"
+                android:text="E"
+                android:textColor="#e4e3e3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

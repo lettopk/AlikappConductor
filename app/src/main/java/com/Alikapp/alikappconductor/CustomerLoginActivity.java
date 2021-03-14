@@ -4,6 +4,8 @@ import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,12 +16,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.royrodriguez.transitionbutton.TransitionButton;
+
+import java.util.logging.LogRecord;
 
 public class CustomerLoginActivity extends AppCompatActivity {
 
     private EditText mEmail, mPassword;
     private Button mLogin, mRegistration;
-
+    private TransitionButton transitionButton;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     @Override
@@ -45,45 +50,44 @@ public class CustomerLoginActivity extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
 
-        mLogin = (Button) findViewById(R.id.login);
-        mRegistration = (Button) findViewById(R.id.registration);
-
-        mRegistration.setOnClickListener(new android.view.View.OnClickListener() {
+        transitionButton = findViewById(R.id.logint);
+        transitionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(android.view.View v) {
-                final String email = mEmail.getText().toString();
-                final String password = mPassword.getText().toString();
-                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(CustomerLoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@androidx.annotation.NonNull com.google.android.gms.tasks.Task<AuthResult> task) {
-                        if(!task.isSuccessful()){
-                            Toast.makeText(CustomerLoginActivity.this, "sign up error", Toast.LENGTH_SHORT).show();
-                        }else{
-                            String user_id = mAuth.getCurrentUser().getUid();
-                            DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(user_id);
-                            current_user_db.setValue(true);
+            public void onClick(View v) {
+                // Start the loading animation when the user tap the button
+                transitionButton.startAnimation();
+                try {
+                    final String email = mEmail.getText().toString();
+                    final String password = mPassword.getText().toString();
+                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(CustomerLoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@androidx.annotation.NonNull com.google.android.gms.tasks.Task<AuthResult> task) {
+                            if(!task.isSuccessful()){
+                                transitionButton.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
+                                Toast.makeText(CustomerLoginActivity.this, "sign in error", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                }catch (Exception e){
+                    transitionButton.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
+                    Toast.makeText(CustomerLoginActivity.this, "Ingrese un usuario y contraseña", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-        mLogin.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View v) {
-                final String email = mEmail.getText().toString();
-                final String password = mPassword.getText().toString();
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(CustomerLoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@androidx.annotation.NonNull com.google.android.gms.tasks.Task<AuthResult> task) {
-                        if(!task.isSuccessful()){
-                            Toast.makeText(CustomerLoginActivity.this, "sign in error", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
 
+        //ir a pagina de registro mediante boton registro
+        mRegistration =(Button)findViewById(R.id.registration);
+        mRegistration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent registrop = new Intent(CustomerLoginActivity.this, CostumerRegistroActivity.class);
+                startActivity(registrop);
             }
         });
+
+
     }
 
 
@@ -91,10 +95,15 @@ public class CustomerLoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(firebaseAuthListener);
+
     }
     @Override
     protected void onStop() {
         super.onStop();
         mAuth.removeAuthStateListener(firebaseAuthListener);
+
+
+
     }
+
 }
