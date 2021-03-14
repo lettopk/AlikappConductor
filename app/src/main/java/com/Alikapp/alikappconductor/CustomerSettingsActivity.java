@@ -52,9 +52,9 @@ import java.util.Map;
 
 public class CustomerSettingsActivity extends AppCompatActivity {
 
-    private EditText mNameField, mPhoneField, mCarField, mCedulaCiudadania,mNumPlaca, mvehiculo;
+    private EditText mNameField, mPhoneField, mCedulaCiudadania,mNumPlaca, mvehiculo;
 
-    private Button mBack, mConfirm, mVerificarCedula, mVerificarPasado, mVerificarPropiedad;
+    private Button mBack, mConfirm;
 
     private ImageView mProfileImage, mCedulaImage,mPasadoJudicialImage, mTarjetaPropiedad;
 
@@ -112,9 +112,6 @@ public class CustomerSettingsActivity extends AppCompatActivity {
 
         mBack = (Button) findViewById(R.id.back);
         mConfirm = (Button) findViewById(R.id.confirm);
-        mVerificarCedula = findViewById(R.id.btnVerificarCedula);
-        mVerificarPropiedad = findViewById(R.id.btnVerificarPropiedad);
-        mVerificarPasado = findViewById(R.id.btnVerificarPasado);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -176,52 +173,6 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             }
         });
 
-        mVerificarCedula.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCedulaImage.getImageMatrix().hashCode() != R.mipmap.ic_default_user) {
-                    try {
-                        runTextRecognation("Cedula", resultUriCedula);
-                        mVerificarCedula.setEnabled(false);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(CustomerSettingsActivity.this, "No se ha cargado imagen de Cédula", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        mVerificarPasado.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (resultUriPasado != null) {
-                    try {
-                        runTextRecognation("Pasado", resultUriPasado);
-                        mVerificarPasado.setEnabled(false);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(CustomerSettingsActivity.this, "No se ha cargado imagen de Cédula", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        mVerificarPropiedad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (resultUriPropiedad != null) {
-                    try {
-                        runTextRecognation("Propiedad", resultUriPropiedad);
-                        mVerificarPropiedad.setEnabled(false);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(CustomerSettingsActivity.this, "No se ha cargado imagen de Cédula", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
         mConfirm.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
@@ -290,8 +241,6 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         Boolean boolPasado = false;
         List<FirebaseVisionText.TextBlock> blocks = texts.getTextBlocks();
         if(blocks.size() == 0){
-            mVerificarCedula.setEnabled(true);
-            mVerificarPropiedad.setEnabled(true);
             Toast.makeText(CustomerSettingsActivity.this, "No se pudo identificar la imagen, intente nuevamente", Toast.LENGTH_SHORT).show();
             Toast.makeText(CustomerSettingsActivity.this, "La imagen debe encontrarse al derecho y visualizarse con claridad", Toast.LENGTH_SHORT).show();
         } else {
@@ -342,12 +291,12 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                 }
             }
             System.out.println(parts);
-            System.out.println(boolCedula1.toString() + boolCedula2.toString() + boolCedula3.toString());
+            System.out.println(boolPasado);
             if (consulta.equals("Cedula")){
                 verificarCedula(boolCedula1, boolCedula2, boolCedula3, parts);
             }else if (consulta.equals("Pasado")) {
                 verificarPasado(boolPasado, parts);
-            } else if (consulta.equals("Propiedad")) {
+            } else if (consulta.equals("propiedad")) {
                 verificarPropiedad(boolPasado, parts);
             }
         }
@@ -365,18 +314,15 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                 }
             }
             if (!isCorrect) {
-                mVerificarPasado.setEnabled(true);
                 Toast.makeText(CustomerSettingsActivity.this, "El certificado no corresponde con el número de cédula", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(CustomerSettingsActivity.this, "correcto", Toast.LENGTH_SHORT).show();
                 mPasadoJudicialImage.setEnabled(false);
-                mVerificarCedula.setEnabled(false);
                 mCedulaImage.setEnabled(false);
                 isPasado = true;
             }
 
         }else {
-            mVerificarPasado.setEnabled(true);
             Toast.makeText(CustomerSettingsActivity.this, "La imagen cargada no Corresponde a un certificado de pasado judicial, intente con una nueva imagen", Toast.LENGTH_SHORT).show();
 
         }
@@ -433,14 +379,11 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             }
             mNameField.setEnabled(true);
             mPhoneField.setEnabled(true);
-            mCarField.setEnabled(true);
-            mVerificarCedula.setEnabled(true);
             isCedula = true;
             isPasado = false;
             mPasadoJudicialImage.setImageResource(R.mipmap.ic_default_user);
             Toast.makeText(CustomerSettingsActivity.this, "correcto", Toast.LENGTH_SHORT).show();
         } else {
-            mVerificarCedula.setEnabled(true);
             Toast.makeText(CustomerSettingsActivity.this, "La imagen cargada no Corresponde a una cédula de ciudadanía colombiana, intente con una nueva imagen", Toast.LENGTH_SHORT).show();
         }
         checkDocumentos();
@@ -457,24 +400,24 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             for (int i = 0; i < parts.size(); i++) {
                 if (parts.get(i).toString().contains("PLACA")) {
 
-                    placa = (String) parts.get(i + 1);
+                    placa = (String) parts.get(i + 4);
                 }
                 if (parts.get(i).toString().contains("MARCA")) {
 
-                    marca = (String) parts.get(i + 5);
+                    marca = (String) parts.get(i + 4);
                 }
-                if (parts.get(i).toString().contains("LINEA")) {
+                if (parts.get(i).toString().contains("LINEA") || parts.get(i).toString().contains("LÍNEA")) {
 
-                    linea = (String) parts.get(i + 5);
+                    linea = (String) parts.get(i + 4);
                 }
                 if (parts.get(i).toString().contains("MODELO")) {
 
-                    modelo = (String) parts.get(i + 5);
+                    modelo = (String) parts.get(i + 4);
                 }
 
             }
             mNumeroPlaca= placa;
-            mVehiculoTotal=marca+linea+modelo;
+            mVehiculoTotal=marca+" "+linea+" "+modelo;
 
             mNumPlaca.setText(mNumeroPlaca);
             mvehiculo.setText(mVehiculoTotal);
@@ -485,7 +428,6 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             isPropiedad = true;
 
         }else {
-            mVerificarPropiedad.setEnabled(true);
             Toast.makeText(CustomerSettingsActivity.this, "La imagen cargada no Corresponde a una tarjeta de propiedad, intente con una nueva imagen", Toast.LENGTH_SHORT).show();
 
         }

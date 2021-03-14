@@ -41,11 +41,6 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="20sp"
                     android:src="@mipmap/ic_default_user" />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Verificar"
-                    android:id="@+id/btnVerificarCedula"/>
 
             </LinearLayout>
             <TextView
@@ -64,11 +59,6 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="20sp"
                     android:src="@mipmap/ic_default_user" />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Verificar"
-                    android:id="@+id/btnVerificarPasado"/>
 
             </LinearLayout>
             <TextView
@@ -87,11 +77,6 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="20sp"
                     android:src="@mipmap/ic_default_user" />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Verificar"
-                    android:id="@+id/btnVerificarPropiedad"/>
 
             </LinearLayout>
 
