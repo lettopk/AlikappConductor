@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.content.ContextCompat;
@@ -152,6 +153,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private String info1;
 
     private RippleBackground rippleBackground, rippleBackgroundhelp;
+    private ConstraintLayout constraintLayout;
 
     public static String conductorUID;
 
@@ -259,9 +261,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         mDesplegar.setVisibility(View.GONE);
+                        rippleBackground.setVisibility(View.GONE);
+                        constraintLayout.setVisibility(View.GONE);
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:
                         mDesplegar.setVisibility(View.VISIBLE);
+                        rippleBackground.setVisibility(View.VISIBLE);
+                        constraintLayout.setVisibility(View.VISIBLE);
                         break;
                     case BottomSheetBehavior.STATE_SETTLING:
                         //mTextViewState.setText("settling...");
@@ -277,8 +283,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-        final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
+        rippleBackground = (RippleBackground)findViewById(R.id.content);
         rippleBackground.startRippleAnimation();
+        constraintLayout = findViewById(R.id.contrainLayout);
+        rippleBackgroundhelp = (RippleBackground) myDialog.findViewById(R.id.help);
+        rippleBackgroundhelp.stopRippleAnimation();
         mDesplegar = findViewById(R.id.desplegarCuadro);
         mDesplegar.setVisibility(View.VISIBLE);
         mDesplegar.setOnClickListener(new View.OnClickListener() {
@@ -289,13 +298,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     ShowPopup();
 
                 } else {
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                     mDesplegar.setVisibility(View.GONE);
-                    rippleBackground.startRippleAnimation();
-
+                    rippleBackground.setVisibility(View.GONE);
+                    constraintLayout.setVisibility(View.GONE);
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 }
-
-
             }
         });
 
@@ -370,13 +377,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mLongDescrip.setText(""+String.valueOf(maximum_character - mDescripcion.getText().length()));
-                if (mLongDescrip.equals("250"))
-                {
-                    final RippleBackground rippleBackgroundhelp=(RippleBackground)myDialog.findViewById(R.id.help);
+                if (mLongDescrip.getText().equals("250")) {
+                    rippleBackgroundhelp.stopRippleAnimation();
+                    rippleBackgroundhelp.startRippleAnimation();
                     rippleBackgroundhelp.stopRippleAnimation();
                 }
                 else {
-                    final RippleBackground rippleBackgroundhelp=(RippleBackground)myDialog.findViewById(R.id.help);
                     rippleBackgroundhelp.startRippleAnimation();
                 }
             }
@@ -1360,7 +1366,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                                                 pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
                                                 requestService = D;
-                                                if(D.equals("Taller")){
+                                                if(D.equals("Taller")) {
                                                     mSegmentedButtonGroup.setPosition(1, true);
                                                  //   mRadioGroup.check(R.id.Taller);
                                                 } else if (D.equals("Mecanico")) {
@@ -1377,6 +1383,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 }, 1000);
                                                 getDriverInfo();
                                                 getHasRideEnded();
+                                                mDesplegar.setVisibility(View.GONE);
+                                                rippleBackground.setVisibility(View.GONE);
+                                                constraintLayout.setVisibility(View.GONE);
                                                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                                                 servicioPendiente = true;
                                             } else {
