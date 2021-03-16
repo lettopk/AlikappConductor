@@ -14,36 +14,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="288dp"
         android:layout_marginEnd="0dp"
-        android:layout_marginBottom="115dp"
         app:cardBackgroundColor="#464646"
         app:cardCornerRadius="20dp">
 
         <ImageView
+            android:id="@+id/cerrar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="350dp"
             android:layout_marginTop="15dp"
             android:elevation="5dp"
-            android:id="@+id/cerrar"
             android:src="@drawable/ic_baseline_close_24" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
             android:layout_marginRight="20dp"
+            android:text="¿Qué Ayuda Necesitas?"
             android:textAlignment="center"
-            android:textStyle="bold"
-            android:textSize="25dp"
-            android:text="Que Ayuda Necesitas?"
             android:textColor="@color/AlikappGris"
+            android:textSize="25dp"
+            android:fontFamily="@font/abeezee"
+            android:textStyle="bold"
             />
 
         <LinearLayout
@@ -59,7 +56,7 @@
                 android:orientation="vertical">
 
                 <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
-                    android:id="@+id/buttonGroup_lordOfTheRings"
+                    android:id="@+id/buttonGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
@@ -83,7 +80,8 @@
                     app:radius="30dp"
                     app:ripple="true"
                     app:rippleColor="@color/purple_700"
-                    app:selectedBackground="@color/teal_200">
+                    app:selectedBackground="@color/teal_200"
+                    android:padding="15dp">
 
 
                     <com.addisonelliott.segmentedbutton.SegmentedButton
@@ -97,8 +95,9 @@
                         app:drawableGravity="top"
                         app:selectedTextColor="@color/white"
                         app:text="Mecanico"
+                        app:textColor="@color/black"
                         app:textSize="18dp"
-                        app:textColor="@color/black" />
+                        android:id="@+id/Mecanico"/>
 
                     <com.addisonelliott.segmentedbutton.SegmentedButton
                         android:layout_width="0dp"
@@ -109,8 +108,9 @@
                         app:drawableGravity="top"
                         app:selectedTextColor="@color/white"
                         app:text="Taller"
+                        app:textColor="@color/black"
                         app:textSize="18dp"
-                        app:textColor="@color/black" />
+                        android:id="@+id/Taller"/>
 
 
                     <com.addisonelliott.segmentedbutton.SegmentedButton
@@ -199,12 +199,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:visibility="invisible"
+                        android:visibility="gone"
 
                         >
 
                         <me.omidh.liquidradiobutton.LiquidRadioButton
-                            android:id="@+id/Mecanico"
+                            android:id="@+id/Mecanico1"
                             android:layout_width="134dp"
                             android:layout_height="wrap_content"
                             android:text="@string/mecanico"
@@ -221,7 +221,7 @@
                             app:lrb_unCheckedColor="@color/black" />
 
                         <me.omidh.liquidradiobutton.LiquidRadioButton
-                            android:id="@+id/Taller"
+                            android:id="@+id/Taller1"
                             android:layout_width="134dp"
                             android:layout_height="wrap_content"
                             android:text="@string/taller"
@@ -258,44 +258,27 @@
 
                     </RadioGroup>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <com.skyfishjy.library.RippleBackground
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/help"
-                            map:rb_color="@color/AlikappBlue"
-                            map:rb_radius="13dp"
-                            map:rb_rippleAmount="4"
-                            map:rb_duration="3000"
-                            map:rb_scale="8">
-
-                            <Button
-                                android:id="@+id/request"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:visibility="visible"
-                                android:outlineSpotShadowColor="@color/AlikappRed"
-                                android:text="E"
-                                android:background="@drawable/boton_confirmacion"
-                                android:backgroundTint="@color/AlikappBlue"
-                                android:textColor="@color/AlikappGris"
-                                android:layout_centerInParent="true"
-                                />
-                        </com.skyfishjy.library.RippleBackground>
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginRight="20dp"
+                        android:text="Describe la situacion"
+                        android:textAlignment="center"
+                        android:textColor="@color/AlikappGris"
+                        android:textSize="25dp"
+                        android:fontFamily="@font/abeezee"
+                        android:textStyle="bold" />
 
 
                     <TextView
                         android:id="@+id/longDescrip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/AlikappGris" />
+                        android:text="250"
+                        android:textColor="@color/AlikappGris"
+                        android:paddingStart="20dp"/>
 
                     <EditText
                         android:id="@+id/descripcion"
@@ -305,9 +288,41 @@
                         android:background="#464646"
                         android:hint="Describe la situación, maximo 250 Caracteres"
                         android:maxLength="250"
-                        android:textColorHint="@color/AlikappGris" />
+                        android:textColorHint="@color/AlikappGris"
+                        android:paddingStart="20dp"/>
 
                 </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    >
+
+                    <com.skyfishjy.library.RippleBackground
+                        android:id="@+id/help"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        map:rb_color="@color/AlikappBlue"
+                        map:rb_duration="3000"
+                        map:rb_radius="13dp"
+                        map:rb_rippleAmount="4"
+                        map:rb_scale="8">
+
+                        <Button
+                            android:id="@+id/request"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/boton_confirmacion"
+                            android:backgroundTint="@color/AlikappBlue"
+                            android:outlineSpotShadowColor="@color/AlikappRed"
+                            android:text="E"
+                            android:textColor="@color/AlikappGris"
+                            android:visibility="visible" />
+                    </com.skyfishjy.library.RippleBackground>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             </LinearLayout>

@@ -38,6 +38,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.addisonelliott.segmentedbutton.SegmentedButton;
+import com.addisonelliott.segmentedbutton.SegmentedButtonGroup;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -131,7 +133,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private android.widget.TextView mDriverName, mDriverPhone, mDriverCar;
 
-    private RadioGroup mRadioGroup;
+    //private RadioGroup mRadioGroup;
+
+    private SegmentedButtonGroup mSegmentedButtonGroup;
 
     private RatingBar mRatingBar;
 
@@ -235,8 +239,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mRequest.setText("Pedir Ayuda");
         mDescripcion = myDialog.findViewById(R.id.descripcion);
         mLongDescrip = myDialog.findViewById(R.id.longDescrip);
-        mRadioGroup = (RadioGroup) myDialog.findViewById(R.id.radioGroup);
-        mRadioGroup.check(R.id.Mecanico);
+        mSegmentedButtonGroup = (SegmentedButtonGroup) myDialog.findViewById(R.id.buttonGroup);
+        mSegmentedButtonGroup.setPosition(0, true);
+        // mRadioGroup = (RadioGroup) myDialog.findViewById(R.id.radioGroup);
+        // mRadioGroup.check(R.id.Mecanico);
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -272,7 +278,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         });
 
         final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
-        final RippleBackground rippleBackground1 =(RippleBackground)findViewById(R.id.help);
         rippleBackground.startRippleAnimation();
         mDesplegar = findViewById(R.id.desplegarCuadro);
         mDesplegar.setVisibility(View.VISIBLE);
@@ -282,8 +287,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                 if(!isOnService){
                     ShowPopup();
-                    rippleBackground1.startRippleAnimation();
-                    rippleBackground.stopRippleAnimation();
+
                 } else {
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                     mDesplegar.setVisibility(View.GONE);
@@ -366,6 +370,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mLongDescrip.setText(""+String.valueOf(maximum_character - mDescripcion.getText().length()));
+                if (mLongDescrip.equals("250"))
+                {
+                    final RippleBackground rippleBackgroundhelp=(RippleBackground)myDialog.findViewById(R.id.help);
+                    rippleBackgroundhelp.stopRippleAnimation();
+                }
+                else {
+                    final RippleBackground rippleBackgroundhelp=(RippleBackground)myDialog.findViewById(R.id.help);
+                    rippleBackgroundhelp.startRippleAnimation();
+                }
             }
 
             @Override
@@ -391,7 +404,19 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }else{
                     if (!mLongDescrip.getText().equals("250")){
-                        int selectId = mRadioGroup.getCheckedRadioButtonId();
+
+                        int selectId = mSegmentedButtonGroup.getPosition();
+                        if (selectId == 0)
+                        {
+                            requestService = "Mecanico";
+                        }
+                        else
+                            if ( selectId == 1)
+                            {
+                                requestService = "Taller";
+                            }
+                        System.out.println(requestService);
+                        /*int selectId = mRadioGroup.getCheckedRadioButtonId();
 
                         final RadioButton radioButton = (RadioButton) myDialog.findViewById(selectId);
 
@@ -399,7 +424,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             return;
                         }
 
-                        requestService = radioButton.getText().toString();
+                        requestService = radioButton.getText().toString();*/
 
                         requestBol = true;
 
@@ -642,12 +667,24 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             driverFound = false;
                             requestBol = true;
 
-                            int selectId = mRadioGroup.getCheckedRadioButtonId();
-                            final RadioButton radioButton = (RadioButton) findViewById(selectId);
-                            if (radioButton.getText() == null){
+                            int selectId = mSegmentedButtonGroup.getPosition();
+                            if (selectId == 0)
+                            {
+                                requestService = "Mecanico";
+                            }
+                            else
+                            if ( selectId == 1)
+                            {
+                                requestService = "Taller";
+                            }
+                            System.out.println(requestService);
+
+                           /* int selectId = mRadioGroup.getCheckedRadioButtonId();
+                           final RadioButton radioButton = (RadioButton) findViewById(selectId);
+                           if (radioButton.getText() == null){
                                 return;
                             }
-                            requestService = radioButton.getText().toString();
+                            requestService = radioButton.getText().toString(); */
                             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                             GeoFire geoFire = new GeoFire(ref);
@@ -1141,9 +1178,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                 tallerLatLng = new LatLng(locationLat,locationLng);
                                 if(tallerMarker1 == null){
-                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_taller)));
+                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especiaalidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
                                 } else if(tallerMarker2 == null){
-                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_taller)));
+                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
                                 }
                                 mMap.getUiSettings().setMapToolbarEnabled(true);
                                 mMap.setPadding(0, 0, 0, 250);
@@ -1324,9 +1361,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
                                                 requestService = D;
                                                 if(D.equals("Taller")){
-                                                    mRadioGroup.check(R.id.Taller);
+                                                    mSegmentedButtonGroup.setPosition(1, true);
+                                                 //   mRadioGroup.check(R.id.Taller);
                                                 } else if (D.equals("Mecanico")) {
-                                                    mRadioGroup.check(R.id.Mecanico);
+                                                    mSegmentedButtonGroup.setPosition(0,true);
+                                                   // mRadioGroup.check(R.id.Mecanico);
                                                 }
                                                 mRequest.setText("Buscando la Ubicacion de su Mecanico....");
                                                 final Handler handler =new Handler();

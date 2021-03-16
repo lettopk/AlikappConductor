@@ -167,7 +167,7 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="200dp"
             android:orientation="vertical"
             android:layout_gravity="center">
 
