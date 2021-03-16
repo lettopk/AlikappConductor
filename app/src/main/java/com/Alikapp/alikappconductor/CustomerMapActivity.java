@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
@@ -36,6 +38,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.addisonelliott.segmentedbutton.SegmentedButton;
+import com.addisonelliott.segmentedbutton.SegmentedButtonGroup;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -71,6 +75,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -80,6 +85,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.skyfishjy.library.RippleBackground;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,96 +94,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.Alikapp.alikappconductor.notifyFirebase.tokeng;
-import android.Manifest;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.core.content.ContextCompat;
-
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RatingBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.directions.route.AbstractRouting;
-import com.directions.route.Route;
-import com.directions.route.RouteException;
-import com.directions.route.Routing;
-import com.directions.route.RoutingListener;
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
-import com.firebase.geofire.GeoQuery;
-import com.firebase.geofire.GeoQueryEventListener;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.messaging.FirebaseMessaging;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.Alikapp.alikappconductor.notifyFirebase.tokeng;
 
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, RoutingListener {
@@ -190,7 +106,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mLogout, mRequest, mRequestt, mSettings, mHistory, mDesplegar, mChat;
+    private Button mLogout, mRequest, mRequestt, mSettings, mHistory, mChat;
+
+    private FloatingActionButton mDesplegar;
 
     private EditText mDescripcion;
 
@@ -215,17 +133,28 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private android.widget.TextView mDriverName, mDriverPhone, mDriverCar;
 
-    private RadioGroup mRadioGroup;
+    //private RadioGroup mRadioGroup;
+
+    private SegmentedButtonGroup mSegmentedButtonGroup;
 
     private RatingBar mRatingBar;
+
     private AppBarConfiguration mAppBarConfiguration;
+
     private BottomSheetBehavior mBottomSheetBehavior;
+
     private String token1;
+
     private String titulo1;
+
     private String detalle1;
+
     private String info1;
 
+    private RippleBackground rippleBackground, rippleBackgroundhelp;
+
     public static String conductorUID;
+
     public static String clicknotify="";
 
     @Override
@@ -310,8 +239,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mRequest.setText("Pedir Ayuda");
         mDescripcion = myDialog.findViewById(R.id.descripcion);
         mLongDescrip = myDialog.findViewById(R.id.longDescrip);
-        mRadioGroup = (RadioGroup) myDialog.findViewById(R.id.radioGroup);
-        mRadioGroup.check(R.id.Mecanico);
+        mSegmentedButtonGroup = (SegmentedButtonGroup) myDialog.findViewById(R.id.buttonGroup);
+        mSegmentedButtonGroup.setPosition(0, true);
+        // mRadioGroup = (RadioGroup) myDialog.findViewById(R.id.radioGroup);
+        // mRadioGroup.check(R.id.Mecanico);
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -346,6 +277,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
+        final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
+        rippleBackground.startRippleAnimation();
         mDesplegar = findViewById(R.id.desplegarCuadro);
         mDesplegar.setVisibility(View.VISIBLE);
         mDesplegar.setOnClickListener(new View.OnClickListener() {
@@ -354,9 +287,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                 if(!isOnService){
                     ShowPopup();
+
                 } else {
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                     mDesplegar.setVisibility(View.GONE);
+                    rippleBackground.startRippleAnimation();
+
                 }
 
 
@@ -434,6 +370,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mLongDescrip.setText(""+String.valueOf(maximum_character - mDescripcion.getText().length()));
+                if (mLongDescrip.equals("250"))
+                {
+                    final RippleBackground rippleBackgroundhelp=(RippleBackground)myDialog.findViewById(R.id.help);
+                    rippleBackgroundhelp.stopRippleAnimation();
+                }
+                else {
+                    final RippleBackground rippleBackgroundhelp=(RippleBackground)myDialog.findViewById(R.id.help);
+                    rippleBackgroundhelp.startRippleAnimation();
+                }
             }
 
             @Override
@@ -459,7 +404,19 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }else{
                     if (!mLongDescrip.getText().equals("250")){
-                        int selectId = mRadioGroup.getCheckedRadioButtonId();
+
+                        int selectId = mSegmentedButtonGroup.getPosition();
+                        if (selectId == 0)
+                        {
+                            requestService = "Mecanico";
+                        }
+                        else
+                            if ( selectId == 1)
+                            {
+                                requestService = "Taller";
+                            }
+                        System.out.println(requestService);
+                        /*int selectId = mRadioGroup.getCheckedRadioButtonId();
 
                         final RadioButton radioButton = (RadioButton) myDialog.findViewById(selectId);
 
@@ -467,7 +424,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             return;
                         }
 
-                        requestService = radioButton.getText().toString();
+                        requestService = radioButton.getText().toString();*/
 
                         requestBol = true;
 
@@ -494,14 +451,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         enableReference.updateChildren(usuarioInfo);
 
                         myDialog.dismiss();
+
                     } else {
                         Toast.makeText(CustomerMapActivity.this, "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
-
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
+
     }
 
     private void guardartoken(String token) {
@@ -708,12 +667,24 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             driverFound = false;
                             requestBol = true;
 
-                            int selectId = mRadioGroup.getCheckedRadioButtonId();
-                            final RadioButton radioButton = (RadioButton) findViewById(selectId);
-                            if (radioButton.getText() == null){
+                            int selectId = mSegmentedButtonGroup.getPosition();
+                            if (selectId == 0)
+                            {
+                                requestService = "Mecanico";
+                            }
+                            else
+                            if ( selectId == 1)
+                            {
+                                requestService = "Taller";
+                            }
+                            System.out.println(requestService);
+
+                           /* int selectId = mRadioGroup.getCheckedRadioButtonId();
+                           final RadioButton radioButton = (RadioButton) findViewById(selectId);
+                           if (radioButton.getText() == null){
                                 return;
                             }
-                            requestService = radioButton.getText().toString();
+                            requestService = radioButton.getText().toString(); */
                             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                             GeoFire geoFire = new GeoFire(ref);
@@ -1207,9 +1178,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                 tallerLatLng = new LatLng(locationLat,locationLng);
                                 if(tallerMarker1 == null){
-                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_taller)));
+                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especiaalidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
                                 } else if(tallerMarker2 == null){
-                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_taller)));
+                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
                                 }
                                 mMap.getUiSettings().setMapToolbarEnabled(true);
                                 mMap.setPadding(0, 0, 0, 250);
@@ -1390,9 +1361,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
                                                 requestService = D;
                                                 if(D.equals("Taller")){
-                                                    mRadioGroup.check(R.id.Taller);
+                                                    mSegmentedButtonGroup.setPosition(1, true);
+                                                 //   mRadioGroup.check(R.id.Taller);
                                                 } else if (D.equals("Mecanico")) {
-                                                    mRadioGroup.check(R.id.Mecanico);
+                                                    mSegmentedButtonGroup.setPosition(0,true);
+                                                   // mRadioGroup.check(R.id.Mecanico);
                                                 }
                                                 mRequest.setText("Buscando la Ubicacion de su Mecanico....");
                                                 final Handler handler =new Handler();
