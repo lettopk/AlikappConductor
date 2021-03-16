@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -107,7 +108,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mLogout, mRequest, mRequestt, mSettings, mHistory, mChat;
+    private Button mLogout, mRequest, mRequestt, mSettings, mHistory, mChat, mCancelar;
 
     private FloatingActionButton mDesplegar;
 
@@ -154,6 +155,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private RippleBackground rippleBackground, rippleBackgroundhelp;
     private ConstraintLayout constraintLayout;
+    private CardView cardViewInicial, cardViewBusqueda;
 
     public static String conductorUID;
 
@@ -243,6 +245,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mLongDescrip = myDialog.findViewById(R.id.longDescrip);
         mSegmentedButtonGroup = (SegmentedButtonGroup) myDialog.findViewById(R.id.buttonGroup);
         mSegmentedButtonGroup.setPosition(0, true);
+        cardViewInicial = myDialog.findViewById(R.id.carview_inicial);
+        cardViewInicial.setVisibility(View.VISIBLE);
+        cardViewBusqueda = myDialog.findViewById(R.id.cardViewBusqueda);
+        cardViewBusqueda.setVisibility(View.GONE);
+        mCancelar = myDialog.findViewById(R.id.cancelarPedido);
         // mRadioGroup = (RadioGroup) myDialog.findViewById(R.id.radioGroup);
         // mRadioGroup.check(R.id.Mecanico);
 
@@ -393,6 +400,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
+        mCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    endRide();
+                } catch (Exception e) {
+                    romper = true;
+                    finRide();
+                    CustomerMapActivity.super.onRestart();
+                    Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
+                }
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+
         mRequest.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
@@ -400,7 +422,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 if (requestBol){
                     try {
                         endRide();
-
                     } catch (Exception e) {
                         romper = true;
                         finRide();
@@ -456,8 +477,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
                         enableReference.updateChildren(usuarioInfo);
 
-                        myDialog.dismiss();
-
+                        cardViewInicial.setVisibility(View.GONE);
+                        cardViewBusqueda.setVisibility(View.VISIBLE);
                     } else {
                         Toast.makeText(CustomerMapActivity.this, "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
                     }
@@ -497,6 +518,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private void finRide() {
         requestBol = false;
         isOnService = false;
+        cardViewInicial.setVisibility(View.VISIBLE);
+        cardViewBusqueda.setVisibility(View.GONE);
         try {
             geoQuery.removeAllListeners();
         } catch (Exception e){
@@ -669,6 +692,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             driver_ID = driverFoundID;
                             mRequest.setText("Buscando la Ubicacion de su Mecanico....");
                             enServicio();
+                            myDialog.dismiss();
                         } else if (A.equals("No")) {
                             driverFound = false;
                             requestBol = true;
@@ -910,6 +934,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private void endRide(){
         requestBol = false;
         isOnService = false;
+        cardViewInicial.setVisibility(View.VISIBLE);
+        cardViewBusqueda.setVisibility(View.GONE);
         try {
             geoQuery.removeAllListeners();
         } catch (Exception e){
@@ -1363,8 +1389,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 mDescripcion.setText(C);
                                                 requestBol = true;
                                                 isOnService = true;
-                                                pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
                                                 requestService = D;
                                                 if(D.equals("Taller")) {
                                                     mSegmentedButtonGroup.setPosition(1, true);
@@ -1378,6 +1402,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 handler.postDelayed(new Runnable(){
                                                     @Override
                                                     public void run() {
+                                                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                                                        pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
                                                         getDriverLocation();
                                                     }
                                                 }, 1000);
