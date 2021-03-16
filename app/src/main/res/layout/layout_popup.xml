@@ -22,6 +22,7 @@
         app:cardBackgroundColor="#464646"
         app:cardCornerRadius="20dp">
 
+
         <ImageView
             android:id="@+id/cerrar"
             android:layout_width="wrap_content"
@@ -287,7 +288,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="#464646"
+                        android:background="@drawable/edittext_descripcion"
+                        android:textColor="@color/AlikappGris"
                         android:hint="Describe la situación, maximo 250 Caracteres"
                         android:maxLength="250"
                         android:textColorHint="@color/AlikappGris"
@@ -305,11 +307,11 @@
                         android:id="@+id/help"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        map:rb_color="@color/AlikappBlue"
-                        map:rb_duration="3000"
-                        map:rb_radius="13dp"
-                        map:rb_rippleAmount="4"
-                        map:rb_scale="8">
+                        map:rb_color="@color/teal_200"
+                        map:rb_duration="5000"
+                        map:rb_radius="20dp"
+                        map:rb_rippleAmount="6"
+                        map:rb_scale="10">
 
                         <Button
                             android:id="@+id/request"

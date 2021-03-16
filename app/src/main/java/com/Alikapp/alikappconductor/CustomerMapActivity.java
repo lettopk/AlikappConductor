@@ -462,7 +462,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
 
                         pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                        pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                        pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
 
                         mRequest.setText("Buscando Mecanico");
 
@@ -720,7 +720,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             GeoFire geoFire = new GeoFire(ref);
                             geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
                             pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
                             mRequest.setText("Buscando Mecanico....");
 
                             getClosestDriver();
@@ -848,7 +848,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
 
                     mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Su Mecanico")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mecanico)));
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.mecanico)));
                 }
 
             }
@@ -1137,7 +1137,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                 LatLng driverLocation = new LatLng(location.latitude, location.longitude);
 
-                Marker mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mecanico)));
+                Marker mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.drawable.mecanico)));
                 mDriverMarker.setTag(key);
 
                 markers.add(mDriverMarker);
@@ -1283,7 +1283,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private double DriverlocationLat = 0;
     private double DriverlocationLng = 0;
     private List<Polyline> polylines;
-    private static final int[] COLORS = new int[]{R.color.black};
+    private static final int[] COLORS = new int[]{R.color.AlikappGris};
     @Override
     public void onRoutingFailure(RouteException e) {
         if (e != null) {
