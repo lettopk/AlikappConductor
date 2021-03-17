@@ -52,7 +52,7 @@ import java.util.Map;
 
 public class CustomerSettingsActivity extends AppCompatActivity {
 
-    private EditText mNameField, mPhoneField, mCedulaCiudadania,mNumPlaca, mvehiculo;
+    private EditText mNameField, mPhoneField, mCedulaCiudadania,mNumPlaca, mvehiculo, mEmail;
 
     private Button mBack, mConfirm;
 
@@ -71,6 +71,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
     private String mNumeroPlaca;
     private String mVehiculoTotal;
     private String mProfileImageUrl;
+    private String mEmailString;
 
     private Uri resultUri;
     private Uri resultUriCedula;
@@ -86,6 +87,8 @@ public class CustomerSettingsActivity extends AppCompatActivity {
     private Boolean isCedula = false;
     private Boolean isPropiedad = false;
     private Boolean isPasado = false;
+    private Boolean isPerfil = false;
+    private Boolean isPrimeraVez;
 
 
     @Override
@@ -104,6 +107,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         mCedulaCiudadania = findViewById(R.id.cedula);
         mNumPlaca = (EditText) findViewById(R.id.numeroPlaca);
         mvehiculo =(EditText) findViewById(R.id.vehiculo);
+        mEmail = (EditText) findViewById(R.id.email);
 
         mProfileImage = (ImageView) findViewById(R.id.profileImage);
         mCedulaImage = findViewById(R.id.cedulaImage);
@@ -176,10 +180,19 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         mConfirm.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
-                guardarCedula();
-                guardarPropiedad();
-                guardarPasado();
-                saveUserInformation();
+                if(mNameField.getText() != null && mPhoneField.getText() != null &&  mvehiculo.getText() != null
+                        && mCedulaCiudadania.getText() != null){
+                    guardarCedula();
+                    guardarPropiedad();
+                    guardarPasado();
+                    saveUserInformation();
+                    if(isPrimeraVez){
+                        Intent intent = new Intent(CustomerSettingsActivity.this, CustomerMapActivity.class);
+                        startActivity(intent);
+                    }
+                } else {
+                    Toast.makeText(CustomerSettingsActivity.this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -190,6 +203,11 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                 return;
             }
         });
+        Intent mPv = getIntent();
+        isPrimeraVez = mPv.getBooleanExtra("PrimeraVez",true);
+        if(isPrimeraVez){
+            mBack.setVisibility(View.GONE);
+        }
     }
 
 
@@ -436,8 +454,6 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         checkDocumentos();
     }
 
-
-
     public void getUserInfo(){
         mCustomerDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -451,6 +467,10 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                     if(map.get("phone")!=null){
                         mPhone = map.get("phone").toString();
                         mPhoneField.setText(mPhone);
+                    }
+                    if(map.get("email")!=null){
+                        mEmailString = map.get("email").toString();
+                        mEmail.setText(mEmailString);
                     }
                     if(map.get("cedula")!=null){
                         mCedula = map.get("cedula").toString();
@@ -467,6 +487,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                     if(map.get("profileImageUrl")!=null){
                         mProfileImageUrl = map.get("profileImageUrl").toString();
                         com.bumptech.glide.Glide.with(getApplication()).load(mProfileImageUrl).into(mProfileImage);
+                        isPerfil = true;
                     }
                     if(map.get("cedulaImageUrl")!=null){
                         URLImagenCedula = map.get("cedulaImageUrl").toString();
@@ -493,7 +514,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         });
     }
     private void checkDocumentos() {
-        if(isCedula && isPropiedad && isPasado) {
+        if(isCedula && isPropiedad && isPasado && isPerfil) {
             mConfirm.setVisibility(View.VISIBLE);
         } else {
             mConfirm.setVisibility(View.GONE);
@@ -510,6 +531,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         java.util.Map userInfo = new HashMap();
         userInfo.put("name", mName);
         userInfo.put("phone", mPhone);
+        userInfo.put("email", mEmailString);
         userInfo.put("cedula", mCedula);
         userInfo.put("placa", mNumeroPlaca);
         userInfo.put("vehiculo", mVehiculoTotal);
@@ -561,7 +583,6 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     UploadTask.TaskSnapshot downloadUrl = taskSnapshot.getTask().getResult();
-
                 }
             });
         }else {
@@ -737,7 +758,8 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             Uri u = data.getData();
             resultUri = u;
             mProfileImage.setImageURI(resultUri);
-
+            isPerfil = true;
+            checkDocumentos();
         }
         if(requestCode == 3 && resultCode == Activity.RESULT_OK){
             Uri u = data.getData();
@@ -750,8 +772,6 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             }
         }
         if(requestCode == 101 && resultCode == Activity.RESULT_OK){
-            //Bundle bundle = data.getExtras();
-            //bitmapCedula = (Bitmap) bundle.get("data");
             bitmapCedula = BitmapFactory.decodeFile(rutaImagen);
             mCedulaImage.setImageBitmap(bitmapCedula);
             try {
@@ -782,8 +802,8 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         File imagen = File.createTempFile(nombreImagen, ".jpg", directorio);
 
         if (consulta.equals("cedula")){
-        rutaImagen = imagen.getAbsolutePath();
-        }else if (consulta.equals("propiedad")){
+            rutaImagen = imagen.getAbsolutePath();
+        } else if (consulta.equals("propiedad")){
             rutaPropiedadImagen = imagen.getAbsolutePath();
 
         }

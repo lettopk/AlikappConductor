@@ -23,7 +23,7 @@ import java.util.logging.LogRecord;
 public class CustomerLoginActivity extends AppCompatActivity {
 
     private EditText mEmail, mPassword;
-    private Button mLogin, mRegistration;
+    private Button mRegistration;
     private TransitionButton transitionButton;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -75,7 +75,6 @@ public class CustomerLoginActivity extends AppCompatActivity {
             }
         });
 
-
         //ir a pagina de registro mediante boton registro
         mRegistration =(Button)findViewById(R.id.registration);
         mRegistration.setOnClickListener(new View.OnClickListener() {
@@ -86,8 +85,6 @@ public class CustomerLoginActivity extends AppCompatActivity {
                 startActivity(registrop);
             }
         });
-
-
     }
 
 
@@ -95,15 +92,11 @@ public class CustomerLoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(firebaseAuthListener);
-
     }
     @Override
     protected void onStop() {
         super.onStop();
         mAuth.removeAuthStateListener(firebaseAuthListener);
-
-
-
     }
 
 }
