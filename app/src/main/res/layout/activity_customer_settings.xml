@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.Alikapp.alikappconductor.CustomerSettingsActivity"
     android:orientation="vertical"
-    android:background="#204051"
-    android:padding="20sp">
+    android:background="#e4e3e3">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,7 +15,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="20sp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -24,19 +24,21 @@
                 android:fontFamily="@font/abeezee"
                 android:gravity="center"
                 android:text="Foto de Perfil"
-                android:textColor="#E4E3E3"
+                android:textStyle="bold"
+                android:textColor="@color/AlikappBlue"
                 android:textSize="30dp" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:background="#84A9AC">
+                android:background="@drawable/ventanas_info">
 
                 <ImageView
                     android:id="@+id/profileImage"
                     android:layout_width="142dp"
                     android:layout_height="149dp"
                     android:layout_gravity="center"
+                    android:layout_margin="10sp"
                     android:src="@mipmap/ic_default_user" />
             </LinearLayout>
 
@@ -44,16 +46,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/abeezee"
+                android:textStyle="bold"
                 android:gravity="center"
                 android:text="Cédula de Ciudadanía"
-                android:textColor="#E4E3E3"
+                android:textColor="@color/AlikappBlue"
                 android:textSize="30dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#84A9AC">
+                android:background="@drawable/ventanas_info">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -63,19 +66,20 @@
                         android:layout_width="158dp"
                         android:layout_height="158dp"
                         android:layout_gravity="center"
-                        android:layout_marginBottom="20sp"
+                        android:layout_margin="10sp"
                         android:src="@mipmap/ic_default_user" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/abeezee"
+                        android:textStyle="bold"
                         android:gravity="center"
                         android:text="Agrega una foto de tu cedula,
                         dando click en la imagen a la izquierda,
                         recuerda tener buena luz, que sea clara.
 
                         Puedes tomar la foto de manera horizontal"
-                        android:textColor="#204051"
+                        android:textColor="#e4e3e3"
                         android:textSize="15dp" />
 
                 </LinearLayout>
@@ -83,39 +87,67 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/abeezee"
+                        android:textStyle="bold"
+                        android:text=" Nombre:"
+                        android:textColor="#e4e3e3"
+                        android:textSize="15dp"/>
 
                     <EditText
                         android:id="@+id/name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20sp"
-                        android:backgroundTint="@color/AlikappBlue"
+                        android:backgroundTint="@color/AlikappGris"
                         android:enabled="false"
                         android:fontFamily="@font/abeezee"
+                        android:textStyle="bold"
                         android:hint="Nombre"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/AlikappGris" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Cédula:"
+                        android:fontFamily="@font/abeezee"
+                        android:textStyle="bold"
+                        android:textColor="#e4e3e3"
+                        android:textSize="15dp"/>
+
 
                     <EditText
                         android:id="@+id/cedula"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20sp"
-                        android:backgroundTint="@color/AlikappBlue"
+                        android:backgroundTint="@color/AlikappGris"
                         android:enabled="false"
                         android:fontFamily="@font/abeezee"
+                        android:textStyle="bold"
                         android:hint="Cédula de Ciudadanía"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/AlikappGris" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Celular:"
+                        android:fontFamily="@font/abeezee"
+                        android:textStyle="bold"
+                        android:textColor="#e4e3e3"
+                        android:textSize="15dp"/>
                     <EditText
                         android:id="@+id/phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20sp"
-                        android:backgroundTint="@color/AlikappBlue"
+                        android:backgroundTint="@color/AlikappGris"
                         android:enabled="false"
                         android:hint="Numero celular"
                         android:inputType="number"
                         android:fontFamily="@font/abeezee"
-                        android:textColor="@color/black" />
+                        android:textStyle="bold"
+                        android:textColor="@color/AlikappGris" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -123,22 +155,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/abeezee"
+                android:textStyle="bold"
                 android:gravity="center"
                 android:text="Pasado Judicial"
-                android:textColor="#E4E3E3"
+                android:textColor="@color/AlikappBlue"
                 android:textSize="30dp" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#84A9AC">
+                android:background="@drawable/ventanas_info">
 
                 <ImageView
                     android:id="@+id/pasadoJudicialImage"
                     android:layout_width="158dp"
                     android:layout_height="158dp"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="20sp"
+                    android:layout_margin="10sp"
+                    android:fontFamily="@font/abeezee"
+                    android:textStyle="bold"
                     android:src="@mipmap/ic_default_user" />
 
             </LinearLayout>
@@ -147,16 +182,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/abeezee"
+                android:textStyle="bold"
                 android:gravity="center"
                 android:text="Tarjeta de propiedad"
-                android:textColor="#E4E3E3"
+                android:textColor="@color/AlikappBlue"
                 android:textSize="30dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#84A9AC">
+                android:background="@drawable/ventanas_info">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -168,39 +204,55 @@
                         android:layout_width="158dp"
                         android:layout_height="158dp"
                         android:layout_gravity="center"
-                        android:layout_marginBottom="20sp"
+                        android:layout_margin="10sp"
                         android:src="@mipmap/ic_default_user" />
 
                 </LinearLayout>
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/abeezee"
+                    android:textStyle="bold"
+                    android:text=" Placa:"
+                    android:textColor="#e4e3e3"
+                    android:textSize="15dp"/>
                 <EditText
                     android:id="@+id/numeroPlaca"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20sp"
-                    android:backgroundTint="@color/AlikappBlue"
+                    android:backgroundTint="@color/AlikappGris"
                     android:enabled="false"
                     android:fontFamily="@font/abeezee"
+                    android:textStyle="bold"
                     android:hint="PLaca"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/AlikappGris" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/abeezee"
+                    android:textStyle="bold"
+                    android:text=" Vehículo:"
+                    android:textColor="#e4e3e3"
+                    android:textSize="15dp"/>
 
                 <EditText
                     android:id="@+id/vehiculo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20sp"
-                    android:backgroundTint="@color/AlikappBlue"
+                    android:backgroundTint="@color/AlikappGris"
                     android:enabled="false"
                     android:fontFamily="@font/abeezee"
+                    android:textStyle="bold"
                     android:hint="vehículo"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/AlikappGris" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#84A9AC">
+                android:orientation="vertical">
                 <Button
                     android:id="@+id/confirm"
                     android:layout_width="match_parent"
@@ -210,6 +262,7 @@
                     android:text="confirmar"
                     android:textColor="#e4e3e3"
                     android:fontFamily="@font/abeezee"
+                    android:textStyle="bold"
                     android:visibility="gone" />
 
                 <Button
@@ -220,6 +273,7 @@
                     android:background="@drawable/boton_confirmacion"
                     android:text="atras"
                     android:fontFamily="@font/abeezee"
+                    android:textStyle="bold"
                     android:textColor="#e4e3e3" />
             </LinearLayout>
         </LinearLayout>
