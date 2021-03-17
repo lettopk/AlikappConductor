@@ -104,7 +104,19 @@
                         android:orientation="vertical"
                         android:backgroundTint="@color/AlikappGris"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:id="@+id/driverInfo"
+                        android:layout_gravity="bottom"
+                        android:orientation="horizontal"
+                        android:background="@android:color/white">
+
+                        <ImageView
+                            android:layout_width="100sp"
+                            android:layout_height="100sp"
+                            android:id="@+id/driverProfileImage"
+                            android:src="@mipmap/ic_default_user"
+                            android:padding="20sp"/>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -186,65 +198,20 @@
                             <me.omidh.liquidradiobutton.LiquidRadioButton
                                 android:layout_width="134dp"
                                 android:layout_height="wrap_content"
-                                android:text="@string/taller"
-                                android:id="@+id/Taller"
-                                android:textColor="@color/black"
-                                android:textSize="18sp"
-                                app:lrb_checkedColor="@color/AlikappBlue"
-                                app:lrb_explodeCount="6"
-                                app:lrb_inAnimDuration="600"
-                                app:lrb_innerCircleRadius="6dp"
-                                app:lrb_outAnimDuration="600"
-                                app:lrb_outterPadding="4dp"
-                                app:lrb_strokeRadius="18dp"
-                                app:lrb_strokeWidth="5dp"
-                                app:lrb_unCheckedColor="@color/black"
-                                />
-                            <me.omidh.liquidradiobutton.LiquidRadioButton
-                                android:layout_width="134dp"
+                                android:id="@+id/ratingBar"
+                                android:layout_gravity="center"
+                                android:numStars="5"
+                                android:stepSize="0.1"/>
+                            <Button
+                                android:layout_gravity="bottom"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/Grua"
-                                android:id="@+id/Grua"
-                                android:textColor="@color/black"
-                                android:textSize="18sp"
-                                android:visibility="gone"
-                                app:lrb_checkedColor="@color/AlikappBlue"
-                                app:lrb_explodeCount="6"
-                                app:lrb_inAnimDuration="600"
-                                app:lrb_innerCircleRadius="6dp"
-                                app:lrb_outAnimDuration="600"
-                                app:lrb_outterPadding="4dp"
-                                app:lrb_strokeRadius="18dp"
-                                app:lrb_strokeWidth="5dp"
-                                app:lrb_unCheckedColor="@color/black"
-                                />
-
-
-
-                        </RadioGroup>
-
-                        <Button
-                            android:layout_gravity="bottom"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="LLamar mecanico"
-                            android:textColor="#e4e3e3"
-                            android:background="@drawable/boton_emergencia"
-                            android:id="@+id/request"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/longDescrip"
-                            android:text="250"/>
-
-                        <EditText
-                            android:id="@+id/descripcion"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:maxLength="250"
-                            android:hint="Describe la situación"
-                            android:layout_weight="1"/>
+                                android:text="Finalizar Servicio"
+                                android:textColor="#e4e3e3"
+                                android:background="@drawable/boton_emergencia"
+                                android:id="@+id/request"/>
+                        </LinearLayout>
+                    </LinearLayout>
 
                     </LinearLayout>
 
@@ -257,16 +224,31 @@
                 android:orientation="vertical"
                 android:layout_gravity="center">
 
-                <Button
-                    android:id="@+id/desplegarCuadro"
-                    android:layout_width="70sp"
+                <com.skyfishjy.library.RippleBackground
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/boton_emergencia"
-                    android:gravity="center"
-                    android:text="E"
-                    android:textColor="#e4e3e3"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:id="@+id/content"
+                    map:rb_color="@color/AlikappRed"
+                    map:rb_radius="13dp"
+                    map:rb_rippleAmount="4"
+                    map:rb_duration="3000"
+                    map:rb_scale="8">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/desplegarCuadro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        app:rippleColor="@color/AlikappBlue"
+                        android:outlineSpotShadowColor="@color/AlikappRed"
+                        android:text="E"
+                        android:background="@color/AlikappRed"
+                        android:backgroundTint="@color/AlikappRed"
+
+                        android:layout_centerInParent="true"
+                        />
+                </com.skyfishjy.library.RippleBackground>
+              
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
