@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.content.ContextCompat;
@@ -224,10 +225,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     public static String conductorUID;
     public static String clicknotify="";
 
+    private DatabaseReference mDriverDatabase;
+    private CoordinatorLayout mMain, mSecond;
+
     @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_costumer_map);
+
+        mMain = findViewById(R.id.mainCoordinator);
+        mSecond = findViewById(R.id.secondCoodinator);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -276,8 +283,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
                 });
 
-
-
+        mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(conductorUID);
+        getUserInfo();
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -1399,6 +1406,35 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         });
     }
 
+    private void getUserInfo(){
+        mDriverDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("name")!=null && map.get("cedula")!=null){
+                        final Handler handler =new Handler();
+                        handler.postDelayed(new Runnable(){
+                            @Override
+                            public void run() {
+                                mMain.setVisibility(View.VISIBLE);
+                                mSecond.setVisibility(View.GONE);
+                            }
+                        }, 2000);
+                    } else {
+                        Intent intent = new Intent(CustomerMapActivity.this, CustomerSettingsActivity.class);
+                        intent.putExtra("PrimeraVez", true);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
 }
 
 

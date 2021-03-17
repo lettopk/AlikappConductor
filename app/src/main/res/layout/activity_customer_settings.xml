@@ -148,6 +148,25 @@
                         android:fontFamily="@font/abeezee"
                         android:textStyle="bold"
                         android:textColor="@color/AlikappGris" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Email:"
+                        android:fontFamily="@font/abeezee"
+                        android:textStyle="bold"
+                        android:textColor="#e4e3e3"
+                        android:textSize="15dp"/>
+                    <EditText
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20sp"
+                        android:backgroundTint="@color/AlikappGris"
+                        android:enabled="false"
+                        android:hint="Email"
+                        android:fontFamily="@font/abeezee"
+                        android:textStyle="bold"
+                        android:textColor="@color/AlikappGris" />
                 </LinearLayout>
             </LinearLayout>
 

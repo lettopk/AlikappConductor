@@ -26,6 +26,7 @@ public class GalleryFragment extends androidx.fragment.app.Fragment {
         });
 
         Intent intent = new Intent(getContext(), CustomerSettingsActivity.class);
+        intent.putExtra("PrimeraVez", false);
         startActivity(intent);
 
         return root;
