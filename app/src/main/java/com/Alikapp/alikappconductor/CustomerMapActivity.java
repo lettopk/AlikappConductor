@@ -110,7 +110,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mLogout, mRequest, mRequestt, mSettings, mHistory, mChat, mCancelar;
+    private Button mRequest, mRequestt, mChat, mCancelar;
 
     private FloatingActionButton mDesplegar;
 
@@ -173,6 +173,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mMain = findViewById(R.id.mainCoordinator);
         mSecond = findViewById(R.id.secondCoodinator);
+        mSecond.setVisibility(View.VISIBLE);
+        mMain.setVisibility(View.GONE);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -186,10 +188,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
-
-        mLogout = (Button) findViewById(R.id.logout);
-        mSettings = (Button) findViewById(R.id.settings);
-        mHistory = (Button) findViewById(R.id.history);
 
         conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseMessaging.getInstance().getToken()
@@ -210,7 +208,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 });
 
 
-        mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(conductorUID);
+        mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         getUserInfo();
 
         myDialog.setContentView(R.layout.layout_popup);
@@ -324,38 +322,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 }
             }
         });
-
-        mLogout.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(CustomerMapActivity.this, CustomerLoginActivity.class);
-                startActivity(intent);
-                finish();
-                return;
-            }
-        });
-
-        mSettings.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View v) {
-                Intent intent = new Intent(CustomerMapActivity.this, CustomerSettingsActivity.class);
-                startActivity(intent);
-                return;
-            }
-        });
-
-        mHistory.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View v) {
-                Intent intent = new Intent(CustomerMapActivity.this, HistoryActivity.class);
-                intent.putExtra("customerOrDriver", "Customers");
-                startActivity(intent);
-                return;
-            }
-        });
-
-
 
         /*Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);*/

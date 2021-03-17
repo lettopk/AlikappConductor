@@ -10,8 +10,8 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/mainCoordinator"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:id="@+id/mainCoordinator">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -40,25 +40,6 @@
             android:layout_height="wrap_content">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/buttons"
-                android:visibility="invisible">
-                <Button
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/history"
-                    android:text="history"/>
-                <Button
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/settings"
-                    android:text="Settings"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fab"
@@ -72,10 +53,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
-
-
             </LinearLayout>
-
         </RelativeLayout>
 
 
@@ -104,27 +82,14 @@
                         android:orientation="vertical"
                         android:backgroundTint="@color/AlikappGris"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/driverInfo"
-                        android:layout_gravity="bottom"
-                        android:orientation="horizontal"
-                        android:background="@android:color/white">
-
-                        <ImageView
-                            android:layout_width="100sp"
-                            android:layout_height="100sp"
-                            android:id="@+id/driverProfileImage"
-                            android:src="@mipmap/ic_default_user"
-                            android:padding="20sp"/>
-
+                        android:layout_height="wrap_content" >
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/driverInfo"
                             android:layout_gravity="bottom"
                             android:orientation="horizontal"
-                            android:background="@android:color/white"
-                            android:visibility="gone">
+                            android:background="@android:color/white">
 
                             <ImageView
                                 android:layout_width="100sp"
@@ -139,10 +104,10 @@
                                 android:orientation="vertical"
                                 android:paddingLeft="40sp">
                                 <Button
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Chat"
-                                android:id="@+id/mChat"/>
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Chat"
+                                    android:id="@+id/mChat"/>
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -168,50 +133,16 @@
                                     android:layout_gravity="center"
                                     android:numStars="5"
                                     android:stepSize="0.1"/>
+                                <Button
+                                    android:layout_gravity="bottom"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Finalizar Servicio"
+                                    android:textColor="#e4e3e3"
+                                    android:background="@drawable/boton_emergencia"
+                                    android:id="@+id/request"/>
                             </LinearLayout>
                         </LinearLayout>
-                        <RadioGroup
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/radioGroup"
-                            android:orientation="horizontal"
-
-                            >
-
-                            <me.omidh.liquidradiobutton.LiquidRadioButton
-                                android:layout_width="134dp"
-                                android:layout_height="wrap_content"
-                                android:text="@string/mecanico"
-                                android:id="@+id/Mecanico"
-                                android:textColor="@color/black"
-                                android:textSize="20sp"
-                                app:lrb_checkedColor="@color/AlikappBlue"
-                                app:lrb_explodeCount="6"
-                                app:lrb_inAnimDuration="600"
-                                app:lrb_innerCircleRadius="6dp"
-                                app:lrb_outAnimDuration="600"
-                                app:lrb_outterPadding="4dp"
-                                app:lrb_strokeRadius="18dp"
-                                app:lrb_strokeWidth="5dp"
-                                app:lrb_unCheckedColor="@color/black" />
-
-                            <me.omidh.liquidradiobutton.LiquidRadioButton
-                                android:layout_width="134dp"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/ratingBar"
-                                android:layout_gravity="center"
-                                android:numStars="5"
-                                android:stepSize="0.1"/>
-                            <Button
-                                android:layout_gravity="bottom"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Finalizar Servicio"
-                                android:textColor="#e4e3e3"
-                                android:background="@drawable/boton_emergencia"
-                                android:id="@+id/request"/>
-                        </LinearLayout>
-                    </LinearLayout>
 
                     </LinearLayout>
 
@@ -219,8 +150,9 @@
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/contrainLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:orientation="vertical"
                 android:layout_gravity="center">
 
@@ -248,9 +180,11 @@
                         android:layout_centerInParent="true"
                         />
                 </com.skyfishjy.library.RippleBackground>
-              
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -267,7 +201,7 @@
                 android:layout_height="wrap_content"
                 android:text="CARGANDO..."
                 android:gravity="center"
-                android:textSize="30sp"></TextView>
+                android:textSize="30sp" />
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
