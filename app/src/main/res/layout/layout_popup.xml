@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:gravity="center"
+    tools:ignore="NamespaceTypo">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/carview_inicial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#464646"
+        app:cardCornerRadius="20dp">
+
+
+        <ImageView
+            android:id="@+id/cerrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="350dp"
+            android:layout_marginTop="15dp"
+            android:elevation="5dp"
+            android:src="@drawable/ic_baseline_close_24" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="20dp"
+            android:text="¿Qué Ayuda Necesitas?"
+            android:textAlignment="center"
+            android:textColor="@color/AlikappGris"
+            android:textSize="25dp"
+            android:fontFamily="@font/abeezee"
+            android:textStyle="bold"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="25dp"
+                android:orientation="vertical">
+
+                <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
+                    android:id="@+id/buttonGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@color/white"
+                    android:elevation="2dp"
+                    app:borderColor="@color/purple_200"
+                    app:borderWidth="1dp"
+                    app:divider="@color/purple_500"
+                    app:dividerPadding="10dp"
+                    app:dividerWidth="1dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:position="0"
+                    app:radius="30dp"
+                    app:ripple="true"
+                    app:rippleColor="@color/purple_700"
+                    app:selectedBackground="@color/teal_200"
+                    android:padding="15dp">
+
+
+                    <com.addisonelliott.segmentedbutton.SegmentedButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif"
+                        android:forceDarkAllowed="false"
+                        android:padding="10dp"
+                        app:drawable="@drawable/ic_mecanico"
+                        app:drawableGravity="top"
+                        app:selectedTextColor="@color/white"
+                        app:text="Mecanico"
+                        app:textColor="@color/black"
+                        app:textSize="18dp"
+                        android:id="@+id/Mecanico"/>
+
+                    <com.addisonelliott.segmentedbutton.SegmentedButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        app:drawable="@drawable/ic_taller"
+                        app:drawableGravity="top"
+                        app:selectedTextColor="@color/white"
+                        app:text="Taller"
+                        app:textColor="@color/black"
+                        app:textSize="18dp"
+                        android:id="@+id/Taller"/>
+
+
+                    <com.addisonelliott.segmentedbutton.SegmentedButton
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif"
+                        android:padding="10dp"
+                        android:visibility="gone"
+                        app:drawable="@drawable/ic_taller"
+                        app:drawableGravity="top"
+                        app:selectedTextColor="@color/white"
+                        app:text="Grua"
+                        app:textColor="@color/black" />
+                </com.addisonelliott.segmentedbutton.SegmentedButtonGroup>
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/AlikappGris"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/driverInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:background="@android:color/white"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/driverProfileImage"
+                            android:layout_width="100sp"
+                            android:layout_height="100sp"
+                            android:padding="20sp"
+                            android:src="@mipmap/ic_default_user" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#464646"
+                            android:orientation="vertical"
+                            android:paddingLeft="40sp">
+
+                            <Button
+                                android:id="@+id/mChat"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Chat" />
+
+                            <TextView
+                                android:id="@+id/driverName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="20sp"
+                                android:paddingBottom="10sp" />
+
+                            <TextView
+                                android:id="@+id/driverPhone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="20sp"
+                                android:paddingBottom="10sp" />
+
+                            <TextView
+                                android:id="@+id/driverCar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="20sp"
+                                android:paddingBottom="10sp" />
+
+                            <RatingBar
+                                android:id="@+id/ratingBar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:numStars="5"
+                                android:stepSize="0.1" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <RadioGroup
+                        android:id="@+id/radioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+
+                        >
+
+                        <me.omidh.liquidradiobutton.LiquidRadioButton
+                            android:id="@+id/Mecanico1"
+                            android:layout_width="134dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mecanico"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            app:lrb_checkedColor="@color/AlikappBlue"
+                            app:lrb_explodeCount="6"
+                            app:lrb_inAnimDuration="600"
+                            app:lrb_innerCircleRadius="6dp"
+                            app:lrb_outAnimDuration="600"
+                            app:lrb_outterPadding="4dp"
+                            app:lrb_strokeRadius="18dp"
+                            app:lrb_strokeWidth="5dp"
+                            app:lrb_unCheckedColor="@color/black" />
+
+                        <me.omidh.liquidradiobutton.LiquidRadioButton
+                            android:id="@+id/Taller1"
+                            android:layout_width="134dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/taller"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            app:lrb_checkedColor="@color/AlikappBlue"
+                            app:lrb_explodeCount="6"
+                            app:lrb_inAnimDuration="600"
+                            app:lrb_innerCircleRadius="6dp"
+                            app:lrb_outAnimDuration="600"
+                            app:lrb_outterPadding="4dp"
+                            app:lrb_strokeRadius="18dp"
+                            app:lrb_strokeWidth="5dp"
+                            app:lrb_unCheckedColor="@color/black" />
+
+                        <me.omidh.liquidradiobutton.LiquidRadioButton
+                            android:id="@+id/Grua"
+                            android:layout_width="134dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/Grua"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:visibility="gone"
+                            app:lrb_checkedColor="@color/AlikappBlue"
+                            app:lrb_explodeCount="6"
+                            app:lrb_inAnimDuration="600"
+                            app:lrb_innerCircleRadius="6dp"
+                            app:lrb_outAnimDuration="600"
+                            app:lrb_outterPadding="4dp"
+                            app:lrb_strokeRadius="18dp"
+                            app:lrb_strokeWidth="5dp"
+                            app:lrb_unCheckedColor="@color/black" />
+
+
+                    </RadioGroup>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginRight="20dp"
+                        android:text="Describe la situacion"
+                        android:textAlignment="center"
+                        android:textColor="@color/AlikappGris"
+                        android:textSize="25dp"
+                        android:fontFamily="@font/abeezee"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/longDescrip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="250"
+                        android:textColor="@color/AlikappGris"
+                        android:paddingStart="20dp"/>
+
+                    <EditText
+                        android:id="@+id/descripcion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/edittext_descripcion"
+                        android:textColor="@color/AlikappGris"
+                        android:hint="Describe la situación, maximo 250 Caracteres"
+                        android:maxLength="250"
+                        android:textColorHint="@color/AlikappGris"
+                        android:paddingStart="20dp"/>
+
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    >
+
+                    <com.skyfishjy.library.RippleBackground
+                        android:id="@+id/help"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        map:rb_color="@color/teal_200"
+                        map:rb_duration="5000"
+                        map:rb_radius="20dp"
+                        map:rb_rippleAmount="6"
+                        map:rb_scale="10">
+
+                        <Button
+                            android:id="@+id/request"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/boton_confirmacion"
+                            android:backgroundTint="@color/AlikappBlue"
+                            android:outlineSpotShadowColor="@color/AlikappRed"
+                            android:text="E"
+                            android:textColor="@color/AlikappGris"
+                            android:visibility="visible" />
+                    </com.skyfishjy.library.RippleBackground>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewBusqueda"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="BUSCANDO MECÁNICO"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+            <Button
+                android:id="@+id/cancelarPedido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CANCELAR"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

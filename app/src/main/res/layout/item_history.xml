@@ -26,11 +26,27 @@
             android:textSize="12dp" />
 
         <TextView
-            android:id="@+id/rideId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="rideId"
-            android:textSize="12dp" />
+            android:id="@+id/nombreHistory"
+            android:textSize="12dp"
+            android:text="nombreHistory"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:text="Codigo del servicio: "/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rideId"
+                android:textSize="12dp"
+                android:text="rideId"/>
+
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
