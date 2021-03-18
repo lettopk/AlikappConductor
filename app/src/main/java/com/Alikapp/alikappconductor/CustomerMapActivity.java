@@ -153,7 +153,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private String info1;
 
-    private RippleBackground rippleBackground, rippleBackgroundhelp;
+    private RippleBackground rippleBackground, rippleBackgroundhelp, rippleBackgroundEspera;
     private ConstraintLayout constraintLayout;
     private CardView cardViewInicial, cardViewBusqueda;
 
@@ -295,6 +295,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         constraintLayout = findViewById(R.id.contrainLayout);
         rippleBackgroundhelp = (RippleBackground) myDialog.findViewById(R.id.help);
         rippleBackgroundhelp.stopRippleAnimation();
+        rippleBackgroundEspera = (RippleBackground)findViewById(R.id.espera);
+
         mDesplegar = findViewById(R.id.desplegarCuadro);
         mDesplegar.setVisibility(View.VISIBLE);
         mDesplegar.setOnClickListener(new View.OnClickListener() {
@@ -477,10 +479,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
                         enableReference.updateChildren(usuarioInfo);
 
+                        final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
                         cardViewInicial.setVisibility(View.GONE);
                         cardViewBusqueda.setVisibility(View.VISIBLE);
+                        rippleBackgroundEspera.startRippleAnimation();
                     } else {
-                        Toast.makeText(CustomerMapActivity.this, "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
+                       Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
