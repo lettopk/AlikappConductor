@@ -90,6 +90,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.skyfishjy.library.RippleBackground;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -158,6 +159,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private RippleBackground rippleBackground, rippleBackgroundhelp, rippleBackgroundEspera;
     private ConstraintLayout constraintLayout;
     private CardView cardViewInicial, cardViewBusqueda;
+    private AVLoadingIndicatorView avi;
 
     public static String conductorUID;
 
@@ -174,6 +176,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mMain = findViewById(R.id.mainCoordinator);
         mSecond = findViewById(R.id.secondCoodinator);
         mSecond.setVisibility(View.VISIBLE);
+        avi = (AVLoadingIndicatorView) findViewById(R.id.avi);
+        avi.show();
         mMain.setVisibility(View.GONE);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
