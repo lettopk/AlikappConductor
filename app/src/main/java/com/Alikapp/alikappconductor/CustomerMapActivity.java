@@ -111,7 +111,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mRequest, mRequestt, mChat, mCancelar;
+    private Button mRequest, mRequestt, mChat, mCancelar, mLogout;
 
     private FloatingActionButton mDesplegar;
 
@@ -223,6 +223,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverPhone = (android.widget.TextView) findViewById(R.id.driverPhone);
         mDriverCar = (android.widget.TextView)findViewById(R.id.driverCar);
         mChat =(Button) findViewById(R.id.mChat);
+        mLogout =(Button) findViewById(R.id.logout);
+
+        mLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(CustomerMapActivity.this, CustomerLoginActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        });
 
         mChat.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
@@ -506,6 +518,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         isOnService = false;
         cardViewInicial.setVisibility(View.VISIBLE);
         cardViewBusqueda.setVisibility(View.GONE);
+        mDesplegar.setVisibility(View.VISIBLE);
+        rippleBackground.setVisibility(View.VISIBLE);
+        constraintLayout.setVisibility(View.VISIBLE);
         try {
             geoQuery.removeAllListeners();
         } catch (Exception e){
@@ -669,6 +684,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         System.out.println(A);
                         System.out.println(driverFoundID);
                         if(A.equals("Si")){
+                            mDesplegar.setVisibility(View.GONE);
+                            rippleBackground.setVisibility(View.GONE);
+                            constraintLayout.setVisibility(View.GONE);
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                             isOnService = true;
                             romper = true;
@@ -922,6 +940,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         isOnService = false;
         cardViewInicial.setVisibility(View.VISIBLE);
         cardViewBusqueda.setVisibility(View.GONE);
+        mDesplegar.setVisibility(View.VISIBLE);
+        rippleBackground.setVisibility(View.VISIBLE);
+        constraintLayout.setVisibility(View.VISIBLE);
         try {
             geoQuery.removeAllListeners();
         } catch (Exception e){
