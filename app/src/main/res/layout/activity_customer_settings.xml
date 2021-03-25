@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.Alikapp.alikappconductor.CustomerSettingsActivity"
     android:orientation="vertical"
-    android:background="#e4e3e3">
+    android:background="@color/AlikappGris">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                     android:layout_width="142dp"
                     android:layout_height="149dp"
                     android:layout_gravity="center"
-                    android:layout_margin="10sp"
+                    android:layout_margin="10dp"
                     android:src="@mipmap/ic_default_user" />
             </LinearLayout>
 
@@ -66,21 +66,18 @@
                         android:layout_width="158dp"
                         android:layout_height="158dp"
                         android:layout_gravity="center"
-                        android:layout_margin="10sp"
+                        android:layout_margin="10dp"
                         android:src="@mipmap/ic_default_user" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/abeezee"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:text="Agrega una foto de tu cedula,
-                        dando click en la imagen a la izquierda,
-                        recuerda tener buena luz, que sea clara.
-
-                        Puedes tomar la foto de manera horizontal"
-                        android:textColor="#e4e3e3"
-                        android:textSize="15dp" />
+                        android:text="Agrega una foto de tu cedula, dando click en la imagen a la izquierda, recuerda tener buena luz, que sea clara. Puedes tomar la foto de manera horizontal."
+                        android:textColor="@color/AlikappGris"
+                        android:textSize="10dp" />
 
                 </LinearLayout>
                 <LinearLayout
@@ -93,7 +90,7 @@
                         android:fontFamily="@font/abeezee"
                         android:textStyle="bold"
                         android:text=" Nombre:"
-                        android:textColor="#e4e3e3"
+                        android:textColor="@color/AlikappGris"
                         android:textSize="15dp"/>
 
                     <EditText
@@ -182,7 +179,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:background="@drawable/ventanas_info">
 
                 <ImageView
@@ -191,9 +188,18 @@
                     android:layout_height="158dp"
                     android:layout_gravity="center"
                     android:layout_margin="10sp"
-                    android:fontFamily="@font/abeezee"
                     android:textStyle="bold"
                     android:src="@mipmap/ic_default_user" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/abeezee"
+                    android:textStyle="bold"
+                    android:layout_margin="10sp"
+                    android:gravity="center"
+                    android:text="Agrega una imagen de tus antecedentes judiciales, dando click en la imagen a la izquierda, recuerda puedes encontrarlo en https://antecedentes.policia.gov.co:7005/WebJudicial/index.xhtml y puedes tomar una foto a la pabtalla."
+                    android:textColor="@color/AlikappGris"
+                    android:textSize="10dp" />
 
             </LinearLayout>
 
@@ -225,6 +231,16 @@
                         android:layout_gravity="center"
                         android:layout_margin="10sp"
                         android:src="@mipmap/ic_default_user" />
+                    <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/abeezee"
+                    android:textStyle="bold"
+                    android:layout_margin="10sp"
+                    android:gravity="center"
+                    android:text="Agrega una foto de la tarjeta de propiedad de tu vehiculo dando click en la imagen a la izquierda, recuerda tener buena luz, que sea clara. Puedes tomar la foto de manera horizontal."
+                        android:textColor="@color/AlikappGris"
+                    android:textSize="10dp" />
 
                 </LinearLayout>
                 <TextView
@@ -233,7 +249,7 @@
                     android:fontFamily="@font/abeezee"
                     android:textStyle="bold"
                     android:text=" Placa:"
-                    android:textColor="#e4e3e3"
+                    android:textColor="@color/AlikappGris"
                     android:textSize="15dp"/>
                 <EditText
                     android:id="@+id/numeroPlaca"
@@ -252,7 +268,7 @@
                     android:fontFamily="@font/abeezee"
                     android:textStyle="bold"
                     android:text=" Vehículo:"
-                    android:textColor="#e4e3e3"
+                    android:textColor="@color/AlikappGris"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -279,7 +295,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/boton_confirmacion"
                     android:text="confirmar"
-                    android:textColor="#e4e3e3"
+                    android:textColor="@color/AlikappGris"
                     android:fontFamily="@font/abeezee"
                     android:textStyle="bold"
                     android:visibility="gone" />
@@ -293,7 +309,7 @@
                     android:text="atras"
                     android:fontFamily="@font/abeezee"
                     android:textStyle="bold"
-                    android:textColor="#e4e3e3" />
+                    android:textColor="@color/AlikappGris" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
