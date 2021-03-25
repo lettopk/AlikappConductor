@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:map="http://schemas.android.com/apk/res-auto"
-    tools:context=".CustomerMapActivity">
+    tools:context=".CustomerMapActivity"
+    android:background="@color/AlikappBlue">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -191,18 +192,65 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/secondCoodinator">
-        <LinearLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
-            <TextView
+            android:layout_height="match_parent">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewBusqueda"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CARGANDO..."
-                android:gravity="center"
-                android:textSize="30sp" />
-        </LinearLayout>
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="visible"
+                app:cardBackgroundColor="#464646"
+                app:cardCornerRadius="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <com.wang.avi.AVLoadingIndicatorView
+                        android:id="@+id/avi"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        style="@style/AVLoadingIndicatorView"
+                        android:visibility="visible"
+                        app:indicatorName="TriangleSkewSpinIndicator"
+                        app:indicatorColor="@color/AlikappGris"
+                        android:padding="20dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="CARGANDO..."
+                        android:textSize="30sp"
+                        android:textColor="@color/AlikappGris"
+                        android:fontFamily="@font/abeezee"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:padding="20dp"/>
+
+                </LinearLayout>
+
+
+
+            </androidx.cardview.widget.CardView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
