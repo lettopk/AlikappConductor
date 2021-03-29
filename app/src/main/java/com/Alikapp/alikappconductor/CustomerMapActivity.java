@@ -117,7 +117,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private EditText mDescripcion;
 
-    private TextView mLongDescrip;
+    private TextView mLongDescrip, mMenuNombre;
 
     private LatLng pickupLocation;
 
@@ -224,7 +224,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverCar = (android.widget.TextView)findViewById(R.id.driverCar);
         mChat =(Button) findViewById(R.id.mChat);
         mLogout =(Button) findViewById(R.id.logout);
-
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -352,6 +351,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        mMenuNombre = headerView.findViewById(R.id.nombreManu);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -1471,6 +1472,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         handler.postDelayed(new Runnable(){
                             @Override
                             public void run() {
+                                mMenuNombre.setText(map.get("name").toString());
                                 mMain.setVisibility(View.VISIBLE);
                                 mSecond.setVisibility(View.GONE);
                             }
