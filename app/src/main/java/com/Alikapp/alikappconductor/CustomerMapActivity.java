@@ -99,6 +99,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.Alikapp.alikappconductor.notifyFirebase.tokeng;
 
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, RoutingListener {
@@ -117,7 +120,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private EditText mDescripcion;
 
-    private TextView mLongDescrip;
+    private TextView mLongDescrip, mMenuNombre;
 
     private LatLng pickupLocation;
 
@@ -135,6 +138,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private ConstraintLayout mDriverInfo;
 
     public ImageView mDriverProfileImage;
+    private CircleImageView mImagenPerfil;
 
     private android.widget.TextView mDriverName, mDriverPhone, mDriverCar;
 
@@ -224,7 +228,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverCar = (android.widget.TextView)findViewById(R.id.driverCar);
         mChat =(Button) findViewById(R.id.mChat);
         mLogout =(Button) findViewById(R.id.logout);
-
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -352,6 +355,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        mMenuNombre = headerView.findViewById(R.id.nombreManu);
+        mImagenPerfil = headerView.findViewById(R.id.imageView);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -1467,6 +1473,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     if(map.get("name")!=null && map.get("cedula")!=null){
+                        mMenuNombre.setText(map.get("name").toString());
+                        if(map.get("profileImageUrl")!=null){
+                            com.bumptech.glide.Glide.with(getApplication()).load(map.get("profileImageUrl").toString())
+                                    .into(mImagenPerfil);
+
+                        }
                         final Handler handler =new Handler();
                         handler.postDelayed(new Runnable(){
                             @Override
