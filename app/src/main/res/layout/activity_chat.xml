@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/fotoPerfil"
             android:layout_width="50dp"
-            android:layout_height="50sp"
+            android:layout_height="50dp"
             android:scaleType="center"/>
 
         <TextView
@@ -29,7 +29,8 @@
             android:layout_weight="1"
             android:text="Conductor"
             android:fontFamily="@font/abeezee"
-            android:textSize="26dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
             android:textColor="#E4E3E3" />
 
         <Button
@@ -37,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:drawable/ic_menu_call"
-            android:minWidth="48dip">
+            android:minWidth="50dp">
 
         </Button>
 
