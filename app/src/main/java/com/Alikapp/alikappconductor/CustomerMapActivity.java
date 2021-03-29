@@ -99,6 +99,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.Alikapp.alikappconductor.notifyFirebase.tokeng;
 
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, RoutingListener {
@@ -134,7 +137,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private ConstraintLayout mDriverInfo;
 
-    public ImageView mDriverProfileImage, mImagenPerfil;
+    public ImageView mDriverProfileImage;
+    private CircleImageView mImagenPerfil;
 
     private android.widget.TextView mDriverName, mDriverPhone, mDriverCar;
 
@@ -1473,7 +1477,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         if(map.get("profileImageUrl")!=null){
                             com.bumptech.glide.Glide.with(getApplication()).load(map.get("profileImageUrl").toString())
                                     .into(mImagenPerfil);
-                            
+
                         }
                         final Handler handler =new Handler();
                         handler.postDelayed(new Runnable(){
