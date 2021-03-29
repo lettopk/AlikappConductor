@@ -134,7 +134,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private ConstraintLayout mDriverInfo;
 
-    public ImageView mDriverProfileImage;
+    public ImageView mDriverProfileImage, mImagenPerfil;
 
     private android.widget.TextView mDriverName, mDriverPhone, mDriverCar;
 
@@ -353,6 +353,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         mMenuNombre = headerView.findViewById(R.id.nombreManu);
+        mImagenPerfil = headerView.findViewById(R.id.imageView);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -1468,11 +1469,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     if(map.get("name")!=null && map.get("cedula")!=null){
+                        mMenuNombre.setText(map.get("name").toString());
+                        if(map.get("profileImageUrl")!=null){
+                            com.bumptech.glide.Glide.with(getApplication()).load(map.get("profileImageUrl").toString())
+                                    .into(mImagenPerfil);
+                            
+                        }
                         final Handler handler =new Handler();
                         handler.postDelayed(new Runnable(){
                             @Override
                             public void run() {
-                                mMenuNombre.setText(map.get("name").toString());
                                 mMain.setVisibility(View.VISIBLE);
                                 mSecond.setVisibility(View.GONE);
                             }
