@@ -6,8 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,10 +32,24 @@ public class CustomerLoginActivity extends AppCompatActivity {
     private TransitionButton transitionButton;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    private LinearLayout login;
+    private LinearLayout splash;
     @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_login);
+
+        login = findViewById(R.id.linearLayout);
+        login.setVisibility(View.GONE);
+        splash = findViewById(R.id.splash);
+        splash.setVisibility(View.VISIBLE);
+        Animation animacion1= AnimationUtils.loadAnimation(this, R.anim.desplazamiento_arriba);
+        Animation animacion2= AnimationUtils.loadAnimation(this, R.anim.desplazamiento_abajo);
+        TextView tvalikapp = findViewById(R.id.textAlikapp);
+        ImageView logoAlikapp = findViewById(R.id.imagenlogo);
+
+        tvalikapp.setAnimation(animacion2);
+        logoAlikapp.setAnimation(animacion1);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -38,12 +57,20 @@ public class CustomerLoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@androidx.annotation.NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user!=null){
-                    Intent intent = new Intent(CustomerLoginActivity.this, CustomerMapActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return;
-                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(user!=null){
+                            Intent intent = new Intent(CustomerLoginActivity.this, CustomerMapActivity.class);
+                            startActivity(intent);
+                            finish();
+                            return;
+                        } else {
+                            login.setVisibility(View.VISIBLE);
+                            splash.setVisibility(View.GONE);
+                        }
+                    }
+                }, 3000);
             }
         };
 

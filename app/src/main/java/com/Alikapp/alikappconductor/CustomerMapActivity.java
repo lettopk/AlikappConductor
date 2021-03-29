@@ -132,7 +132,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private LatLng destinationLatLng, tallerLatLng;
 
-    private LinearLayout mDriverInfo;
+    private ConstraintLayout mDriverInfo;
 
     public ImageView mDriverProfileImage;
 
@@ -217,7 +217,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         myDialog.setContentView(R.layout.layout_popup);
 
-        mDriverInfo = (LinearLayout) findViewById(R.id.driverInfo);
+        mDriverInfo = (ConstraintLayout) findViewById(R.id.driverInfo);
         mDriverProfileImage = (ImageView) findViewById(R.id.driverProfileImage);
         mDriverName = (android.widget.TextView) findViewById(R.id.driverName);
         mDriverPhone = (android.widget.TextView) findViewById(R.id.driverPhone);
@@ -880,13 +880,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
                     if(dataSnapshot.child("name")!=null){
-                        mDriverName.setText(dataSnapshot.child("name").getValue().toString());
+                        mDriverName.setText("Mecanico: " + dataSnapshot.child("name").getValue().toString());
                          }
                     if(dataSnapshot.child("phone")!=null){
-                        mDriverPhone.setText(dataSnapshot.child("phone").getValue().toString());
+                        mDriverPhone.setText("Telefono: " + dataSnapshot.child("phone").getValue().toString());
                     }
                     if(dataSnapshot.child("car")!=null){
-                        mDriverCar.setText(dataSnapshot.child("car").getValue().toString());
+                        mDriverCar.setText("Taller: " + dataSnapshot.child("car").getValue().toString());
                     }
                     if(dataSnapshot.child("profileImageUrl").getValue()!=null){
                         com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);

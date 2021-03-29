@@ -59,9 +59,9 @@
 
         <service
             android:name=".onAppKilled"
-            android:stopWithTask="false"></service>
+            android:stopWithTask="false" />
 
-        <activity android:name=".CustomerLoginActivity">
+        <activity android:name=".CustomerLoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -75,7 +75,6 @@
         <activity android:name=".CustomerSettingsActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".HistorySingleActivity" />
-
         <service
             android:name=".notifyFirebase"
             android:exported="false">
