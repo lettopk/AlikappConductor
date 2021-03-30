@@ -1488,7 +1488,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             }
                         }, 2000);
                     } else {
-                        Intent intent = new Intent(CustomerMapActivity.this, CustomerSettingsActivity.class);
+                        Intent intent = new Intent(CustomerMapActivity.this, LegalActivity.class);
                         intent.putExtra("PrimeraVez", true);
                         startActivity(intent);
                         finish();

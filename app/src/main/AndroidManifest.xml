@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.Alikapp.alikappconductor">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -24,6 +23,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+        <activity android:name=".LegalActivity"></activity>
+
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/file_paths" />
@@ -61,7 +62,7 @@
             android:name=".onAppKilled"
             android:stopWithTask="false" />
 
-        <activity android:name=".CustomerLoginActivity" >
+        <activity android:name=".CustomerLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -75,6 +76,7 @@
         <activity android:name=".CustomerSettingsActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".HistorySingleActivity" />
+
         <service
             android:name=".notifyFirebase"
             android:exported="false">
