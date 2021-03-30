@@ -33,11 +33,18 @@ public class LegalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_legal);
 
+        Intent mPv = getIntent();
+        Boolean isPrimeraVez = mPv.getBooleanExtra("PrimeraVez",false);
+
         mTerminos = findViewById(R.id.terminos);
         carga = findViewById(R.id.carga);
         scroll = findViewById(R.id.scroll);
         scrollView = findViewById(R.id.scrollView);
         mAcpeto = findViewById(R.id.acepto);
+
+        if (!isPrimeraVez){
+            mAcpeto.setText("OK");
+        }
 
         mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers");
         mDriverDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -58,9 +65,6 @@ public class LegalActivity extends AppCompatActivity {
             }
         });
 
-        Intent mPv = getIntent();
-        Boolean isPrimeraVez = mPv.getBooleanExtra("PrimeraVez",false);
-
         mAcpeto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,12 +72,8 @@ public class LegalActivity extends AppCompatActivity {
                     Intent intent = new Intent(LegalActivity.this, CustomerSettingsActivity.class);
                     intent.putExtra("PrimeraVez", true);
                     startActivity(intent);
-                    finish();
-                } else {
-                    Intent intent = new Intent(LegalActivity.this, CustomerMapActivity.class);
-                    startActivity(intent);
-                    finish();
                 }
+                finish();
             }
         });
     }
