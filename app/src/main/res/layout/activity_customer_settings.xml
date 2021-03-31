@@ -33,7 +33,7 @@
                 android:gravity="center"
                 android:background="@drawable/ventanas_info">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profileImage"
                     android:layout_width="142dp"
                     android:layout_height="149dp"
@@ -197,7 +197,7 @@
                     android:textStyle="bold"
                     android:layout_margin="10sp"
                     android:gravity="center"
-                    android:text="Agrega una imagen de tus antecedentes judiciales, dando click en la imagen a la izquierda, recuerda puedes encontrarlo en https://antecedentes.policia.gov.co:7005/WebJudicial/index.xhtml y puedes tomar una foto a la pabtalla."
+                    android:text="Agrega una imagen de tus antecedentes judiciales, dando click en la imagen a la izquierda, recuerda puedes encontrarlo en https://antecedentes.policia.gov.co:7005/WebJudicial/index.xhtml y puedes tomar una foto a la pantalla."
                     android:textColor="@color/AlikappGris"
                     android:textSize="10dp" />
 

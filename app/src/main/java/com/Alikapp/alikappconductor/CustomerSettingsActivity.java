@@ -50,13 +50,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class CustomerSettingsActivity extends AppCompatActivity {
 
     private EditText mNameField, mPhoneField, mCedulaCiudadania,mNumPlaca, mvehiculo, mEmail;
 
     private Button mBack, mConfirm;
 
-    private ImageView mProfileImage, mCedulaImage,mPasadoJudicialImage, mTarjetaPropiedad;
+    private ImageView mCedulaImage,mPasadoJudicialImage, mTarjetaPropiedad;
+    private CircleImageView mProfileImage;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mCustomerDatabase;
@@ -73,12 +76,11 @@ public class CustomerSettingsActivity extends AppCompatActivity {
     private String mProfileImageUrl;
     private String mEmailString;
 
-    private Uri resultUri;
+    private Uri resultUriPerfil;
     private Uri resultUriCedula;
     private Uri resultUriPropiedad;
     private Uri resultUriPasado;
 
-    private String URLImagenPerfil;
     private String URLImagenCedula;
     private String URLImagenPropiedad;
     private String URLImagenPasado;
@@ -109,7 +111,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         mvehiculo =(EditText) findViewById(R.id.vehiculo);
         mEmail = (EditText) findViewById(R.id.email);
 
-        mProfileImage = (ImageView) findViewById(R.id.profileImage);
+        mProfileImage = (CircleImageView) findViewById(R.id.profileImage);
         mCedulaImage = findViewById(R.id.cedulaImage);
         mTarjetaPropiedad = findViewById(R.id.tarjetaPropiedadImage);
         mPasadoJudicialImage = findViewById(R.id.pasadoJudicialImage);
@@ -127,10 +129,18 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         mProfileImage.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
-                Intent i = new Intent(Intent.ACTION_PICK);
-                i.setType("image/jpeg");
-                i.putExtra(Intent.EXTRA_LOCAL_ONLY,true);
-                startActivityForResult(Intent.createChooser(i, "selecciona una imagen"), 1);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File imagenArchivo = null;
+                try {
+                    imagenArchivo = crearImagen("perfil");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                if (imagenArchivo != null){
+                    resultUriPerfil = FileProvider.getUriForFile(CustomerSettingsActivity.this, "com.Alikapp.alikappconductor.fileprovider", imagenArchivo);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, resultUriPerfil);
+                    startActivityForResult(intent, 1);
+                }
             }
         });
 
@@ -537,11 +547,11 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         userInfo.put("vehiculo", mVehiculoTotal);
         mCustomerDatabase.updateChildren(userInfo);
 
-        if(resultUri != null) {
+        if(resultUriPerfil != null) {
             StorageReference filePath = FirebaseStorage.getInstance().getReference().child("Images").child(userID).child("Profile_Image");
             Bitmap bitmap = null;
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(),resultUri);
+                bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(),resultUriPerfil);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -696,7 +706,9 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                 }
             });
         }
-    }    protected void guardarPasado() {
+    }
+
+    protected void guardarPasado() {
         if(resultUriPasado != null) {
             StorageReference filePath = FirebaseStorage.getInstance().getReference().child("Images").child(userID).child("PasadoJudicial_Image");
             Bitmap bitmap = null;
@@ -755,15 +767,13 @@ public class CustomerSettingsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && resultCode == Activity.RESULT_OK){
-            Uri u = data.getData();
-            resultUri = u;
-            mProfileImage.setImageURI(resultUri);
+            Bitmap bitmapPerfil = BitmapFactory.decodeFile(rutaPerfilImagen);
+            mProfileImage.setImageBitmap(bitmapPerfil);
             isPerfil = true;
             checkDocumentos();
         }
         if(requestCode == 3 && resultCode == Activity.RESULT_OK){
-            Uri u = data.getData();
-            resultUriPasado = u;
+            resultUriPasado = data.getData();
             mPasadoJudicialImage.setImageURI(resultUriPasado);
             try {
                 runTextRecognation("Pasado", resultUriPasado);
@@ -781,7 +791,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             }
         }
         if(requestCode == 4 && resultCode == Activity.RESULT_OK){
-            bitmapPropiedad = BitmapFactory.decodeFile(rutaPropiedadImagen);
+            Bitmap bitmapPropiedad = BitmapFactory.decodeFile(rutaPropiedadImagen);
             mTarjetaPropiedad.setImageBitmap(bitmapPropiedad);
             try {
                 runTextRecognation("propiedad", resultUriPropiedad);
@@ -792,9 +802,9 @@ public class CustomerSettingsActivity extends AppCompatActivity {
     }
 
     private Bitmap bitmapCedula;
-    private Bitmap bitmapPropiedad;
     private String rutaImagen;
     private String rutaPropiedadImagen;
+    private String rutaPerfilImagen;
 
     private File crearImagen(String consulta) throws IOException {
         String nombreImagen = "foto_";
@@ -805,7 +815,9 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             rutaImagen = imagen.getAbsolutePath();
         } else if (consulta.equals("propiedad")){
             rutaPropiedadImagen = imagen.getAbsolutePath();
-
+        }
+        else if (consulta.equals("perfil")){
+            rutaPerfilImagen = imagen.getAbsolutePath();
         }
         return imagen;
     }
