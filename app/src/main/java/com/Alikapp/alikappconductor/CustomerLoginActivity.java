@@ -52,14 +52,14 @@ public class CustomerLoginActivity extends AppCompatActivity {
         logoAlikapp.setAnimation(animacion1);
 
         mAuth = FirebaseAuth.getInstance();
-
+        /*
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@androidx.annotation.NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         if(user!=null){
                             Intent intent = new Intent(CustomerLoginActivity.this, CustomerMapActivity.class);
                             startActivity(intent);
@@ -71,6 +71,26 @@ public class CustomerLoginActivity extends AppCompatActivity {
                         }
                     }
                 }, 3000);
+            }
+        };*/
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@androidx.annotation.NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user!=null){
+                    Intent intent = new Intent(CustomerLoginActivity.this, CustomerMapActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return;
+                } else {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            login.setVisibility(View.VISIBLE);
+                            splash.setVisibility(View.GONE);
+                        }
+                    }, 1000);
+                }
             }
         };
 
