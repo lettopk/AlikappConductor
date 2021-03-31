@@ -115,13 +115,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mRequest, mRequestt, mChat, mCancelar, mLogout, mTerminosCondiciones;
+    private Button mRequest, mRequestt, mChat, mCancelar, mLogout;
 
     private FloatingActionButton mDesplegar;
 
     private EditText mDescripcion;
 
-    private TextView mLongDescrip, mMenuNombre;
+    private TextView mLongDescrip, mMenuNombre, mTerminosCondiciones;
 
     private LatLng pickupLocation;
 
