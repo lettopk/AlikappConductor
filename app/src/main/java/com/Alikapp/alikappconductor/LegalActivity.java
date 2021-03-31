@@ -11,22 +11,18 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 public class LegalActivity extends AppCompatActivity {
-
-    private DatabaseReference mDriverDatabase;
-    private TextView mTerminos;
-    private ConstraintLayout carga;
-    private ConstraintLayout scroll;
-    private ScrollView scrollView;
-    private Button mAcpeto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,37 +30,24 @@ public class LegalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_legal);
 
         Intent mPv = getIntent();
-        Boolean isPrimeraVez = mPv.getBooleanExtra("PrimeraVez",false);
+        boolean isPrimeraVez = mPv.getBooleanExtra("PrimeraVez",false);
+        String Terminos = mPv.getStringExtra("Terminos");
 
-        mTerminos = findViewById(R.id.terminos);
-        carga = findViewById(R.id.carga);
-        scroll = findViewById(R.id.scroll);
-        scrollView = findViewById(R.id.scrollView);
-        mAcpeto = findViewById(R.id.acepto);
+        TextView mTerminos = findViewById(R.id.terminos);
+        ConstraintLayout carga = findViewById(R.id.carga);
+        ConstraintLayout scroll = findViewById(R.id.scroll);
+        Button mAcpeto = findViewById(R.id.acepto);
 
         if (!isPrimeraVez){
             mAcpeto.setText("OK");
         }
 
-        mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers");
-        mDriverDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
-                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if(map.get("TerminosYCondicionesConductor")!=null){
-                        mTerminos.setText(map.get("TerminosYCondicionesConductor").toString());
-                        scroll.setVisibility(View.VISIBLE);
-                        carga.setVisibility(View.GONE);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
+        if(Terminos != null){
+            mTerminos.setText(Terminos);
+            scroll.setVisibility(View.VISIBLE);
+            carga.setVisibility(View.GONE);
+        }
+        System.out.println(Terminos);
         mAcpeto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

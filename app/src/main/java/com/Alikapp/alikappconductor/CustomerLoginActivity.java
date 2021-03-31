@@ -76,21 +76,21 @@ public class CustomerLoginActivity extends AppCompatActivity {
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@androidx.annotation.NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user!=null){
-                    Intent intent = new Intent(CustomerLoginActivity.this, CustomerMapActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return;
-                } else {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if(user!=null){
+                            Intent intent = new Intent(CustomerLoginActivity.this, CustomerMapActivity.class);
+                            startActivity(intent);
+                            finish();
+                            return;
+                        } else {
                             login.setVisibility(View.VISIBLE);
                             splash.setVisibility(View.GONE);
                         }
-                    }, 1000);
-                }
+                    }
+                }, 3000);
             }
         };
 
