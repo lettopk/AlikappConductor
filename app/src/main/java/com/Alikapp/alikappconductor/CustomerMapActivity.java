@@ -92,6 +92,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.skyfishjy.library.RippleBackground;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -120,7 +121,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private EditText mDescripcion;
 
-    private TextView mLongDescrip, mMenuNombre;
+    private TextView mLongDescrip, mMenuNombre, mTerminosCondiciones;
 
     private LatLng pickupLocation;
 
@@ -228,6 +229,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverCar = (android.widget.TextView)findViewById(R.id.driverCar);
         mChat =(Button) findViewById(R.id.mChat);
         mLogout =(Button) findViewById(R.id.logout);
+        mTerminosCondiciones = findViewById(R.id.TerminosCondiciones);
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -367,6 +369,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         /*NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);*/
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        getTerminos();
+        mTerminosCondiciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.closeDrawers();
+                Intent intent = new Intent(CustomerMapActivity.this, LegalActivity.class);
+                intent.putExtra("PrimeraVez", false);
+                intent.putExtra("Terminos", Terminos);
+                startActivity(intent);
+            }
+        });
 
         isOnService();
     }
@@ -1488,8 +1502,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             }
                         }, 2000);
                     } else {
-                        Intent intent = new Intent(CustomerMapActivity.this, CustomerSettingsActivity.class);
+                        Intent intent = new Intent(CustomerMapActivity.this, LegalActivity.class);
                         intent.putExtra("PrimeraVez", true);
+                        intent.putExtra("Terminos", Terminos);
                         startActivity(intent);
                         finish();
                     }
@@ -1498,6 +1513,26 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private String Terminos;
+    private void getTerminos() {
+        DatabaseReference m = FirebaseDatabase.getInstance().getReference().child("TerminosCondiciones");
+        m.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("Customer")!=null){
+                        Terminos = map.get("Customer").toString();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NotNull DatabaseError databaseError) {
             }
         });
     }

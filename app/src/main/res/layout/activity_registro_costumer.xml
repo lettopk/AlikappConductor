@@ -5,90 +5,93 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="30dp"
     android:background="@color/AlikappGris"
     tools:context=".CostumerRegistroActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/imageView3"
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="25dp"
-            tools:layout_editor_absoluteX="30dp"
-            tools:layout_editor_absoluteY="30dp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                tools:layout_editor_absoluteX="30dp"
+                tools:layout_editor_absoluteY="30dp" />
 
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:src="@mipmap/logo_alikapp" />
+            <ImageView
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@mipmap/logo_alikapp" />
 
-
-        <EditText
-            android:id="@+id/et_correo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:backgroundTint="@color/AlikappBlue"
-            android:drawableStart="@drawable/ic_mail"
-            android:drawableLeft="@drawable/ic_mail"
-            android:fontFamily="@font/abeezee"
-            android:hint=" Email"
-            android:inputType="textEmailAddress"
-            android:textColorHint="@color/AlikappBlue"
-            android:textSize="18sp" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
 
 
-        <EditText
-            android:id="@+id/et_newpass"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:backgroundTint="@color/AlikappBlue"
-            android:drawableStart="@drawable/ic_password"
-            android:drawableLeft="@drawable/ic_password"
-            android:fontFamily="@font/abeezee"
-            android:hint=" Contraseña"
-            android:inputType="textPassword"
-            android:textColorHint="@color/AlikappBlue"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/Et_vnewpass"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:backgroundTint="@color/AlikappBlue"
-            android:drawableStart="@drawable/ic_password"
-            android:drawableLeft="@drawable/ic_password"
-            android:fontFamily="@font/abeezee"
-            android:hint=" Valide contraseña"
-            android:inputType="textPassword"
-            android:textColorHint="@color/AlikappBlue"
-            android:textSize="18sp" />
+            <EditText
+                android:id="@+id/et_correo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:backgroundTint="@color/AlikappBlue"
+                android:drawableStart="@drawable/ic_mail"
+                android:drawableLeft="@drawable/ic_mail"
+                android:fontFamily="@font/abeezee"
+                android:hint=" Email"
+                android:inputType="textEmailAddress"
+                android:textColorHint="@color/AlikappBlue"
+                android:textSize="18sp" />
 
 
-        <Button
-            android:id="@+id/btnRegusuario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/boton_login"
-            android:text="Registro de Usuario"
-            android:textColor="#204051"
-            android:textSize="18dp" />
+            <EditText
+                android:id="@+id/et_newpass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:backgroundTint="@color/AlikappBlue"
+                android:drawableStart="@drawable/ic_password"
+                android:drawableLeft="@drawable/ic_password"
+                android:fontFamily="@font/abeezee"
+                android:hint=" Contraseña"
+                android:inputType="textPassword"
+                android:textColorHint="@color/AlikappBlue"
+                android:textSize="18sp" />
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/Et_vnewpass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:backgroundTint="@color/AlikappBlue"
+                android:drawableStart="@drawable/ic_password"
+                android:drawableLeft="@drawable/ic_password"
+                android:fontFamily="@font/abeezee"
+                android:hint=" Valide contraseña"
+                android:inputType="textPassword"
+                android:textColorHint="@color/AlikappBlue"
+                android:textSize="18sp" />
+
+
+            <Button
+                android:id="@+id/btnRegusuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/boton_login"
+                android:text="Registro de Usuario"
+                android:textColor="#204051"
+                android:textSize="18dp" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

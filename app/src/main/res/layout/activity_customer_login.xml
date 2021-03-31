@@ -17,7 +17,6 @@
         android:background="#e4e3e3"
         android:padding="30dp"
         android:orientation="vertical"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
