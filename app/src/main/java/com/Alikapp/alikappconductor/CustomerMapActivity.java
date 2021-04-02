@@ -127,6 +127,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private Boolean requestBol = false;
     private Boolean isOnService = false;
+    private Boolean outSideRequest = false;
+    private Boolean isOutSide = false;
 
     private Marker pickupMarker;
 
@@ -163,7 +165,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private RippleBackground rippleBackground, rippleBackgroundhelp, rippleBackgroundEspera;
     private ConstraintLayout constraintLayout;
-    private CardView cardViewInicial, cardViewBusqueda;
+    private CardView cardViewInicial, cardViewBusqueda, cardViewOutSide;
     private AVLoadingIndicatorView avi;
 
     public static String conductorUID;
@@ -277,12 +279,24 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mSegmentedButtonGroup = (SegmentedButtonGroup) myDialog.findViewById(R.id.buttonGroup);
         mSegmentedButtonGroup.setPosition(0, true);
         cardViewInicial = myDialog.findViewById(R.id.carview_inicial);
+        cardViewOutSide = myDialog.findViewById(R.id.cardViewOutSide);
         cardViewInicial.setVisibility(View.VISIBLE);
         cardViewBusqueda = myDialog.findViewById(R.id.cardViewBusqueda);
         cardViewBusqueda.setVisibility(View.GONE);
         mCancelar = myDialog.findViewById(R.id.cancelarPedido);
         // mRadioGroup = (RadioGroup) myDialog.findViewById(R.id.radioGroup);
         // mRadioGroup.check(R.id.Mecanico);
+        myDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (isOutSide) {
+                    cardViewBusqueda.setVisibility(View.GONE);
+                    cardViewInicial.setVisibility(View.VISIBLE);
+                    cardViewOutSide.setVisibility(View.GONE);
+                    outSideRequest = true;
+                }
+            }
+        });
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -458,7 +472,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             {
                                 requestService = "Taller";
                             }
-                        System.out.println(requestService);
                         /*int selectId = mRadioGroup.getCheckedRadioButtonId();
 
                         final RadioButton radioButton = (RadioButton) myDialog.findViewById(selectId);
@@ -524,7 +537,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
     private Boolean romper = true;
     private void finalizarEspera() {
-        System.out.println("finalizarEspera");
         if(!romper){
             finRide();
             CustomerMapActivity.super.onRestart();
@@ -701,8 +713,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if(snapshot.exists() && requestBol){
                         java.util.Map<String, Object> map = (java.util.Map<String, Object>) snapshot.getValue();
                         String A = map.get("Enable").toString();
-                        System.out.println(A);
-                        System.out.println(driverFoundID);
                         if(A.equals("Si")){
                             mDesplegar.setVisibility(View.GONE);
                             rippleBackground.setVisibility(View.GONE);
@@ -731,7 +741,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             {
                                 requestService = "Taller";
                             }
-                            System.out.println(requestService);
 
                            /* int selectId = mRadioGroup.getCheckedRadioButtonId();
                            final RadioButton radioButton = (RadioButton) findViewById(selectId);
@@ -1088,7 +1097,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     mLastLocation = location;
 
                     LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-
+                    float lat = (float) location.getLatitude();
+                    float lon = (float) location.getLongitude();
+                    if (!(lat < 4.832224338445363 && lat > 4.484097960049635 && lon < -74.0104303881526 && lon > -74.21255730092525) && !outSideRequest) {
+                        isOutSide = true;
+                        cardViewBusqueda.setVisibility(View.GONE);
+                        cardViewOutSide.setVisibility(View.VISIBLE);
+                        ShowPopup();
+                    }
                     //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                     //mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
                     if(!getDriversAroundStarted)
@@ -1219,7 +1235,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         geoRequest.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                System.out.println(key);
                 if (key != null) {
                     DatabaseReference Tallersitos = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child(key).child("l");
                     Tallersitos.addValueEventListener(new ValueEventListener() {
@@ -1296,7 +1311,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void run() {
                 if (puntoA != null && puntoB != null && mLastLocation != null && requestBol) {
-                    System.out.println(mLastLocation);
                     Routing routing = new Routing.Builder()
                             .key("AIzaSyC5qe0PdRWO9qvCo4rNuyNrXyf8K06SbbI")
                             .travelMode(AbstractRouting.TravelMode.DRIVING)
@@ -1413,7 +1427,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                         java.util.Map<String, Object> map = (java.util.Map<String, Object>) datasnapshot.getValue();
                                         if (map.get(B) != null) {
                                             if(A.equals("Si") && !requestBol){
-                                                System.out.println("entra");
                                                 driverFoundID = B;
                                                 driver_ID = B;
                                                 mDescripcion.setText(C);
