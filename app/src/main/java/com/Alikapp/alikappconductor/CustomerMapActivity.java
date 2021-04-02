@@ -496,6 +496,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mRequest.setText("Buscando Mecanico");
 
                         getClosestDriver();
+                        temporizador.continuarConteo();
                         tiempoEspera();
                         romper = false;
 
@@ -526,20 +527,25 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         ref.child("token").setValue(token);
     }
 
+    private Temporizador temporizador = new Temporizador(0,4,0);
     private void tiempoEspera() {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                finalizarEspera();
+                if(!(temporizador.getSegundosTotal() > 0) || !requestBol){
+                    finalizarEspera();
+                } else {
+                    temporizador.conteoRegresivo();
+                    tiempoEspera();
+                }
             }
-        }, 240000);
+        }, 1000);
     }
     private Boolean romper = true;
     private void finalizarEspera() {
         if(!romper){
             finRide();
-            CustomerMapActivity.super.onRestart();
             romper = true;
             Toast.makeText(this,"No hay mecánicos cerca",Toast.LENGTH_LONG).show();
         }
@@ -553,6 +559,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDesplegar.setVisibility(View.VISIBLE);
         rippleBackground.setVisibility(View.VISIBLE);
         constraintLayout.setVisibility(View.VISIBLE);
+        temporizador.reIniciarConteo();
         try {
             geoQuery.removeAllListeners();
         } catch (Exception e){
@@ -972,6 +979,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDesplegar.setVisibility(View.VISIBLE);
         rippleBackground.setVisibility(View.VISIBLE);
         constraintLayout.setVisibility(View.VISIBLE);
+        temporizador.reIniciarConteo();
         try {
             geoQuery.removeAllListeners();
         } catch (Exception e){
