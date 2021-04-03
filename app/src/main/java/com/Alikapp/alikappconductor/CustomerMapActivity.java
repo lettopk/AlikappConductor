@@ -1,6 +1,7 @@
 package com.Alikapp.alikappconductor;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -81,6 +82,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -111,7 +113,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
-    private Dialog myDialog;
+    private Dialog myDialog, myDialogTaller;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -175,6 +177,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private DatabaseReference mDriverDatabase;
     private CoordinatorLayout mMain, mSecond;
 
+    // Intancias del popup Talleres
+    private TextView mNombreTaller;
+    private TextView mDireccionTaller;
+    private CircleImageView mImagenTaller;
+    private CardView mCardViewTaller, mCardViewCarca;
+
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,6 +205,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         destinationLatLng = new LatLng(0.0,0.0);
 
         myDialog = new Dialog(this);
+        myDialogTaller = new Dialog(this);
 
 
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
@@ -223,6 +233,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         getUserInfo();
 
         myDialog.setContentView(R.layout.layout_popup);
+        myDialogTaller.setContentView(R.layout.layout_popup_taller);
 
         mDriverInfo = (ConstraintLayout) findViewById(R.id.driverInfo);
         mDriverProfileImage = (ImageView) findViewById(R.id.driverProfileImage);
@@ -295,6 +306,22 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     cardViewOutSide.setVisibility(View.GONE);
                     outSideRequest = true;
                 }
+            }
+        });
+
+        mCardViewTaller = myDialogTaller.findViewById(R.id.carview_cargando);
+        mCardViewCarca = myDialogTaller.findViewById(R.id.carview_taller_info);
+        mCardViewTaller.setVisibility(View.GONE);
+        mCardViewCarca.setVisibility(View.VISIBLE);
+        mNombreTaller = myDialogTaller.findViewById(R.id.nombreTaller);
+        mImagenTaller = myDialogTaller.findViewById(R.id.imagenTaller);
+        mDireccionTaller = myDialogTaller.findViewById(R.id.dirccionTaller);
+        myDialogTaller.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                camaraEnMovimiento = true;
+                mCardViewTaller.setVisibility(View.VISIBLE);
+                mCardViewCarca.setVisibility(View.GONE);
             }
         });
 
@@ -1044,13 +1071,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
-                if(tallerMarker1 != null){
-                    tallerMarker1.remove();
-                    tallerMarker1 = null;
-                }
-                if(tallerMarker2 != null){
-                    tallerMarker2.remove();
-                    tallerMarker2 = null;
+                if(camaraEnMovimiento){
+                    if(tallerMarker1 != null){
+                        tallerMarker1.remove();
+                        tallerMarker1 = null;
+                    }
+                    if(tallerMarker2 != null){
+                        tallerMarker2.remove();
+                        tallerMarker2 = null;
+                    }
                 }
                 final Handler handler =new Handler();
                 handler.postDelayed(new Runnable(){
@@ -1094,7 +1123,62 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lat,15));
             }
         });
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                camaraEnMovimiento = false;
+                String id = "id";
+                if(tallerMarker1 != null && tallerMarker1.getId().equals(marker.getId())) {
+                    id = tallerKey1;
+                } else if (tallerMarker2 != null && tallerMarker2.getId().equals(marker.getId())) {
+                    id = tallerKey2;
+                }
+                ShowPopupTaller(id);
+                return false;
+            }
+        });
         getTallerAround();
+    }
+
+    private Boolean camaraEnMovimiento = true;
+    private void ShowPopupTaller(String id) {
+        DatabaseReference talleres = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(id);
+        talleres.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    java.util.Map<String, Object> map = (java.util.Map<String, Object>) snapshot.getValue();
+                    if(map.get("name") != null) {
+                        mNombreTaller.setText(map.get("name").toString());
+                    }
+                    if(map.get("email") != null) {
+                        mDireccionTaller.setText(map.get("email").toString());
+                    }
+                    if(map.get("profileImageUrl")!=null){
+                        com.bumptech.glide.Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mImagenTaller);
+                    }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mCardViewTaller.setVisibility(View.GONE);
+                            mCardViewCarca.setVisibility(View.VISIBLE);
+                        }
+                    }, 2000);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        myDialogTaller.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                myDialogTaller.show();
+            }
+        }, 1000);
     }
 
     LocationCallback mLocationCallback = new LocationCallback(){
@@ -1231,6 +1315,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     boolean getTallerStarted = false;
     private Marker tallerMarker1, tallerMarker2;
+    private String tallerKey1, tallerKey2;
     GeoQuery geoRequest;
     private void getTallerAround(){
         DatabaseReference TalleresLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
@@ -1243,7 +1328,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         geoRequest.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                if (key != null) {
+                if (key != null && camaraEnMovimiento) {
                     DatabaseReference Tallersitos = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child(key).child("l");
                     Tallersitos.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -1263,19 +1348,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                 tallerLatLng = new LatLng(locationLat,locationLng);
                                 if(tallerMarker1 == null){
-                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especiaalidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerKey1 = key;
                                 } else if(tallerMarker2 == null){
-                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title(" especialidad: ").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerKey2 = key;
                                 }
                                 mMap.getUiSettings().setMapToolbarEnabled(true);
                                 mMap.setPadding(0, 0, 0, 250);
-                                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                                    @Override
-                                    public boolean onMarkerClick(Marker marker) {
-                                        Toast.makeText(CustomerMapActivity.this, "si funciona", Toast.LENGTH_LONG).show();
-                                        return false;
-                                    }
-                                });
 
                             }
                         }
