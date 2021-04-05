@@ -176,6 +176,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private DatabaseReference mDriverDatabase;
     private CoordinatorLayout mMain, mSecond;
+    private DrawerLayout drawer;
 
     // Intancias del popup Talleres
     private TextView mNombreTaller;
@@ -396,7 +397,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 onSupportNavigateUp();
             }
         });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         mMenuNombre = headerView.findViewById(R.id.nombreManu);
@@ -1598,6 +1600,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         handler.postDelayed(new Runnable(){
                             @Override
                             public void run() {
+                                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                                 mMain.setVisibility(View.VISIBLE);
                                 mSecond.setVisibility(View.GONE);
                             }
