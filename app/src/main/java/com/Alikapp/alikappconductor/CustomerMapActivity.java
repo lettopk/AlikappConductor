@@ -132,7 +132,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Boolean outSideRequest = false;
     private Boolean isOutSide = false;
 
-    private Marker pickupMarker;
+    private Marker pickupMarker = null;
 
     private SupportMapFragment mapFragment;
 
@@ -520,7 +520,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
 
                         pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                        pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                        if (pickupMarker == null) {
+                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                        }
 
                         mRequest.setText("Buscando Mecanico");
 
@@ -611,9 +613,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         if(pickupMarker != null){
             pickupMarker.remove();
+            pickupMarker = null;
         }
         if (mDriverMarker != null){
             mDriverMarker.remove();
+            mDriverMarker = null;
         }
         mRequest.setText("Pedir Ayuda");
 
@@ -789,7 +793,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             GeoFire geoFire = new GeoFire(ref);
                             geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
                             pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                            if (pickupMarker == null) {
+                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                            }
                             mRequest.setText("Buscando Mecanico....");
 
                             getClosestDriver();
@@ -888,6 +894,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     LatLng driverLatLng = new LatLng(locationLat,locationLng);
                     if(mDriverMarker != null){
                         mDriverMarker.remove();
+                        mDriverMarker = null;
                     }
                     Location loc1 = new Location("");
                     loc1.setLatitude(pickupLocation.latitude);
@@ -915,9 +922,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         getRouteToMarker( new  LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()),
                                 new LatLng(DriverlocationLat, DriverlocationLng));
                     }
-
-                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Su Mecanico")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.mecanico)));
+                    if (mDriverMarker == null) {
+                        mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Su Mecanico")
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mecanico)));
+                    }
                 }
 
             }
@@ -1033,9 +1041,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         if(pickupMarker != null){
             pickupMarker.remove();
+            pickupMarker = null;
         }
         if (mDriverMarker != null){
             mDriverMarker.remove();
+            mDriverMarker = null;
         }
         mRequest.setText("Pedir Ayuda");
 
@@ -1276,8 +1286,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 }
 
                 LatLng driverLocation = new LatLng(location.latitude, location.longitude);
-
-                Marker mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.drawable.mecanico)));
+                if(mDriverMarker == null){
+                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.drawable.mecanico)));
+                }
                 mDriverMarker.setTag(key);
 
                 markers.add(mDriverMarker);
@@ -1536,7 +1547,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                     @Override
                                                     public void run() {
                                                         pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                                                        pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_averiado)));
+                                                        if (pickupMarker == null) {
+                                                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                                                        }
                                                         getDriverLocation();
                                                     }
                                                 }, 1000);
