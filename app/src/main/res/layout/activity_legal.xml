@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/AlikappGris"
+    tools:context=".LegalActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/carga"
+        android:visibility="visible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CARGANDO TERMINOS Y CONDICIONES"
+                android:textSize="30dp"
+                android:gravity="center"
+                android:paddingBottom="20dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="POR FAVOR ESPERE..."
+                android:textSize="30dp"
+                android:gravity="center"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scroll"
+        android:visibility="gone" >
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp">
+                <ImageView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:src="@mipmap/logo_alikapp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Términos y condiciones de uso de la App"
+                    android:textSize="30sp"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:paddingBottom="40dp"
+                    android:paddingTop="40dp"/>
+                <TextView
+                    android:id="@+id/terminos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="loremipsum"
+                    android:justificationMode="inter_word"
+                    android:textSize="15dp"
+                    android:paddingBottom="50dp"/>
+            </LinearLayout>
+        </ScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            tools:ignore="MissingConstraints">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/acepto"
+                android:text="ACEPTO"
+                android:layout_gravity="bottom"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
