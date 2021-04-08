@@ -623,6 +623,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
+    final static float ZOOM_CAMARA = (float) 15.5;
     private void finRide() {
         requestBol = false;
         isOnService = false;
@@ -633,6 +634,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         constraintLayout.setVisibility(View.VISIBLE);
         temporizador.reIniciarConteo();
         service.removeLocationUpdates();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), ZOOM_CAMARA));
         try {
             geoQuery.removeAllListeners();
         } catch (Exception e){
@@ -1063,6 +1065,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         constraintLayout.setVisibility(View.VISIBLE);
         temporizador.reIniciarConteo();
         service.removeLocationUpdates();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), ZOOM_CAMARA));
         try {
             geoQuery.removeAllListeners();
         } catch (Exception e){
@@ -1468,11 +1471,53 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             .waypoints(puntoB, puntoA)
                             .build();
                     routing.execute();
+                    moverCamara(puntoA, puntoB);
                 }
             }
         }, 1000);
 
     }
+
+    Boolean terminado = false;
+    private void moverCamara(LatLng puntoA, LatLng puntoB) {
+        try {
+            double lati = (puntoA.latitude + puntoB.latitude)/2;
+            double longi = (puntoA.longitude + puntoB.longitude)/2;
+            Location locationIn = new Location("");
+            locationIn.setLatitude(puntoA.latitude);
+            locationIn.setLongitude(puntoA.longitude);
+
+            Location locationFn = new Location("");
+            locationFn.setLatitude(puntoB.latitude);
+            locationFn.setLongitude(puntoB.longitude);
+
+            double A = Math.log(locationIn.distanceTo(locationFn)/2);
+            double zoom = (-1)*((10000*A)-172247)/6967;
+
+            if (isOnService && terminado) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lati, longi), (float) zoom));
+            } else {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(puntoB.latitude, puntoB.longitude), 16));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(puntoA.latitude, puntoA.longitude), 16));
+                    }
+                }, 2000);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lati, longi), (float) zoom));
+                        terminado = true;
+                    }
+                }, 4000);
+
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
     private double DriverlocationLat = 0;
     private double DriverlocationLng = 0;
     private List<Polyline> polylines;
