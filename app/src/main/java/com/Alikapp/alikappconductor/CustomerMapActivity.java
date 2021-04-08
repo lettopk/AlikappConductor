@@ -3,14 +3,19 @@ package com.Alikapp.alikappconductor;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
@@ -22,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.content.ContextCompat;
 
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -94,6 +100,9 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.skyfishjy.library.RippleBackground;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -107,7 +116,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.Alikapp.alikappconductor.notifyFirebase.tokeng;
 
-public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, RoutingListener {
+public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, RoutingListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private GoogleMap mMap;
     Location mLastLocation;
@@ -184,11 +193,43 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private CircleImageView mImagenTaller;
     private CardView mCardViewTaller, mCardViewCarca;
 
+    onAppKilled service = null;
+    boolean mBound = false;
+
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder iBinder) {
+            onAppKilled.LocalBinder binder = (onAppKilled.LocalBinder) iBinder;
+            service = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            service = null;
+            mBound = false;
+        }
+    };
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_costumer_map);
+
+        if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION}, 106);
+            }
+        }
+
+        bindService(new Intent(this, onAppKilled.class),
+                mServiceConnection,
+                Context.BIND_AUTO_CREATE);
 
         mMain = findViewById(R.id.mainCoordinator);
         mSecond = findViewById(R.id.secondCoodinator);
@@ -518,7 +559,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                         GeoFire geoFire = new GeoFire(ref);
                         geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-
+                        //poner un try catch con un mensaje de permitir hubicación en el dispositivo
                         pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                         if (pickupMarker == null) {
                             pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
@@ -582,6 +623,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
+    final static float ZOOM_CAMARA = (float) 15.5;
     private void finRide() {
         requestBol = false;
         isOnService = false;
@@ -591,6 +633,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         rippleBackground.setVisibility(View.VISIBLE);
         constraintLayout.setVisibility(View.VISIBLE);
         temporizador.reIniciarConteo();
+        service.removeLocationUpdates();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), ZOOM_CAMARA));
         try {
             geoQuery.removeAllListeners();
         } catch (Exception e){
@@ -763,6 +807,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             getDriverLocation();
                             getDriverInfo();
                             getHasRideEnded();
+                            if(requestService.equals("Taller")) {
+                                service.requestLocationUpdates();
+                            }
                             driver_ID = driverFoundID;
                             mRequest.setText("Buscando la Ubicacion de su Mecanico....");
                             enServicio();
@@ -1017,6 +1064,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         rippleBackground.setVisibility(View.VISIBLE);
         constraintLayout.setVisibility(View.VISIBLE);
         temporizador.reIniciarConteo();
+        service.removeLocationUpdates();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), ZOOM_CAMARA));
         try {
             geoQuery.removeAllListeners();
         } catch (Exception e){
@@ -1422,11 +1471,53 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             .waypoints(puntoB, puntoA)
                             .build();
                     routing.execute();
+                    moverCamara(puntoA, puntoB);
                 }
             }
         }, 1000);
 
     }
+
+    Boolean terminado = false;
+    private void moverCamara(LatLng puntoA, LatLng puntoB) {
+        try {
+            double lati = (puntoA.latitude + puntoB.latitude)/2;
+            double longi = (puntoA.longitude + puntoB.longitude)/2;
+            Location locationIn = new Location("");
+            locationIn.setLatitude(puntoA.latitude);
+            locationIn.setLongitude(puntoA.longitude);
+
+            Location locationFn = new Location("");
+            locationFn.setLatitude(puntoB.latitude);
+            locationFn.setLongitude(puntoB.longitude);
+
+            double A = Math.log(locationIn.distanceTo(locationFn)/2);
+            double zoom = (-1)*((10000*A)-172247)/6967;
+
+            if (isOnService && terminado) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lati, longi), (float) zoom));
+            } else {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(puntoB.latitude, puntoB.longitude), 16));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(puntoA.latitude, puntoA.longitude), 16));
+                    }
+                }, 2000);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lati, longi), (float) zoom));
+                        terminado = true;
+                    }
+                }, 4000);
+
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
     private double DriverlocationLat = 0;
     private double DriverlocationLng = 0;
     private List<Polyline> polylines;
@@ -1538,6 +1629,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 requestService = D;
                                                 if(D.equals("Taller")) {
                                                     mSegmentedButtonGroup.setPosition(1, true);
+                                                    service.requestLocationUpdates();
                                                  //   mRadioGroup.check(R.id.Taller);
                                                 } else if (D.equals("Mecanico")) {
                                                     mSegmentedButtonGroup.setPosition(0,true);
@@ -1569,6 +1661,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 usuarioInfo.put("MecanicoServicio", "");
                                                 usuarioInfo.put("TipoServicio", "");
                                                 enableReference.updateChildren(usuarioInfo);
+                                                service.removeLocationUpdates();
                                             }
                                         }
                                     }
@@ -1654,6 +1747,45 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onCancelled(@NotNull DatabaseError databaseError) {
             }
         });
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(Common.KEY_REQUEST_LOCATION_UPDATES)) {
+            // ver minuto 30
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        if (mBound) {
+            unbindService(mServiceConnection);
+            mBound = false;
+        }
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onListenLocation(SendLocationActivity event) {
+        if (event != null) {
+            String datoshechos = new StringBuilder()
+                    .append(event.getLocation().getLatitude())
+                    .append("/")
+                    .append(event.getLocation().getLongitude())
+                    .toString();
+            //Toast.makeText(service, datoshechos, Toast.LENGTH_SHORT).show();
+        }
     }
 }
 
