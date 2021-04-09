@@ -4,7 +4,7 @@
     android:shape="rectangle"
     tools:ignore="ExtraText">
     <corners android:radius="200dp"/>
-    <stroke android:width="20px"
+    <stroke android:width="5px"
         android:color="@color/AlikappBlue"
         />
     <solid android:color="@color/AlikappBlue"
