@@ -24,8 +24,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-        <activity android:name=".LegalActivity" />
+
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".LegalActivity"></activity>
+
 
         <meta-data
             android:name="com.google.android.actions"
@@ -80,6 +83,8 @@
         <activity android:name=".CustomerSettingsActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".HistorySingleActivity" />
+        <activity android:name=".ActivityBilletera" />
+
 
         <service
             android:name=".notifyFirebase"
