@@ -80,7 +80,6 @@
         <activity android:name=".CustomerSettingsActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".HistorySingleActivity" />
-        <activity android:name=".CashActivity" />
 
         <service
             android:name=".notifyFirebase"

@@ -106,7 +106,7 @@
                     android:drawableLeft="@mipmap/ic_nequi"
                     android:text="  Nequi"
                     android:gravity=""
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:drawableRight="@drawable/ic_check"
                     android:id="@+id/metPagoNequi"/>
 
@@ -120,7 +120,7 @@
                     android:drawableLeft="@mipmap/ic_pse"
                     android:text="  PAgos pse"
                     android:gravity=""
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:drawableRight="@drawable/ic_check"
                     android:id="@+id/metPagoPSE"/>
 
