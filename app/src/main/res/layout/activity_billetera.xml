@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    tools:context=".ActivityBilletera">
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/copDisponib"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/disponible_cop"
@@ -68,7 +68,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="0 creditos"
-            android:textSize="25dp" />
+            android:textSize="25dp"
+            android:id="@+id/credDisponib"/>
 
         <Button
             android:id="@+id/btnRecarga"

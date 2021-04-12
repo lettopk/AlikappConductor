@@ -10,7 +10,8 @@
     android:gravity="center"
     android:padding="20dp"
     android:background="@color/colorPrimary"
-    tools:ignore="NamespaceTypo">
+    tools:ignore="NamespaceTypo"
+    tools:context=".popupRecarga">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/carview_inicial"
@@ -84,8 +85,46 @@
 
                 <Button
                     android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_auxiliar_recargas"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:paddingEnd="20dp"
+                    android:drawableLeft="@mipmap/ic_bancolombia"
+                    android:text="  Bancolombia"
+                    android:visibility="visible"
+                    android:gravity=""
+                    android:drawableRight="@drawable/ic_check"
+                    android:id="@+id/metPagoBancolo"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_auxiliar_recargas"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingEnd="20dp"
+                    android:drawableLeft="@mipmap/ic_nequi"
+                    android:text="  Nequi"
+                    android:gravity=""
+                    android:visibility="visible"
+                    android:drawableRight="@drawable/ic_check"
+                    android:id="@+id/metPagoNequi"/>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_auxiliar_recargas"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingEnd="20dp"
+                    android:drawableLeft="@mipmap/ic_pse"
+                    android:text="  PAgos pse"
+                    android:gravity=""
+                    android:visibility="visible"
+                    android:drawableRight="@drawable/ic_check"
+                    android:id="@+id/metPagoPSE"/>
+
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
