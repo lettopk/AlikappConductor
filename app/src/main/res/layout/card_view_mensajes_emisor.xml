@@ -22,11 +22,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="0.32">
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                cardview:cardCornerRadius="10sp"
+                cardview:cardCornerRadius="12dp"
                 cardview:cardBackgroundColor="#84A9AC">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -49,13 +49,15 @@
                                 android:padding="10dp"
                                 android:textColor="#E4E3E3"
                                 android:fontFamily="@font/abeezee"
-                                android:text="00:00"/>
+                                android:text="00:00"
+                                android:textSize="12sp"/>
                             <TextView
                                 android:id="@+id/nombreMensaje"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="mi nombre"
+                                android:textSize="12sp"
                                 android:textColor="#E4E3E3"
                                 android:fontFamily="@font/abeezee"
                                 android:gravity="end"/>
@@ -67,6 +69,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Hola bienvenido"
+                            android:textSize="16sp"
                             android:fontFamily="@font/abeezee"
                             android:textColor="#E4E3E3"
                             android:gravity="end"/>
@@ -85,6 +88,7 @@
                         android:layout_height="wrap_content"
                         android:padding="10sp">
                         <ImageView
+                            android:visibility="gone"
                             android:id="@+id/fotoPerfilMensaje"
                             android:layout_width="24sp"
                             android:layout_height="24sp"
