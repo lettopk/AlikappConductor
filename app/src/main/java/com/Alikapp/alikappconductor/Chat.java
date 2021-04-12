@@ -46,13 +46,15 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.Alikapp.alikappconductor.CustomerMapActivity.clicknotify;
 import static com.Alikapp.alikappconductor.CustomerMapActivity.driver_ID;
 import static java.nio.file.Paths.get;
 
 public class Chat extends AppCompatActivity {
     public static String getnombreconductor ="";
-    private ImageView fotoPerfil;
+    private CircleImageView fotoPerfil;
     private TextView nombre;
     private RecyclerView rvMensajes;
     private EditText txtMensaje;
@@ -82,7 +84,7 @@ public class Chat extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        fotoPerfil =(ImageView) findViewById(R.id.fotoPerfil);
+        fotoPerfil =(CircleImageView) findViewById(R.id.fotoPerfil);
         nombre = (TextView) findViewById(R.id.nombre);
         rvMensajes =(RecyclerView) findViewById(R.id.rvMensajes);
         txtMensaje = (EditText) findViewById(R.id.txtMensaje);

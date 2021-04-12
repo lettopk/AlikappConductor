@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:backgroundTint="#204051"
+                        android:fontFamily="sans-serif"
             android:hint="email"
             android:textColor="#204051"
             android:textColorHint="#204051" />
@@ -67,7 +68,7 @@
                 android:background="@drawable/boton_login"
                 android:gravity="center"
                 android:layout_marginTop="20dp"
-                android:text="Login"
+                android:text="Iniciar Secion"
                 android:textColor="@android:color/white"
                 app:defaultColor="#204051"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -94,9 +95,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/boton_login"
+                android:background="@drawable/btn_login_ripple"
                 android:text="registrarse"
-
+                android:textColor="@drawable/txt_btn_login"
                 />
 
         </LinearLayout>

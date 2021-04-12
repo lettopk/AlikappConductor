@@ -18,45 +18,55 @@
             android:orientation="vertical"
             android:padding="20sp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/abeezee"
-                android:gravity="center"
-                android:text="Foto de Perfil"
-                android:textStyle="bold"
-                android:textColor="@color/AlikappBlue"
-                android:textSize="30dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:background="@drawable/ventanas_info">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/abeezee"
+                    android:gravity="left"
+                    android:layout_margin="20dp"
+                    android:text="Foto de Perfil"
+                    android:textStyle="bold"
+                    android:textColor="@color/AlikappGris"
+                    android:textSize="18dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profileImage"
                     android:layout_width="142dp"
                     android:layout_height="149dp"
                     android:layout_gravity="center"
-                    android:layout_margin="10dp"
+                    android:rotation="-90"
+                    android:layout_margin="25dp"
                     android:src="@mipmap/ic_default_user" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/abeezee"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:text="Cédula de Ciudadanía"
-                android:textColor="@color/AlikappBlue"
-                android:textSize="30dp" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/ventanas_info">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/abeezee"
+                    android:textStyle="bold"
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:text="Cédula de Ciudadanía"
+                    android:textColor="@color/AlikappGris"
+                    android:textSize="18dp" />
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -71,13 +81,14 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="75dp"
+                        android:layout_gravity="center"
                         android:fontFamily="@font/abeezee"
-                        android:textStyle="bold"
-                        android:gravity="center"
+                        android:gravity="left"
                         android:text="Agrega una foto de tu cedula, dando click en la imagen a la izquierda, recuerda tener buena luz, que sea clara. Puedes tomar la foto de manera horizontal."
                         android:textColor="@color/AlikappGris"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
                 <LinearLayout
@@ -90,6 +101,7 @@
                         android:fontFamily="@font/abeezee"
                         android:textStyle="bold"
                         android:text=" Nombre:"
+                        android:layout_marginLeft="10dp"
                         android:textColor="@color/AlikappGris"
                         android:textSize="15dp"/>
 
@@ -102,6 +114,7 @@
                         android:enabled="false"
                         android:fontFamily="@font/abeezee"
                         android:textStyle="bold"
+                        android:layout_marginLeft="10dp"
                         android:hint="Nombre"
                         android:textColor="@color/AlikappGris" />
                     <TextView
@@ -110,6 +123,7 @@
                         android:text=" Cédula:"
                         android:fontFamily="@font/abeezee"
                         android:textStyle="bold"
+                        android:layout_marginLeft="10dp"
                         android:textColor="#e4e3e3"
                         android:textSize="15dp"/>
 
@@ -123,6 +137,7 @@
                         android:enabled="false"
                         android:fontFamily="@font/abeezee"
                         android:textStyle="bold"
+                        android:layout_marginLeft="10dp"
                         android:hint="Cédula de Ciudadanía"
                         android:textColor="@color/AlikappGris" />
                     <TextView
@@ -131,6 +146,7 @@
                         android:text=" Celular:"
                         android:fontFamily="@font/abeezee"
                         android:textStyle="bold"
+                        android:layout_marginLeft="10dp"
                         android:textColor="#e4e3e3"
                         android:textSize="15dp"/>
                     <EditText
@@ -140,6 +156,7 @@
                         android:layout_marginBottom="20sp"
                         android:backgroundTint="@color/AlikappGris"
                         android:enabled="false"
+                        android:layout_marginLeft="10dp"
                         android:hint="Numero celular"
                         android:inputType="number"
                         android:fontFamily="@font/abeezee"
@@ -151,6 +168,7 @@
                         android:text=" Email:"
                         android:fontFamily="@font/abeezee"
                         android:textStyle="bold"
+                        android:layout_marginLeft="10dp"
                         android:textColor="#e4e3e3"
                         android:textSize="15dp"/>
                     <EditText
@@ -161,6 +179,7 @@
                         android:backgroundTint="@color/AlikappGris"
                         android:enabled="false"
                         android:hint="Email"
+                        android:layout_marginLeft="10dp"
                         android:fontFamily="@font/abeezee"
                         android:textStyle="bold"
                         android:textColor="@color/AlikappGris" />
