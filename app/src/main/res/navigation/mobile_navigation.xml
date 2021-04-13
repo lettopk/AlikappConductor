@@ -28,4 +28,11 @@
         android:name="com.Alikapp.alikappconductor.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+
+     <fragment
+         android:id="@+id/nav_billetera"
+         android:name="com.Alikapp.alikappconductor.ui.billetera.BilleteraFragment"
+         android:label="billetera"
+         tools:layout="@layout/fragment_billetera"
+        />
 </navigation>
