@@ -43,6 +43,14 @@ public class popupRecarga extends AppCompatActivity {
 
     private Boolean isEnabled = false;
 
+    private static final String NUMERO_TARJETA = "4242424242424242";
+    private static final String CVC = "123";
+    private static final String EXP_MONT = "08";
+    private static final String EXP_YEAR = "28";
+    private static final String CARD_HOLDER = "José Pérez";
+    private String aceptanceToken;
+
+
     private static final String TAG = "WOMPI";
     private static final String URL_TERMINOS_WOMPI = "https://wompi.co/wp-content/uploads/2019/09/TERMINOS-Y-CONDICIONES-DE-USO-USUARIOS-WOMPI.pdf";
     private Retrofit retrofit;
@@ -139,7 +147,7 @@ public class popupRecarga extends AppCompatActivity {
                     WompiData wompiData = response.body();
                     WompiRespuesta wompiRespuesta = wompiData.getData();
                     ParametrosAceptacion parametrosAceptacion = wompiRespuesta.getPresigned_acceptance();
-                    System.out.println(parametrosAceptacion.getAcceptance_token());
+                    aceptanceToken = parametrosAceptacion.getAcceptance_token();
                     isEnabled = true;
                 } else {
                     checkBox.setChecked(false);
