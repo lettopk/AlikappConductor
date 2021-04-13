@@ -83,6 +83,7 @@
                     android:textSize="20dp"
                     android:textStyle="bold"/>
 
+
                 <Button
                     android:layout_width="match_parent"
                     android:padding="10dp"
@@ -102,7 +103,7 @@
                     android:background="@drawable/btn_auxiliar_recargas"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:paddingEnd="20dp"
+                    android:paddingEnd="18dp"
                     android:drawableLeft="@mipmap/ic_nequi"
                     android:text="  Nequi"
                     android:gravity=""
@@ -116,7 +117,7 @@
                     android:background="@drawable/btn_auxiliar_recargas"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:paddingEnd="20dp"
+                    android:paddingEnd="18dp"
                     android:drawableLeft="@mipmap/ic_pse"
                     android:text="  PAgos pse"
                     android:gravity=""
