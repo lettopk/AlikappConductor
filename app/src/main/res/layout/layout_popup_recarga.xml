@@ -103,7 +103,8 @@
                             android:gravity=""
                             android:drawableRight="@drawable/ic_check"
                             android:id="@+id/metPagoBancolo"
-                            android:layout_marginEnd="10dp"/>
+                            android:layout_marginEnd="10dp"
+                            android:onClick="tokenizarCreditCard"/>
                         <Button
                             android:layout_width="220dp"
                             android:padding="10dp"
