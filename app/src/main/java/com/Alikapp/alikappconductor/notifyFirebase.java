@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -47,6 +48,9 @@ public static String tokeng="";
     }
 
     private void mayorqueorochat(String titulo, String detalle) {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        final long[] pattern = {0, 100, 100, 100};
+        vibrator.vibrate(pattern, -1);
         String id = "mensaje";
         NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,id);
@@ -83,6 +87,9 @@ public static String tokeng="";
     }
 
     private void mayorqueoreo(String titulo, String detalle) {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        final long[] pattern = {0, 100, 100, 100};
+        vibrator.vibrate(pattern, -1);
         String id = "mensaje";
         NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,id);
@@ -98,8 +105,8 @@ public static String tokeng="";
                 .setSmallIcon(R.mipmap.ic_car)
                 .setContentText(detalle)
                 .setContentIntent(clicknoti())
-                .setContentInfo("nuevo")
-                .setVibrate(new long[]{0, 1000, 500, 1000});
+                .setContentInfo("nuevo");
+                //.setVibrate(new long[]{0, 1000, 500, 1000});
 
         Random random =new Random();
         int idnotify = random.nextInt(8000);

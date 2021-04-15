@@ -30,19 +30,31 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
+            android:background="@color/AlikappGris"
             app:headerLayout="@layout/nav_header_main"
             app:menu="@menu/activity_main_drawer" >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="bottom">
-
+                android:gravity="bottom"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TerminosCondiciones"
+                    android:text="Leer los Terminos y condiciones"
+                    android:layout_marginStart="10dp"
+                    android:padding="20dp"/>
                 <Button
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/logout"
-                    android:text="logout"/>
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/btn_ripple"
+                    android:textColor="@drawable/txt_log_button"
+                    android:text="Cerrar Secion"/>
 
             </LinearLayout>
         </com.google.android.material.navigation.NavigationView>

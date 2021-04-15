@@ -17,7 +17,6 @@
         android:background="#e4e3e3"
         android:padding="30dp"
         android:orientation="vertical"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
@@ -43,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:backgroundTint="#204051"
+                        android:fontFamily="sans-serif"
             android:hint="email"
             android:textColor="#204051"
             android:textColorHint="#204051" />
@@ -68,7 +68,7 @@
                 android:background="@drawable/boton_login"
                 android:gravity="center"
                 android:layout_marginTop="20dp"
-                android:text="Login"
+                android:text="Iniciar Secion"
                 android:textColor="@android:color/white"
                 app:defaultColor="#204051"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -95,9 +95,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/boton_login"
+                android:background="@drawable/btn_login_ripple"
                 android:text="registrarse"
-
+                android:textColor="@drawable/txt_btn_login"
                 />
 
         </LinearLayout>
@@ -107,6 +107,42 @@
             android:layout_height="10dp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/splash"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/AlikappGris"
+        tools:context=".splashScreen"
+        >
+
+        <ImageView
+            android:id="@+id/imagenlogo"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="200dp"
+            android:foregroundGravity="center"
+            android:src="@mipmap/logo_alikapp"
+            tools:layout_editor_absoluteX="105dp"
+            tools:layout_editor_absoluteY="265dp" />
+
+        <TextView
+            android:id="@+id/textAlikapp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/abeezee"
+            android:gravity="center"
+            android:text=" Urgencias Mecanicas"
+            android:textColor="@color/AlikappBlue"
+            android:textSize="18sp"
+            android:layout_marginStart="-20dp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="139dp"
+            tools:layout_editor_absoluteY="696dp" />
+
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

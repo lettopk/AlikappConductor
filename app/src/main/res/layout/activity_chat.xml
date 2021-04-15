@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#204051"
+    android:background="#303030"
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".Chat">
@@ -15,11 +15,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#204051">
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/fotoPerfil"
-            android:layout_width="50dp"
-            android:layout_height="50sp"
-            android:scaleType="center"/>
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:contentDescription="activity chat"
+            />
 
         <TextView
             android:id="@+id/nombre"
@@ -27,9 +28,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:layout_marginStart="10dp"
             android:text="Conductor"
             android:fontFamily="@font/abeezee"
-            android:textSize="26dp"
+            android:textStyle="bold"
+            android:textSize="15sp"
             android:textColor="#E4E3E3" />
 
         <Button
@@ -37,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:drawable/ic_menu_call"
-            android:minWidth="48dip">
+            android:minWidth="50dp">
 
         </Button>
 
@@ -49,13 +52,14 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:padding="5dp"
-        android:background="#36768A">
+        android:background="@color/AlikappGris">
     </androidx.recyclerview.widget.RecyclerView>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/AlikappBlue"
         android:orientation="horizontal">
         <ImageButton
             android:id="@+id/btnEnviarFoto"

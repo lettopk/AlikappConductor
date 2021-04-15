@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:gravity="center"
+    android:padding="20dp"
+    android:background="@color/colorPrimary"
+    tools:ignore="NamespaceTypo"
+    tools:context=".popupRecarga">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/carview_inicial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+
+        app:cardBackgroundColor="#ffffff"
+        app:cardCornerRadius="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nueva Recarga"
+                android:gravity="center"
+                android:layout_marginTop="25dp"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_identificacion"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="25dp"
+                android:orientation="vertical">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="$20.000"
+                    android:textSize="25dp"
+                    android:inputType="numberDecimal"
+                    android:background="@drawable/edt_valor_recarga"
+                    android:gravity="center"
+                    android:id="@+id/valorRecarga"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Valor a Recargar"
+                    android:gravity="center"
+                    android:layout_marginTop="1dp"
+                    android:textSize="15dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Metado de Pago"
+                    android:gravity="center"
+                    android:textSize="20dp"
+                    android:textStyle="bold"/>
+
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_auxiliar_recargas"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingEnd="20dp"
+                    android:drawableLeft="@mipmap/ic_bancolombia"
+                    android:text="  Bancolombia"
+                    android:visibility="visible"
+                    android:gravity=""
+                    android:drawableRight="@drawable/ic_check"
+                    android:id="@+id/metPagoBancolo"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_auxiliar_recargas"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingEnd="18dp"
+                    android:drawableLeft="@mipmap/ic_nequi"
+                    android:text="  Nequi"
+                    android:gravity=""
+                    android:visibility="gone"
+                    android:drawableRight="@drawable/ic_check"
+                    android:id="@+id/metPagoNequi"/>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_auxiliar_recargas"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingEnd="18dp"
+                    android:drawableLeft="@mipmap/ic_pse"
+                    android:text="  PAgos pse"
+                    android:gravity=""
+                    android:visibility="gone"
+                    android:drawableRight="@drawable/ic_check"
+                    android:id="@+id/metPagoPSE"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Seleccione un Metado de Pago"
+
+                    android:gravity="center" />
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Acepto haber leido los términos y condiciones junto a la politica de privacidad"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/chk_terminosycondiciones"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="25dp"
+                    android:gravity="center"
+                    android:layout_margin="20dp">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recargar"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/btn_recargar"
+                    android:layout_marginRight="20dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:id="@+id/aceptarRecarga"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancelar"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:background="@drawable/btn_auxiliar_recargas"
+                    android:id="@+id/cancelarRecarga"/>
+
+
+             </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

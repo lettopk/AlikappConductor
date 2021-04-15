@@ -4,9 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.Alikapp.alikappconductor.CustomerSettingsActivity"
+
     android:orientation="vertical"
-    android:background="#e4e3e3">
+    tools:context="com.Alikapp.alikappconductor.CustomerSettingsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Datos del perfil"
+            android:textColor="#ffffff"
+            android:layout_marginLeft="10dp"
+            android:textSize="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/abeezee"
+            android:gravity="center"
+            android:text="Foto de Perfil"
+            android:textColor="@color/AlikappGris"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:rotation="-90"
+            android:src="@mipmap/ic_default_user" />
+
+        <TextView
+            android:id="@+id/name1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Nombre"
+            android:textColor="@color/white"
+            android:textSize="25dp" />
+
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,102 +65,73 @@
             android:orientation="vertical"
             android:padding="20sp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/abeezee"
-                android:gravity="center"
-                android:text="Foto de Perfil"
-                android:textStyle="bold"
-                android:textColor="@color/AlikappBlue"
-                android:textSize="30dp" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:background="@drawable/ventanas_info">
-
-                <ImageView
-                    android:id="@+id/profileImage"
-                    android:layout_width="142dp"
-                    android:layout_height="149dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="10sp"
-                    android:src="@mipmap/ic_default_user" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/abeezee"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:text="Cédula de Ciudadanía"
-                android:textColor="@color/AlikappBlue"
-                android:textSize="30dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ventanas_info"
                 android:orientation="vertical"
-                android:background="@drawable/ventanas_info">
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:text="Datos personales"
+                    android:textSize="20dp" />
+
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/cedulaImage"
                         android:layout_width="158dp"
                         android:layout_height="158dp"
                         android:layout_gravity="center"
-                        android:layout_margin="10sp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/btn_auxiliar_recargas"
                         android:src="@mipmap/ic_default_user" />
+
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/abeezee"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:text="Agrega una foto de tu cedula,
-                        dando click en la imagen a la izquierda,
-                        recuerda tener buena luz, que sea clara.
-
-                        Puedes tomar la foto de manera horizontal"
-                        android:textColor="#e4e3e3"
-                        android:textSize="15dp" />
+                        android:layout_height="75dp"
+                        android:layout_gravity="center"
+                        android:gravity="left"
+                        android:text="Agrega una foto de tu cedula, dando click en la imagen a la izquierda, recuerda tener buena luz, que sea clara. Puedes tomar la foto de manera horizontal."
+                        android:textSize="12dp"
+                        />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/abeezee"
-                        android:textStyle="bold"
+                        android:layout_marginLeft="10dp"
                         android:text=" Nombre:"
-                        android:textColor="#e4e3e3"
                         android:textSize="15dp"/>
 
                     <EditText
                         android:id="@+id/name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginBottom="20sp"
-                        android:backgroundTint="@color/AlikappGris"
                         android:enabled="false"
-                        android:fontFamily="@font/abeezee"
-                        android:textStyle="bold"
-                        android:hint="Nombre"
-                        android:textColor="@color/AlikappGris" />
+                        android:hint="Nombre" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:text=" Cédula:"
-                        android:fontFamily="@font/abeezee"
-                        android:textStyle="bold"
-                        android:textColor="#e4e3e3"
                         android:textSize="15dp"/>
 
 
@@ -121,97 +139,111 @@
                         android:id="@+id/cedula"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginBottom="20sp"
-                        android:backgroundTint="@color/AlikappGris"
                         android:enabled="false"
-                        android:fontFamily="@font/abeezee"
-                        android:textStyle="bold"
-                        android:hint="Cédula de Ciudadanía"
-                        android:textColor="@color/AlikappGris" />
+                        android:hint="Cédula de Ciudadanía" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:text=" Celular:"
-                        android:fontFamily="@font/abeezee"
-                        android:textStyle="bold"
-                        android:textColor="#e4e3e3"
-                        android:textSize="15dp"/>
+                        android:textSize="15dp" />
+
                     <EditText
                         android:id="@+id/phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginBottom="20sp"
-                        android:backgroundTint="@color/AlikappGris"
                         android:enabled="false"
                         android:hint="Numero celular"
-                        android:inputType="number"
-                        android:fontFamily="@font/abeezee"
-                        android:textStyle="bold"
-                        android:textColor="@color/AlikappGris" />
+                        android:inputType="number" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:text=" Email:"
-                        android:fontFamily="@font/abeezee"
-                        android:textStyle="bold"
-                        android:textColor="#e4e3e3"
-                        android:textSize="15dp"/>
+                        android:textSize="15dp" />
+
                     <EditText
                         android:id="@+id/email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginBottom="20sp"
-                        android:backgroundTint="@color/AlikappGris"
                         android:enabled="false"
-                        android:hint="Email"
-                        android:fontFamily="@font/abeezee"
-                        android:textStyle="bold"
-                        android:textColor="@color/AlikappGris" />
+                        android:hint="Email"/>
+
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/abeezee"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:text="Pasado Judicial"
-                android:textColor="@color/AlikappBlue"
-                android:textSize="30dp" />
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ventanas_info"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical"
-                android:background="@drawable/ventanas_info">
+                android:padding="20dp">
 
-                <ImageView
-                    android:id="@+id/pasadoJudicialImage"
-                    android:layout_width="158dp"
-                    android:layout_height="158dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="10sp"
-                    android:fontFamily="@font/abeezee"
-                    android:textStyle="bold"
-                    android:src="@mipmap/ic_default_user" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Pasado Judicial"
+                    android:padding="10dp"
+                    android:textSize="18dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/pasadoJudicialImage"
+                        android:layout_width="158dp"
+                        android:layout_height="158dp"
+                        android:background="@drawable/btn_auxiliar_recargas"
+                        android:layout_gravity="center"
+                        android:layout_margin="10sp"
+                        android:src="@mipmap/ic_default_user"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10sp"
+                        android:gravity="left"
+                        android:text="Agrega una imagen de tus antecedentes judiciales, dando click en la imagen a la izquierda, recuerda puedes encontrarlo en https://antecedentes.policia.gov.co:7005/WebJudicial/index.xhtml y puedes tomar una foto a la pantalla."
+                        android:textSize="11dp"/>
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/abeezee"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:text="Tarjeta de propiedad"
-                android:textColor="@color/AlikappBlue"
-                android:textSize="30dp" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ventanas_info"
                 android:orientation="vertical"
-                android:background="@drawable/ventanas_info">
+                android:layout_marginTop="20dp"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:text="Datos del vehiculo"
+                    android:textSize="20dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -224,76 +256,88 @@
                         android:layout_height="158dp"
                         android:layout_gravity="center"
                         android:layout_margin="10sp"
+                        android:background="@drawable/btn_auxiliar_recargas"
                         android:src="@mipmap/ic_default_user" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10sp"
+                        android:gravity="left"
+                        android:text="Agrega una foto de la tarjeta de propiedad de tu vehiculo dando click en la imagen a la izquierda, recuerda tener buena luz, que sea clara. Puedes tomar la foto de manera horizontal."
+                        android:textSize="11dp" />
+
                 </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/abeezee"
-                    android:textStyle="bold"
                     android:text=" Placa:"
-                    android:textColor="#e4e3e3"
-                    android:textSize="15dp"/>
+                    android:textSize="15dp" />
+
                 <EditText
                     android:id="@+id/numeroPlaca"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20sp"
-                    android:backgroundTint="@color/AlikappGris"
                     android:enabled="false"
-                    android:fontFamily="@font/abeezee"
                     android:textStyle="bold"
                     android:hint="PLaca"
-                    android:textColor="@color/AlikappGris" />
+                    />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/abeezee"
-                    android:textStyle="bold"
                     android:text=" Vehículo:"
-                    android:textColor="#e4e3e3"
-                    android:textSize="15dp"/>
+                    android:textSize="15dp" />
 
                 <EditText
                     android:id="@+id/vehiculo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20sp"
-                    android:backgroundTint="@color/AlikappGris"
                     android:enabled="false"
-                    android:fontFamily="@font/abeezee"
-                    android:textStyle="bold"
                     android:hint="vehículo"
-                    android:textColor="@color/AlikappGris" />
+                    />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="20dp">
+
                 <Button
                     android:id="@+id/confirm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/boton_confirmacion"
-                    android:text="confirmar"
-                    android:textColor="#e4e3e3"
                     android:fontFamily="@font/abeezee"
+                    android:text="confirmar"
+                    android:textColor="@color/AlikappGris"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/back"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/boton_confirmacion"
-                    android:text="atras"
-                    android:fontFamily="@font/abeezee"
-                    android:textStyle="bold"
-                    android:textColor="#e4e3e3" />
+                    android:padding="15dp">
+
+                    <Button
+                        android:id="@+id/back"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/boton_confirmacion"
+                        android:fontFamily="@font/abeezee"
+                        android:text="atras"
+                        android:textColor="@color/AlikappGris"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -3,10 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:shape="rectangle"
     tools:ignore="ExtraText">
-    <corners android:radius="20dp"/>
-    <stroke android:width="20px"
-        android:color="@color/AlikappBlue"
+    <corners android:radius="200dp"/>
+    <stroke android:width="5px"
+        android:color="#ffffff"
         />
-    <solid android:color="@color/AlikappBlue"
-        />"
+
 </shape>
