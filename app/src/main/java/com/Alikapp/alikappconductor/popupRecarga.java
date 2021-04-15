@@ -66,7 +66,6 @@ public class popupRecarga extends AppCompatActivity {
     private WompiapiService service;
     private static final String URL_BASE_WOMPI = "https://sandbox.wompi.co/v1/";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +122,10 @@ public class popupRecarga extends AppCompatActivity {
             public void onClick(View v) {
                 if(isEnabled) {
                     if (isEnabledValue) {
+                      
+                        Intent intent = new Intent( popupRecarga.this, Submit_card_view.class);
+                        startActivity(intent);
+                      
                         recagar();
                     } else {
                         Toast.makeText(popupRecarga.this, "Transacción inválida, el monto debe ser igual o superior a $20.000", Toast.LENGTH_LONG).show();
