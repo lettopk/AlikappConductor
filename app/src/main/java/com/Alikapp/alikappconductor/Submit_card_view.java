@@ -26,7 +26,6 @@ public class Submit_card_view extends AppCompatActivity {
 
     private EditText mCardNumber, mNameCard, mNumCcv, mDateExpiry;
     private Button mConfir;
-    private Object CreditCardView;
     private TextView frontCardNUmber, fromCardName, fromCardExpiry, cvvNumber;
     private View creditCardFront, creditCardBack;
 
@@ -47,15 +46,11 @@ public class Submit_card_view extends AppCompatActivity {
         fromCardExpiry = findViewById(R.id.front_card_expiry);
         cvvNumber = findViewById(R.id.cvvNumber);
 
-
-        CreditCardView = (CreditCardView) findViewById(R.id.card_1);
         mCardNumber = (EditText) findViewById(R.id.numTc);
         mNameCard = (EditText) findViewById(R.id.nomComp);
         mNumCcv = (EditText) findViewById(R.id.numCcv);
         mDateExpiry = (EditText) findViewById(R.id.fecVenc);
         mConfir = (Button) findViewById(R.id.btnConfir);
-
-        Date currentTime = Calendar.getInstance().getTime();
 
         mNameCard.addTextChangedListener(new TextWatcher() {
             @Override
