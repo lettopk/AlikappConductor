@@ -26,8 +26,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Creditcard"></activity>
-        <activity android:name=".Submit_card_view" />
         <activity android:name=".LegalActivity" />
 
         <meta-data

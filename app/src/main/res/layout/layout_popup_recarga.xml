@@ -97,14 +97,26 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:paddingEnd="20dp"
+                            android:drawableLeft="@mipmap/ic_pse"
+                            android:text="  Tarjeta Crédito"
+                            android:gravity=""
+                            android:drawableRight="@drawable/ic_check"
+                            android:id="@+id/metPagoCard"
+                            android:layout_marginEnd="10dp"/>
+                        <Button
+                            android:layout_width="220dp"
+                            android:padding="10dp"
+                            android:background="@drawable/btn_auxiliar_recargas"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:paddingEnd="20dp"
                             android:drawableLeft="@mipmap/ic_bancolombia"
                             android:text="  Bancolombia"
                             android:visibility="visible"
                             android:gravity=""
                             android:drawableRight="@drawable/ic_check"
                             android:id="@+id/metPagoBancolo"
-                            android:layout_marginEnd="10dp"
-                            android:onClick="tokenizarCreditCard"/>
+                            android:layout_marginEnd="10dp"/>
                         <Button
                             android:layout_width="220dp"
                             android:padding="10dp"

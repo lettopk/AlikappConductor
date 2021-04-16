@@ -1,10 +1,14 @@
 package com.Alikapp.alikappconductor;
 
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -13,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +35,8 @@ import com.Alikapp.alikappconductor.wompiApi.WompiapiService;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -41,18 +48,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class popupRecarga extends AppCompatActivity {
 
     private CheckBox checkBox;
-    private Button mRecargar;
-    private Button mCancela;
+    private Button mRecargar, mCancela, btnPagoTarjeta;
     private EditText mCantidad;
+
+    private Dialog myDialog;
+    private EditText mCardNumber, mNameCard, mNumCcv, mDateExpiry;
+    private Button mConfir;
+    private TextView frontCardNUmber, fromCardName, fromCardExpiry, cvvNumber;
+    private View creditCardFront, creditCardBack;
+    private Boolean a1 = false, a2 = false, a3 = false, a4 = false;
 
     private Boolean isEnabled = false;
     private Boolean isEnabledValue = false;
 
-    private static final String NUMERO_TARJETA = "4242424242424242";
-    private static final String CVC = "123";
-    private static final String EXP_MONT = "08";
-    private static final String EXP_YEAR = "28";
-    private static final String CARD_HOLDER = "José Pérez";
+    private static String NUMERO_TARJETA;
+    private static String CVC;
+    private static String EXP_MONT;
+    private static String EXP_YEAR;
+    private static String CARD_HOLDER;
 
 
     private String aceptanceToken;
@@ -66,16 +79,41 @@ public class popupRecarga extends AppCompatActivity {
     private WompiapiService service;
     private static final String URL_BASE_WOMPI = "https://sandbox.wompi.co/v1/";
 
+    private String actualMonth, actualYear;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_popup_recarga);
+
+        Calendar currentTime = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM");
+        SimpleDateFormat dateFormatYear = new SimpleDateFormat("yy");
+        actualMonth = dateFormat.format(currentTime.getTime());
+        actualYear = dateFormatYear.format(currentTime.getTime());
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(URL_BASE_WOMPI)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         service = retrofit.create(WompiapiService.class);
+
+        myDialog = new Dialog(this);
+        myDialog.setContentView(R.layout.activity_submit_card_view);
+
+        creditCardFront = myDialog.findViewById(R.id.Creditcardfront);
+        creditCardBack = myDialog.findViewById(R.id.Creditcardback);
+
+        frontCardNUmber = myDialog.findViewById(R.id.front_card_number);
+        fromCardName = myDialog.findViewById(R.id.front_card_name);
+        fromCardExpiry = myDialog.findViewById(R.id.front_card_expiry);
+        cvvNumber = myDialog.findViewById(R.id.cvvNumber);
+
+        mCardNumber = (EditText) myDialog.findViewById(R.id.numTc);
+        mNameCard = (EditText) myDialog.findViewById(R.id.nomComp);
+        mNumCcv = (EditText) myDialog.findViewById(R.id.numCcv);
+        mDateExpiry = (EditText) myDialog.findViewById(R.id.fecVenc);
+        mConfir = (Button) myDialog.findViewById(R.id.btnConfir);
 
         mCantidad = findViewById(R.id.valorRecarga);
         mCantidad.addTextChangedListener(new TextWatcher() {
@@ -122,10 +160,6 @@ public class popupRecarga extends AppCompatActivity {
             public void onClick(View v) {
                 if(isEnabled) {
                     if (isEnabledValue) {
-                      
-                        Intent intent = new Intent( popupRecarga.this, Submit_card_view.class);
-                        startActivity(intent);
-                      
                         recagar();
                     } else {
                         Toast.makeText(popupRecarga.this, "Transacción inválida, el monto debe ser igual o superior a $20.000", Toast.LENGTH_LONG).show();
@@ -155,7 +189,169 @@ public class popupRecarga extends AppCompatActivity {
                 }
             }
         });
+        btnPagoTarjeta = findViewById(R.id.metPagoCard);
+        btnPagoTarjeta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopup();
+            }
+        });
         obtenerParametros();
+    }
+
+    private void showPopup() {
+        mNameCard.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                fromCardName.setText(mNameCard.getText().toString());
+                creditCardFront.setVisibility(View.VISIBLE);
+                creditCardBack.setVisibility(View.GONE);
+                a1 = mNameCard.getText().length() > 5;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        mCardNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (mCardNumber.getText().length() <= 4 ) {
+                    frontCardNUmber.setText(mCardNumber.getText().toString());
+                }
+                else if (mCardNumber.getText().length() > 4 && mCardNumber.getText().length()<= 8){
+                    frontCardNUmber.setText(mCardNumber.getText().toString().substring(0, 4) + "  " + mCardNumber.getText().toString().substring(4));
+                }
+
+                else if (mCardNumber.getText().length() > 8 && mCardNumber.getText().length()<= 12){
+                    frontCardNUmber.setText(mCardNumber.getText().toString().substring(0, 4) + "  " +
+                            mCardNumber.getText().toString().substring(4, 8) + "  " +
+                            mCardNumber.getText().toString().substring(8));
+                }
+
+                else if (mCardNumber.getText().length() > 12 && mCardNumber.getText().length()<= 16){
+                    frontCardNUmber.setText(mCardNumber.getText().toString().substring(0, 4) + "  " +
+                            mCardNumber.getText().toString().substring(4, 8) + "  " +
+                            mCardNumber.getText().toString().substring(8, 12) + "  " +
+                            mCardNumber.getText().toString().substring(12));
+                }
+
+                a2 = mCardNumber.getText().length() == 16;
+                creditCardFront.setVisibility(View.VISIBLE);
+                creditCardBack.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        mDateExpiry.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                creditCardFront.setVisibility(View.VISIBLE);
+                creditCardBack.setVisibility(View.GONE);
+                switch (mDateExpiry.getText().length()) {
+                    case 0: fromCardExpiry.setText("MM/AA");
+                        break;
+                    case 1: fromCardExpiry.setText(mDateExpiry.getText().toString()+"M/AA");
+                        break;
+                    case 2: fromCardExpiry.setText(mDateExpiry.getText().toString()+"/AA");
+                        break;
+                    case 3: fromCardExpiry.setText(mDateExpiry.getText().toString().substring(0, 2) + "/"+
+                                mDateExpiry.getText().toString().substring(2)+ "A" );
+                        break;
+                    case 4: fromCardExpiry.setText(mDateExpiry.getText().toString().substring(0,2) + "/"+ mDateExpiry.getText().toString().substring(2));
+                        break;
+                }
+                a3 = mDateExpiry.getText().length() == 4;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (mDateExpiry.getText().length() == 2) {
+                    int i = Integer.parseInt(mDateExpiry.getText().toString().substring(0, 2));
+                    if (i > 12){
+                        mDateExpiry.setText("");
+                        Toast.makeText(getBaseContext(),"El mes no puede ser mayor a 12", Toast.LENGTH_LONG).show();
+                    }
+                } else if (mDateExpiry.getText().length() == 4) {
+                    int date = Integer.parseInt(mDateExpiry.getText().toString().substring(2) + mDateExpiry.getText().toString().substring(0, 2));
+                    int dateActual = Integer.parseInt(actualYear + actualMonth);
+                    if (date < dateActual) {
+                        mDateExpiry.setText("");
+                        Toast.makeText(getBaseContext(),"La fecha de expiración debe ser posterior a la fecha actual: " + actualMonth + "/" + actualYear, Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+
+        mNumCcv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                cvvNumber.setText(mNumCcv.getText().toString());
+                creditCardFront.setVisibility(View.GONE);
+                creditCardBack.setVisibility(View.VISIBLE);
+                a4 = mNumCcv.getText().length() == 3;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (mNumCcv.getText().length() == 3) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            creditCardFront.setVisibility(View.VISIBLE);
+                            creditCardBack.setVisibility(View.GONE);
+                        }
+                    }, 2000);
+                }
+
+            }
+        });
+
+        mConfir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (a1 && a2 && a3 && a4) {
+                    StringBuilder sb = new StringBuilder(mNameCard.getText().toString());
+                    if (mNameCard.getText().toString().substring(mNameCard.getText().length()-1).equals(" ")) {
+                        sb.deleteCharAt(mNameCard.getText().length()-1);
+                        mNameCard.setText(sb.toString());
+                    }
+                    NUMERO_TARJETA = mCardNumber.getText().toString();
+                    CVC = mNumCcv.getText().toString();
+                    CARD_HOLDER = mNameCard.getText().toString();
+                    EXP_MONT = mDateExpiry.getText().toString().substring(0,2);
+                    EXP_YEAR = mDateExpiry.getText().toString().substring(2);
+                    tokenizarCreditCard();
+                } else {
+                    Toast.makeText(popupRecarga.this, "Debes diligencir todos los campos", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                myDialog.show();
+            }
+        }, 1000);
     }
 
     private void obtenerParametros() {
@@ -198,7 +394,7 @@ public class popupRecarga extends AppCompatActivity {
         });
     }
 
-    public void tokenizarCreditCard(View view) {
+    public void tokenizarCreditCard() {
         CreditCardTokenizar creditCardTokenizar = new CreditCardTokenizar(NUMERO_TARJETA, CVC, EXP_MONT, EXP_YEAR, CARD_HOLDER);
         Call<CreditCardData> creditCardDataCall = service.tokenizarTarjeta(creditCardTokenizar);
 
@@ -209,9 +405,16 @@ public class popupRecarga extends AppCompatActivity {
                     CreditCardData creditCard = response.body();
                     CreditCardRespose creditCardRespose = creditCard.getData();
                     tokenCreditCard = creditCardRespose.getId();
+                    myDialog.dismiss();
+                    Toast.makeText(popupRecarga.this, "Tarjeta válida", Toast.LENGTH_SHORT).show();
                     System.out.println(tokenCreditCard);
                 } else {
-                    Log.e(TAG, "tokenizarCreditCard onResponse: " + response.errorBody());
+                    Toast.makeText(popupRecarga.this, "Datos de tarjeta erróneos", Toast.LENGTH_LONG).show();
+                    try {
+                        Log.e(TAG, "tokenizarCreditCard onResponse: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -276,7 +479,11 @@ public class popupRecarga extends AppCompatActivity {
                     System.out.println(informationyeye.getId());
                     System.out.println(informationyeye.getStatus());
                 } else {
-                    Log.e(TAG, "Recarga onResponse: " + response.errorBody());
+                    try {
+                        Log.e(TAG, "Recarga onResponse: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
