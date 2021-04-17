@@ -3,6 +3,7 @@ package com.Alikapp.alikappconductor.wompiApi;
 import com.Alikapp.alikappconductor.models.acceptance_token.WompiData;
 import com.Alikapp.alikappconductor.models.creditCardToken.CreditCardData;
 import com.Alikapp.alikappconductor.models.creditCardToken.CreditCardTokenizar;
+import com.Alikapp.alikappconductor.models.pseBanks.PseData;
 import com.Alikapp.alikappconductor.models.transaction.Transaction;
 import com.Alikapp.alikappconductor.models.transaction.responses.TransactionResponse;
 
@@ -18,6 +19,7 @@ public interface WompiapiService {
     static final String URL_WOMPI_TRANSACCION = "transactions";
     static final String URL_WOMPI_ACEPTACION = "merchants/";
     static final String URL_WOMPI_TOKENIZAR_TARJETA = "tokens/cards";
+    static final String URL_WOMPI_PSE_BANCOS = "pse/financial_institutions";
 
     static final String LLAVE_PUBLICA_WOMPI = "pub_test_7CZ8Yhe2xeaFd6Z1FZxip3nHlwQzgIvR";
 
@@ -26,6 +28,10 @@ public interface WompiapiService {
 
     @GET(URL_WOMPI_TRANSACCION + "/{id}")
     Call<TransactionResponse> verificarEstadoTransaccion(@Path ("id") String id);
+
+    @Headers({"Authorization: Bearer " + LLAVE_PUBLICA_WOMPI})
+    @GET(URL_WOMPI_PSE_BANCOS)
+    Call<PseData> getPseBancos();
 
     @Headers({"Authorization: Bearer " + LLAVE_PUBLICA_WOMPI})
     @POST(URL_WOMPI_TOKENIZAR_TARJETA)
