@@ -19,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,6 +30,8 @@ import com.Alikapp.alikappconductor.models.creditCardToken.CreditCardData;
 import com.Alikapp.alikappconductor.models.creditCardToken.CreditCardRespose;
 import com.Alikapp.alikappconductor.models.creditCardToken.CreditCardTokenizar;
 import com.Alikapp.alikappconductor.models.transaction.Transaction;
+import com.Alikapp.alikappconductor.models.transaction.responses.PaymentMethod;
+import com.Alikapp.alikappconductor.models.transaction.responses.ResponseExtra;
 import com.Alikapp.alikappconductor.models.transaction.responses.TransactionResponse;
 import com.Alikapp.alikappconductor.models.transaction.responses.TransactionInformation;
 import com.Alikapp.alikappconductor.wompiApi.WompiapiService;
@@ -48,10 +51,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class popupRecarga extends AppCompatActivity {
 
     private CheckBox checkBox;
-    private Button mRecargar, mCancela, btnPagoTarjeta;
+    private Button mRecargar, mCancela;
+    private ToggleButton btnPagoTarjeta, btnPagoBancolo, btnPagoNequi, btnPagoPSE;
     private EditText mCantidad;
 
+    private Dialog transferenciaBancolo;
+    private EditText emailBancolo, nombreBancolo, numCelularBancolo, tipoPersona;
+    private Button btnConfirBC, btnCancelBC;
+
+
     private Dialog myDialog;
+    private View linearLayout3;
     private EditText mCardNumber, mNameCard, mNumCcv, mDateExpiry;
     private Button mConfir;
     private TextView frontCardNUmber, fromCardName, fromCardExpiry, cvvNumber;
@@ -77,7 +87,7 @@ public class popupRecarga extends AppCompatActivity {
     private static final String TAG = "WOMPI";
     private Retrofit retrofit;
     private WompiapiService service;
-    private static final String URL_BASE_WOMPI = "https://sandbox.wompi.co/v1/";
+    private static final String URL_BASE_WOMPI = "https://production.wompi.co/v1/";
 
     private String actualMonth, actualYear;
 
@@ -99,7 +109,9 @@ public class popupRecarga extends AppCompatActivity {
         service = retrofit.create(WompiapiService.class);
 
         myDialog = new Dialog(this);
-        myDialog.setContentView(R.layout.activity_submit_card_view);
+        myDialog.setContentView(R.layout.layout_popup_submit_card_view);
+        transferenciaBancolo = new Dialog(this);
+        transferenciaBancolo.setContentView(R.layout.layout_popup_pago_bancolombia);
 
         creditCardFront = myDialog.findViewById(R.id.Creditcardfront);
         creditCardBack = myDialog.findViewById(R.id.Creditcardback);
@@ -113,7 +125,8 @@ public class popupRecarga extends AppCompatActivity {
         mNameCard = (EditText) myDialog.findViewById(R.id.nomComp);
         mNumCcv = (EditText) myDialog.findViewById(R.id.numCcv);
         mDateExpiry = (EditText) myDialog.findViewById(R.id.fecVenc);
-        mConfir = (Button) myDialog.findViewById(R.id.btnConfir);
+        mConfir = (Button) myDialog.findViewById(R.id.btnConfirTC);
+        linearLayout3 =  myDialog.findViewById(R.id.linearLayout3);
 
         mCantidad = findViewById(R.id.valorRecarga);
         mCantidad.addTextChangedListener(new TextWatcher() {
@@ -189,15 +202,154 @@ public class popupRecarga extends AppCompatActivity {
                 }
             }
         });
-        btnPagoTarjeta = findViewById(R.id.metPagoCard);
-        btnPagoTarjeta.setOnClickListener(new View.OnClickListener() {
+        btnPagoTarjeta = (ToggleButton) findViewById(R.id.metPagoCard);
+        btnPagoBancolo = (ToggleButton) findViewById(R.id.metPagoBancolo);
+        btnPagoNequi = (ToggleButton) findViewById(R.id.metPagoNequi);
+        btnPagoPSE = (ToggleButton) findViewById(R.id.metPagoPSE);
+
+        obtenerParametros();
+
+        btnPagoTarjeta.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                showPopup();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                 if (isChecked){
+
+                     cambiarFondobtnPagoTarjeta();
+                     quitarFondobtnPagoNequi();
+                     quitarFondobtnPagoBancolombia();
+                     quitarFondobtnPagoPSE();
+                     showPopup();
+
+                 }
+
+                 else {
+
+                     quitarFondoPagoTarjeta();
+
+                }
+            }
+
+        });
+
+      btnPagoBancolo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+              if (isChecked){
+
+                  cambiarFondobtnPagoBancolombia();
+                  quitarFondoPagoTarjeta();
+                  quitarFondobtnPagoNequi();
+                  quitarFondobtnPagoPSE();
+
+              }
+
+              else {
+
+                  quitarFondobtnPagoBancolombia();
+
+              }
+
+          }
+      });
+
+        btnPagoNequi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+
+                    cambiarFondobtnPagoNequi();
+                    quitarFondoPagoTarjeta();
+                    quitarFondobtnPagoBancolombia();
+                    quitarFondobtnPagoPSE();
+
+                }
+
+                else {
+
+                    quitarFondobtnPagoNequi();
+
+                }
+
             }
         });
-        obtenerParametros();
+
+        btnPagoPSE.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+
+                    cambiarFondobtnPagoPSE();
+                    quitarFondoPagoTarjeta();
+                    quitarFondobtnPagoBancolombia();
+                    quitarFondobtnPagoNequi();
+
+                }
+
+                else {
+
+                    quitarFondobtnPagoPSE();
+
+                }
+
+            }
+        });
+
     }
+
+    /**
+     * Lanza un background cuando el boton pago con tarjeta queda enclavado**/
+    public void cambiarFondobtnPagoTarjeta(){
+
+        btnPagoTarjeta.setBackgroundResource(R.drawable.btn_met_pgo_seleccion);
+        btnPagoBancolo.setChecked(false);
+        btnPagoNequi.setChecked(false);
+        btnPagoPSE.setChecked(false);
+    }
+
+    public void quitarFondoPagoTarjeta(){
+
+        this.btnPagoTarjeta.setBackgroundResource(R.drawable.btn_auxiliar_recargas);
+    }
+
+    public void cambiarFondobtnPagoBancolombia(){
+
+        btnPagoBancolo.setBackgroundResource(R.drawable.btn_met_pgo_seleccion);
+        btnPagoTarjeta.setChecked(false);
+        btnPagoNequi.setChecked(false);
+        btnPagoPSE.setChecked(false);
+    }
+
+    public void quitarFondobtnPagoBancolombia(){
+
+        this.btnPagoBancolo.setBackgroundResource(R.drawable.btn_auxiliar_recargas);
+    }
+
+    public void cambiarFondobtnPagoNequi(){
+
+        btnPagoNequi.setBackgroundResource(R.drawable.btn_met_pgo_seleccion);
+        btnPagoTarjeta.setChecked(false);
+        btnPagoBancolo.setChecked(false);
+        btnPagoPSE.setChecked(false);
+    }
+
+    public void quitarFondobtnPagoNequi(){
+
+        this.btnPagoNequi.setBackgroundResource(R.drawable.btn_auxiliar_recargas);
+    }
+
+    public void cambiarFondobtnPagoPSE(){
+
+        btnPagoPSE.setBackgroundResource(R.drawable.btn_met_pgo_seleccion);
+        btnPagoTarjeta.setChecked(false);
+        btnPagoNequi.setChecked(false);
+        btnPagoBancolo.setChecked(false);
+    }
+
+    public void quitarFondobtnPagoPSE(){
+
+        this.btnPagoPSE.setBackgroundResource(R.drawable.btn_auxiliar_recargas);
+    }
+
 
     private void showPopup() {
         mNameCard.addTextChangedListener(new TextWatcher() {
@@ -328,17 +480,22 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (a1 && a2 && a3 && a4) {
-                    StringBuilder sb = new StringBuilder(mNameCard.getText().toString());
-                    if (mNameCard.getText().toString().substring(mNameCard.getText().length()-1).equals(" ")) {
-                        sb.deleteCharAt(mNameCard.getText().length()-1);
-                        mNameCard.setText(sb.toString());
+                    while (true) {
+                        StringBuilder sb = new StringBuilder(mNameCard.getText().toString());
+                        if (mNameCard.getText().toString().substring(mNameCard.getText().length()-1).equals(" ")) {
+                            sb.deleteCharAt(mNameCard.getText().length()-1);
+                            mNameCard.setText(sb.toString());
+                        } else {
+                            NUMERO_TARJETA = mCardNumber.getText().toString();
+                            CVC = mNumCcv.getText().toString();
+                            CARD_HOLDER = mNameCard.getText().toString();
+                            EXP_MONT = mDateExpiry.getText().toString().substring(0,2);
+                            EXP_YEAR = mDateExpiry.getText().toString().substring(2);
+                            tokenizarCreditCard();
+                            break;
+
+                        }
                     }
-                    NUMERO_TARJETA = mCardNumber.getText().toString();
-                    CVC = mNumCcv.getText().toString();
-                    CARD_HOLDER = mNameCard.getText().toString();
-                    EXP_MONT = mDateExpiry.getText().toString().substring(0,2);
-                    EXP_YEAR = mDateExpiry.getText().toString().substring(2);
-                    tokenizarCreditCard();
                 } else {
                     Toast.makeText(popupRecarga.this, "Debes diligencir todos los campos", Toast.LENGTH_SHORT).show();
                 }
@@ -346,12 +503,7 @@ public class popupRecarga extends AppCompatActivity {
         });
 
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                myDialog.show();
-            }
-        }, 1000);
+        myDialog.show();
     }
 
     private void obtenerParametros() {
@@ -408,6 +560,7 @@ public class popupRecarga extends AppCompatActivity {
                     myDialog.dismiss();
                     Toast.makeText(popupRecarga.this, "Tarjeta válida", Toast.LENGTH_SHORT).show();
                     System.out.println(tokenCreditCard);
+                    linearLayout3.setVisibility(View.GONE);
                 } else {
                     Toast.makeText(popupRecarga.this, "Datos de tarjeta erróneos", Toast.LENGTH_LONG).show();
                     try {
@@ -427,10 +580,6 @@ public class popupRecarga extends AppCompatActivity {
 
     private String idTransaccion;
     private void recagar() {
-        HashMap creditCardPay = new HashMap();
-        creditCardPay.put("type", "CARD");
-        creditCardPay.put("installments", 2);
-        creditCardPay.put("token", tokenCreditCard);
         Long timestamp = System.currentTimeMillis();
         String conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String referencia = new StringBuilder()
@@ -438,7 +587,7 @@ public class popupRecarga extends AppCompatActivity {
                 .append("//")
                 .append(conductorUID)
                 .toString();
-        Transaction transaction = new Transaction(aceptanceToken, (int) (amount*100), "pepito_perez@example.com", referencia, creditCardPay);
+        Transaction transaction = new Transaction(aceptanceToken, (int) (amount*100), "pepito_perez@example.com", referencia, metPago());
 
         Call<TransactionResponse> transactionResponseCall = service.payTransaction(transaction);
         transactionResponseCall.enqueue(new Callback<TransactionResponse>() {
@@ -447,6 +596,16 @@ public class popupRecarga extends AppCompatActivity {
                 if(response.isSuccessful()){
                     TransactionResponse transaction = response.body();
                     TransactionInformation informationyeye = transaction.getData();
+                    PaymentMethod metodoPago = informationyeye.getPayment_method();
+                    System.out.println(informationyeye.getPayment_method());
+                    if (metodoPago.getExtra()!= null) {
+
+                        System.out.println(metodoPago.getExtra());
+                        ResponseExtra metodoResponse = metodoPago.getExtra();
+                        Intent intent = new Intent(popupRecarga.this, LayoutWebview.class);
+                        intent.putExtra("pack", metodoResponse.getAsync_payment_url());
+                        startActivity(intent);
+                    }
                     System.out.println(informationyeye.getId());
                     idTransaccion = informationyeye.getId();
                     System.out.println(informationyeye.getStatus());
@@ -467,6 +626,41 @@ public class popupRecarga extends AppCompatActivity {
         });
     }
 
+    private HashMap metPago() {
+
+        HashMap metPago = new HashMap();
+
+        if (btnPagoTarjeta.isChecked()) {
+
+            metPago.put("type", "CARD");
+            metPago.put("installments", 2);
+            metPago.put("token", tokenCreditCard);
+
+        }
+        else if (btnPagoBancolo.isChecked()){
+
+            metPago.put("type", "BANCOLOMBIA_TRANSFER");
+            metPago.put("user_type", "PERSON");
+            metPago.put("payment_description", "Pago por creditos Alikapp");
+            //metPago.put("sandbox_status", "APPROVED");
+
+        }
+
+        else if (btnPagoNequi.isChecked()) {
+
+
+
+        }
+        else if (btnPagoPSE.isChecked()){
+
+
+
+        }
+
+        return metPago;
+
+    }
+
     private void verificarEstadoTransaccion() {
         Call<TransactionResponse> transaction = service.verificarEstadoTransaccion(idTransaccion);
 
@@ -476,6 +670,33 @@ public class popupRecarga extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     TransactionResponse transaction = response.body();
                     TransactionInformation informationyeye = transaction.getData();
+
+                    if (informationyeye.getStatus().equals("PENDING")) {
+
+                        PaymentMethod metodoPago = informationyeye.getPayment_method();
+                        if (metodoPago.getExtra()!= null) {
+
+                            ResponseExtra metodoResponse = metodoPago.getExtra();
+                            Intent intent = new Intent(popupRecarga.this, LayoutWebview.class);
+                            intent.putExtra("pack", metodoResponse.getAsync_payment_url());
+                            startActivity(intent);
+                        }
+
+                        else if (metodoPago.getExtra() == null && btnPagoBancolo.isChecked()){
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    verificarEstadoTransaccion();
+
+                                }
+                            }, 500);
+
+                        }
+
+                    }
+
                     System.out.println(informationyeye.getId());
                     System.out.println(informationyeye.getStatus());
                 } else {
