@@ -22,7 +22,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="50dp"
             android:hint="XXXX XXXX XXXX XXXX"
-            android:textSize="@dimen/text_size_normal"
+            android:textSize="18dp"
 
 
             />
@@ -54,11 +54,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:hint="@string/card_holder_name_sample"
+                    android:hint="NOMBRE TARJETA"
                     android:maxWidth="150dp"
                     android:minWidth="150dp"
-                    android:paddingTop="@dimen/padding_small"
-                    android:paddingBottom="@dimen/padding_small"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
                     android:shadowRadius="2" />
 
 
@@ -89,8 +89,8 @@
                     android:hint="MM_AA"
                     android:maxWidth="150dp"
                     android:minWidth="150dp"
-                    android:paddingTop="@dimen/padding_small"
-                    android:paddingBottom="@dimen/padding_small"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
           />
 
             </LinearLayout>

@@ -21,7 +21,7 @@ public interface WompiapiService {
     static final String URL_WOMPI_TOKENIZAR_TARJETA = "tokens/cards";
     static final String URL_WOMPI_PSE_BANCOS = "pse/financial_institutions";
 
-    static final String LLAVE_PUBLICA_WOMPI = "pub_test_7CZ8Yhe2xeaFd6Z1FZxip3nHlwQzgIvR";
+    static final String LLAVE_PUBLICA_WOMPI = "pub_prod_BScxnsM92Qp3te8VRfvONb3ikvqLr5X1";
 
     @GET(URL_WOMPI_ACEPTACION + LLAVE_PUBLICA_WOMPI)
     Call<WompiData> obtenerParametros();

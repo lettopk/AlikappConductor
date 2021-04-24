@@ -18,45 +18,37 @@
         android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:cardBackgroundColor="#464646"
         app:cardCornerRadius="20dp">
 
 
-        <ImageView
-            android:id="@+id/cerrar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="350dp"
-            android:layout_marginTop="15dp"
-            android:elevation="5dp"
-            android:src="@drawable/ic_baseline_close_24" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="20dp"
-            android:text="¿Qué Ayuda Necesitas?"
-            android:textAlignment="center"
-            android:textColor="@color/AlikappGris"
-            android:textSize="25dp"
-            android:fontFamily="@font/abeezee"
-            android:textStyle="bold"
-            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
+                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="25dp"
                 android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginRight="20dp"
+                    android:text="¿Qué Ayuda Necesitas?"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"/>
 
                 <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
                     android:id="@+id/buttonGroup"
@@ -65,7 +57,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
                     android:background="@color/AlikappGris"
@@ -137,11 +129,8 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginRight="20dp"
                     android:text="Describe la situacion"
-                    android:textAlignment="center"
-                    android:textColor="@color/AlikappGris"
-                    android:textSize="25dp"
-                    android:fontFamily="@font/abeezee"
-                    android:textStyle="bold" />
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
                 <LinearLayout
 
@@ -222,7 +211,7 @@
         android:layout_marginEnd="0dp"
         app:cardBackgroundColor="#464646"
         app:cardCornerRadius="20dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
 
         <LinearLayout
