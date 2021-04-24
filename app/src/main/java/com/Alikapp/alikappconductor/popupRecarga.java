@@ -13,10 +13,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -39,6 +41,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -58,6 +61,27 @@ public class popupRecarga extends AppCompatActivity {
     private Dialog transferenciaBancolo;
     private EditText emailBancolo, nombreBancolo, numCelularBancolo, tipoPersona;
     private Button btnConfirBC, btnCancelBC;
+
+    private Spinner opcionesTipoPersonasPSE, opcionesTipoDocumentoPSE, opcionesBancoPSE;
+
+    private static String EMAIL;
+    private static String NUMTELEFONOCEL;
+    private static String NOMBRE;
+    private static int TIPOPERSONA;
+    private static String TIPOID;
+    private static String NUMCC;
+    private static String BANCO;
+    private static final String DEScPAGO ="Pago por recarga para servicios y creditos ALIKAPP";
+
+    private Dialog pagoNqui;
+    private EditText emailNequi, nombreNequi, numCelularNequi;
+    private Button btnConfirNQ, btnCancelNQ;
+
+
+    private Dialog pagoPSE;
+    private EditText emailPSE, nombrePSE, numDocumentoPSE;
+
+    private Button btnConfirPSE, btnCancelPSE;
 
 
     private Dialog myDialog;
@@ -110,8 +134,18 @@ public class popupRecarga extends AppCompatActivity {
 
         myDialog = new Dialog(this);
         myDialog.setContentView(R.layout.layout_popup_submit_card_view);
+
         transferenciaBancolo = new Dialog(this);
         transferenciaBancolo.setContentView(R.layout.layout_popup_pago_bancolombia);
+
+
+        pagoNqui = new Dialog(this);
+        pagoNqui.setContentView(R.layout.layout_popup_pago_nequi);
+
+        pagoPSE = new Dialog(this);
+        pagoPSE.setContentView(R.layout.layout_popup_pago_pse);
+
+
 
         creditCardFront = myDialog.findViewById(R.id.Creditcardfront);
         creditCardBack = myDialog.findViewById(R.id.Creditcardback);
@@ -128,6 +162,32 @@ public class popupRecarga extends AppCompatActivity {
         mConfir = (Button) myDialog.findViewById(R.id.btnConfirTC);
         linearLayout3 =  myDialog.findViewById(R.id.linearLayout3);
 
+        btnPagoTarjeta = (ToggleButton) findViewById(R.id.metPagoCard);
+        btnPagoBancolo = (ToggleButton) findViewById(R.id.metPagoBancolo);
+        btnPagoNequi = (ToggleButton) findViewById(R.id.metPagoNequi);
+        btnPagoPSE = (ToggleButton) findViewById(R.id.metPagoPSE);
+
+
+        emailBancolo = (EditText) transferenciaBancolo.findViewById(R.id.emailBancolo);
+        nombreBancolo = (EditText) transferenciaBancolo.findViewById(R.id.nombreApellidosBancolo);
+        numCelularBancolo = (EditText) transferenciaBancolo.findViewById(R.id.numeroCelularBancolo);
+        btnConfirBC = (Button) transferenciaBancolo.findViewById(R.id.btnConfirBC);
+        btnCancelBC = (Button) transferenciaBancolo.findViewById(R.id.btnCancelBC);
+
+        emailNequi = (EditText) pagoNqui.findViewById(R.id.emailNequi);
+        numCelularNequi = (EditText) pagoNqui.findViewById(R.id.numeroCelularNequi);
+        btnConfirNQ = (Button) pagoNqui.findViewById(R.id.btnConfirNQ);
+        btnCancelNQ = (Button) pagoNqui.findViewById(R.id.btnCancelNQ);
+
+        opcionesBancoPSE = (Spinner) pagoPSE.findViewById(R.id.spinBancoPSE);
+        opcionesTipoDocumentoPSE = (Spinner) pagoPSE.findViewById(R.id.spinTipoDocumentoPSE);
+        opcionesTipoPersonasPSE = (Spinner) pagoPSE.findViewById(R.id.spinTipoPersonaPSE);
+        emailPSE = (EditText) pagoPSE.findViewById(R.id.emailPSE);
+        numDocumentoPSE = (EditText) pagoPSE.findViewById(R.id.nunDocumentoPSE);
+        nombrePSE = (EditText) pagoPSE.findViewById(R.id.nombreApellidosPSE);
+        btnConfirPSE = (Button) pagoPSE.findViewById(R.id.btnConfirPSE);
+        btnCancelPSE = (Button) pagoPSE.findViewById(R.id.btnCancelPSE);
+
         mCantidad = findViewById(R.id.valorRecarga);
         mCantidad.addTextChangedListener(new TextWatcher() {
             @Override
@@ -139,7 +199,7 @@ public class popupRecarga extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     amount = Double.parseDouble(mCantidad.getText().toString());
-                    if(amount < 20000) {
+                    if(amount < 2000) {
                         isEnabledValue = false;
                         mCantidad.setTextColor(Color.parseColor("#c22828"));
                     } else {
@@ -197,15 +257,13 @@ public class popupRecarga extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(checkBox.isChecked()){
                     obtenerParametros();
+                    checkBox.setEnabled(false);
+                    Toast.makeText(popupRecarga.this, "Manten pulsado para leer terminos y condiciones", Toast.LENGTH_SHORT).show();
                 } else {
                     isEnabled = false;
                 }
             }
         });
-        btnPagoTarjeta = (ToggleButton) findViewById(R.id.metPagoCard);
-        btnPagoBancolo = (ToggleButton) findViewById(R.id.metPagoBancolo);
-        btnPagoNequi = (ToggleButton) findViewById(R.id.metPagoNequi);
-        btnPagoPSE = (ToggleButton) findViewById(R.id.metPagoPSE);
 
         obtenerParametros();
 
@@ -225,6 +283,7 @@ public class popupRecarga extends AppCompatActivity {
                  else {
 
                      quitarFondoPagoTarjeta();
+                     desactivarBotonRecarga();
 
                 }
             }
@@ -240,12 +299,14 @@ public class popupRecarga extends AppCompatActivity {
                   quitarFondoPagoTarjeta();
                   quitarFondobtnPagoNequi();
                   quitarFondobtnPagoPSE();
+                  showPopupPagoBancolo();
 
               }
 
               else {
 
                   quitarFondobtnPagoBancolombia();
+                  desactivarBotonRecarga();
 
               }
 
@@ -261,12 +322,14 @@ public class popupRecarga extends AppCompatActivity {
                     quitarFondoPagoTarjeta();
                     quitarFondobtnPagoBancolombia();
                     quitarFondobtnPagoPSE();
+                    showPopupPagoNequi();
 
                 }
 
                 else {
 
                     quitarFondobtnPagoNequi();
+                    desactivarBotonRecarga();
 
                 }
 
@@ -282,17 +345,155 @@ public class popupRecarga extends AppCompatActivity {
                     quitarFondoPagoTarjeta();
                     quitarFondobtnPagoBancolombia();
                     quitarFondobtnPagoNequi();
+                    showPopupPagoPSE();
+                    desactivarBotonRecarga();
 
                 }
 
                 else {
 
                     quitarFondobtnPagoPSE();
+                    desactivarBotonRecarga();
+                }
+
+            }
+        });
+
+
+    }
+
+    private void desactivarBotonRecarga() {
+
+        mRecargar.setBackgroundResource(R.drawable.btn_recarga_desactivado);
+        mRecargar.setEnabled(false);
+
+    }
+
+    private void activarBotonRecarga() {
+
+        mRecargar.setBackgroundResource(R.drawable.btn_recargar);
+        mRecargar.setEnabled(true);
+    }
+
+    private void showPopupPagoPSE() {
+
+
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.opcionesTipoDocumento, android.R.layout.simple_spinner_item);
+        opcionesTipoDocumentoPSE.setAdapter(adapter1);
+
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.opcionesTipoPersona, android.R.layout.simple_spinner_item);
+        opcionesTipoPersonasPSE.setAdapter(adapter2);
+
+        ArrayAdapter<CharSequence> bancosArray = ArrayAdapter.createFromResource(this, R.array.opcionesBancos, android.R.layout.simple_spinner_item);
+        opcionesBancoPSE.setAdapter(bancosArray);
+
+
+        btnConfirPSE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String tipoDocumento= opcionesTipoDocumentoPSE.getSelectedItem().toString();
+                System.out.println(tipoDocumento);
+
+                Long tipoPersona= opcionesTipoPersonasPSE.getSelectedItemId();
+                System.out.println(tipoPersona);
+
+                String banco = opcionesBancoPSE.getSelectedItem().toString();
+                System.out.println(banco);
+
+                if (nombrePSE.getText().length()>0 && emailPSE.getText().length()>0
+                        && numDocumentoPSE.toString().length()>0){
+
+                    NOMBRE = nombrePSE.getText().toString();
+                    EMAIL = emailPSE.getText().toString();
+                    NUMCC = numDocumentoPSE.getText().toString();
+                    TIPOID = tipoDocumento;
+                    TIPOPERSONA = Math.toIntExact(tipoPersona);
+                    BANCO = banco;
+                    pagoPSE.dismiss();
+
+
+                    Toast.makeText(popupRecarga.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
+                }
+                else
+
+                    Toast.makeText(popupRecarga.this, "Diligencia todos los campos disponibles", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnCancelPSE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pagoPSE.dismiss();
+            }
+        });
+
+
+        pagoPSE.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pagoPSE.show();
+
+    }
+
+    private void showPopupPagoNequi() {
+
+        btnConfirNQ.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (emailNequi.getText().length()>0 && numCelularNequi.getText().length()>0){
+
+                    EMAIL = emailNequi.getText().toString();
+                    NUMTELEFONOCEL = numCelularNequi.getText().toString();
+                    Toast.makeText(popupRecarga.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
+                    pagoNqui.dismiss();
+
+                }
+
+                else {
+
+                    Toast.makeText(popupRecarga.this, "Diligencia todos lo campos disponibles", Toast.LENGTH_SHORT).show();
 
                 }
 
             }
         });
+
+        pagoNqui.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pagoNqui.show();
+
+    }
+
+    private void showPopupPagoBancolo() {
+
+        btnConfirBC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (nombreBancolo.getText().length()>0 && emailBancolo.getText().length()>0 && numCelularBancolo.getText().length()>0){
+                    NOMBRE = nombreBancolo.getText().toString();
+                    EMAIL = emailBancolo.getText().toString();
+                    NUMTELEFONOCEL = numCelularBancolo.getText().toString();
+                    transferenciaBancolo.dismiss();
+                    activarBotonRecarga();
+                    Toast.makeText(popupRecarga.this, "Datos guardados correctamente", Toast.LENGTH_LONG).show();
+                }
+
+                else {
+
+                    Toast.makeText(popupRecarga.this, "Diligencia todo los campos disponibles", Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+        });
+
+        btnCancelBC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                transferenciaBancolo.dismiss();
+            }
+        });
+
+        transferenciaBancolo.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        transferenciaBancolo.show();
 
     }
 
@@ -492,6 +693,7 @@ public class popupRecarga extends AppCompatActivity {
                             EXP_MONT = mDateExpiry.getText().toString().substring(0,2);
                             EXP_YEAR = mDateExpiry.getText().toString().substring(2);
                             tokenizarCreditCard();
+                            activarBotonRecarga();
                             break;
 
                         }
@@ -522,6 +724,7 @@ public class popupRecarga extends AppCompatActivity {
                         System.out.println(aceptanceToken);
                     }
                     isEnabled = true;
+                    checkBox.setEnabled(true);
                 } else {
                     if(checkBox.isChecked()){
                         checkBox.setChecked(false);
@@ -587,7 +790,7 @@ public class popupRecarga extends AppCompatActivity {
                 .append("//")
                 .append(conductorUID)
                 .toString();
-        Transaction transaction = new Transaction(aceptanceToken, (int) (amount*100), "pepito_perez@example.com", referencia, metPago());
+        Transaction transaction = new Transaction(aceptanceToken, (int) (amount*100), EMAIL, referencia, metPago());
 
         Call<TransactionResponse> transactionResponseCall = service.payTransaction(transaction);
         transactionResponseCall.enqueue(new Callback<TransactionResponse>() {
@@ -641,19 +844,25 @@ public class popupRecarga extends AppCompatActivity {
 
             metPago.put("type", "BANCOLOMBIA_TRANSFER");
             metPago.put("user_type", "PERSON");
-            metPago.put("payment_description", "Pago por creditos Alikapp");
+            metPago.put("payment_description", DEScPAGO);
             //metPago.put("sandbox_status", "APPROVED");
 
         }
 
         else if (btnPagoNequi.isChecked()) {
 
-
-
+            metPago.put("type", "NEQUI");
+            metPago.put("phone_number", NUMTELEFONOCEL);
         }
+
         else if (btnPagoPSE.isChecked()){
 
-
+            metPago.put("type", "PSE");
+            metPago.put("user_type", TIPOPERSONA);
+            metPago.put("user_legal_id_type", TIPOID);
+            metPago.put("user_legal_id", NUMCC);
+            metPago.put("financial_institution_code", BANCO);
+            metPago.put("payment_description", DEScPAGO);
 
         }
 
@@ -677,8 +886,11 @@ public class popupRecarga extends AppCompatActivity {
                         if (metodoPago.getExtra()!= null) {
 
                             ResponseExtra metodoResponse = metodoPago.getExtra();
-                            Intent intent = new Intent(popupRecarga.this, LayoutWebview.class);
-                            intent.putExtra("pack", metodoResponse.getAsync_payment_url());
+                            System.out.println(metodoResponse.getAsync_payment_url());
+                            //Intent intent = new Intent(popupRecarga.this, LayoutWebview.class);
+                            //intent.putExtra("pack", metodoResponse.getAsync_payment_url());
+                            //startActivity(intent);
+                            Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(metodoResponse.getAsync_payment_url()));
                             startActivity(intent);
                         }
 
@@ -691,7 +903,7 @@ public class popupRecarga extends AppCompatActivity {
                                     verificarEstadoTransaccion();
 
                                 }
-                            }, 500);
+                            }, 10000);
 
                         }
 

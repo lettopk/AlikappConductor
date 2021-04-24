@@ -20,8 +20,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-
             <LinearLayout
                 android:id="@+id/linearLayout6"
                 android:layout_width="match_parent"
@@ -71,6 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:hint="Correo Electronico"
+                    android:inputType="textEmailAddress"
                     android:id="@+id/emailBancolo"/>
 
                 <TextView
@@ -85,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:hint="Correo Electronico"
+                    android:hint="Nombres y Apellidos"
                     android:id="@+id/nombreApellidosBancolo"/>
 
                 <TextView
@@ -100,22 +99,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:hint="Correo Electronico"
+                    android:hint="Numero Celular"
+                    android:inputType="number"
                     android:id="@+id/numeroCelularBancolo"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:gravity="left"
-                    android:text="Tipo Persona:"
-                    />
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:hint="Tipo Persona"
-                    android:id="@+id/tipoPersonaBnacolo"/>
 
             </LinearLayout>
 

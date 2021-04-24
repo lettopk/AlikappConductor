@@ -71,22 +71,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:hint="Correo Electronico"
+                    android:inputType="textEmailAddress"
                     android:id="@+id/emailNequi"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:gravity="left"
-                    android:text="Nombres y Apellidos:"
-                    />
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:hint="Correo Electronico"
-                    android:id="@+id/nombreApellidosNequi"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -100,7 +87,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:hint="Correo Electronico"
+                    android:hint="Numero Celular"
+                    android:inputType="number"
                     android:id="@+id/numeroCelularNequi"/>
 
 

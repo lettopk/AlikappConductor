@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="opcionesTipoPersona">
+
+        <item>Persona Natural</item>
+        <item>Persona Juridica</item>
+
+    </string-array>
+
+    <string-array name="opcionesTipoDocumento">
+
+        <item>CC</item>
+        <item>NIT</item>
+
+    </string-array>
+
+    <string-array name="opcionesBancos">
+
+        <item>Bancolombia</item>
+        <item>Banco de Bogota</item>
+        <item>Banco Caja Social</item>
+        <item>Bancolombia</item>
+        <item>Bancolombia</item>
+        <item>Bancolombia</item>
+        <item>Bancolombia</item>
+
+    </string-array>
+
+
+</resources>
