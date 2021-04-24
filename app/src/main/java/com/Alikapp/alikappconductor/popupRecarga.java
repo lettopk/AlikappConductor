@@ -31,6 +31,8 @@ import com.Alikapp.alikappconductor.models.acceptance_token.WompiRespuesta;
 import com.Alikapp.alikappconductor.models.creditCardToken.CreditCardData;
 import com.Alikapp.alikappconductor.models.creditCardToken.CreditCardRespose;
 import com.Alikapp.alikappconductor.models.creditCardToken.CreditCardTokenizar;
+import com.Alikapp.alikappconductor.models.pseBanks.PseData;
+import com.Alikapp.alikappconductor.models.pseBanks.PseResponse;
 import com.Alikapp.alikappconductor.models.transaction.Transaction;
 import com.Alikapp.alikappconductor.models.transaction.responses.PaymentMethod;
 import com.Alikapp.alikappconductor.models.transaction.responses.ResponseExtra;
@@ -433,6 +435,7 @@ public class popupRecarga extends AppCompatActivity {
         pagoPSE.show();
 
     }
+  
 
     private void showPopupPagoNequi() {
 
@@ -551,6 +554,10 @@ public class popupRecarga extends AppCompatActivity {
         this.btnPagoPSE.setBackgroundResource(R.drawable.btn_auxiliar_recargas);
     }
 
+
+
+    /**
+     * permite visualizar los campos para diligenciar la terjeta dde crédito**/
 
     private void showPopup() {
         mNameCard.addTextChangedListener(new TextWatcher() {
@@ -923,6 +930,37 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onFailure(Call<TransactionResponse> call, Throwable t) {
                 Log.e(TAG, "verificarEstadoTransaccion onFailure: " + t.getMessage());
+            }
+        });
+    }
+
+    private void getPseBancos() {
+        Call<PseData> pseDataCall = service.getPseBancos();
+
+        pseDataCall.enqueue(new Callback<PseData>() {
+            @Override
+            public void onResponse(Call<PseData> call, Response<PseData> response) {
+                if (response.isSuccessful()) {
+                    PseData data = response.body();
+                    ArrayList<PseResponse> responses = data.getData();
+                    ArrayList<String> bancos = new ArrayList<String>();
+                    for(int i = 0; i < responses.size(); i++){
+                        PseResponse pse = responses.get(i);
+                        bancos.add(pse.getFinancial_institution_name());
+                    }
+                    System.out.println(bancos);
+                } else {
+                    try {
+                        Log.e(TAG, "getPseBancos onResponse: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PseData> call, Throwable t) {
+                Log.e(TAG, "getPseBancos onFailure: " + t.getMessage());
             }
         });
     }
