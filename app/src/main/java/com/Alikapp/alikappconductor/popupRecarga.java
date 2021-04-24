@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Alikapp.alikappconductor.models.acceptance_token.ParametrosAceptacion;
@@ -45,7 +47,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -347,7 +353,7 @@ public class popupRecarga extends AppCompatActivity {
                     quitarFondoPagoTarjeta();
                     quitarFondobtnPagoBancolombia();
                     quitarFondobtnPagoNequi();
-                    showPopupPagoPSE();
+                    getPseBancos();
                     desactivarBotonRecarga();
 
                 }
@@ -378,17 +384,20 @@ public class popupRecarga extends AppCompatActivity {
     }
 
     private void showPopupPagoPSE() {
-
-
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.opcionesTipoDocumento, android.R.layout.simple_spinner_item);
         opcionesTipoDocumentoPSE.setAdapter(adapter1);
 
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.opcionesTipoPersona, android.R.layout.simple_spinner_item);
         opcionesTipoPersonasPSE.setAdapter(adapter2);
 
-        ArrayAdapter<CharSequence> bancosArray = ArrayAdapter.createFromResource(this, R.array.opcionesBancos, android.R.layout.simple_spinner_item);
+        ArrayList<String> prepre = new ArrayList<String>();
+        for(int i = 0; i < repustaApiBancosPSE.size(); i++){
+            PseResponse pse = repustaApiBancosPSE.get(i);
+            prepre.add(pse.getFinancial_institution_name());
+        }
+        String[] bancosApiPSE = prepre.toArray(new String[0]);
+        ArrayAdapter<String> bancosArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, bancosApiPSE);
         opcionesBancoPSE.setAdapter(bancosArray);
-
 
         btnConfirPSE.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -403,18 +412,25 @@ public class popupRecarga extends AppCompatActivity {
                 String banco = opcionesBancoPSE.getSelectedItem().toString();
                 System.out.println(banco);
 
+                String code = "";
+                for (int i = 0; i < repustaApiBancosPSE.size();i++){
+                    PseResponse pse = repustaApiBancosPSE.get(i);
+                    if (pse.getFinancial_institution_name().equals(banco)){
+                        code = pse.getFinancial_institution_code();
+                    }
+                }
+                System.out.println(code);
+
                 if (nombrePSE.getText().length()>0 && emailPSE.getText().length()>0
-                        && numDocumentoPSE.toString().length()>0){
+                        && numDocumentoPSE.toString().length()>0 && !code.equals("0")){
 
                     NOMBRE = nombrePSE.getText().toString();
                     EMAIL = emailPSE.getText().toString();
                     NUMCC = numDocumentoPSE.getText().toString();
                     TIPOID = tipoDocumento;
                     TIPOPERSONA = Math.toIntExact(tipoPersona);
-                    BANCO = banco;
+                    BANCO = code;
                     pagoPSE.dismiss();
-
-
                     Toast.makeText(popupRecarga.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
                 }
                 else
@@ -934,6 +950,7 @@ public class popupRecarga extends AppCompatActivity {
         });
     }
 
+    private ArrayList<PseResponse> repustaApiBancosPSE;
     private void getPseBancos() {
         Call<PseData> pseDataCall = service.getPseBancos();
 
@@ -942,13 +959,8 @@ public class popupRecarga extends AppCompatActivity {
             public void onResponse(Call<PseData> call, Response<PseData> response) {
                 if (response.isSuccessful()) {
                     PseData data = response.body();
-                    ArrayList<PseResponse> responses = data.getData();
-                    ArrayList<String> bancos = new ArrayList<String>();
-                    for(int i = 0; i < responses.size(); i++){
-                        PseResponse pse = responses.get(i);
-                        bancos.add(pse.getFinancial_institution_name());
-                    }
-                    System.out.println(bancos);
+                    repustaApiBancosPSE = data.getData();
+                    showPopupPagoPSE();
                 } else {
                     try {
                         Log.e(TAG, "getPseBancos onResponse: " + response.errorBody().string());
