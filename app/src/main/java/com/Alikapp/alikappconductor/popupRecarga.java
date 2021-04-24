@@ -202,6 +202,8 @@ public class popupRecarga extends AppCompatActivity {
         obtenerParametros();
     }
 
+    /**
+     * permite visualizar los campos para diligenciar la terjeta dde crédito**/
     private void showPopup() {
         mNameCard.addTextChangedListener(new TextWatcher() {
             @Override
