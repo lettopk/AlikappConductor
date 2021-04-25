@@ -427,6 +427,7 @@ public class popupRecarga extends AppCompatActivity {
                     TIPOID = tipoDocumento;
                     TIPOPERSONA = Math.toIntExact(tipoPersona);
                     BANCO = code;
+                    activarBotonRecarga();
                     pagoPSE.dismiss();
                     Toast.makeText(popupRecarga.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
                 } else {
@@ -456,11 +457,19 @@ public class popupRecarga extends AppCompatActivity {
                     EMAIL = emailNequi.getText().toString();
                     NUMTELEFONOCEL = numCelularNequi.getText().toString();
                     Toast.makeText(popupRecarga.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
+                    activarBotonRecarga();
                     pagoNqui.dismiss();
                 } else {
                     Toast.makeText(popupRecarga.this, "Diligencia todos lo campos disponibles", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+
+        btnCancelNQ.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pagoNqui.dismiss();
             }
         });
 
