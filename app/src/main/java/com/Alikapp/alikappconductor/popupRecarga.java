@@ -207,7 +207,7 @@ public class popupRecarga extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     amount = Double.parseDouble(mCantidad.getText().toString());
-                    if(amount < 2000) {
+                    if(amount < 400) {
                         isEnabledValue = false;
                         mCantidad.setTextColor(Color.parseColor("#c22828"));
                     } else {
@@ -352,7 +352,7 @@ public class popupRecarga extends AppCompatActivity {
                     quitarFondobtnPagoBancolombia();
                     quitarFondobtnPagoNequi();
                     getPseBancos();
-                    desactivarBotonRecarga();
+                    showPopupPagoPSE();
 
                 }
 
@@ -457,6 +457,7 @@ public class popupRecarga extends AppCompatActivity {
                     NUMTELEFONOCEL = numCelularNequi.getText().toString();
                     Toast.makeText(popupRecarga.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
                     pagoNqui.dismiss();
+                    activarBotonRecarga();
                 } else {
                     Toast.makeText(popupRecarga.this, "Diligencia todos lo campos disponibles", Toast.LENGTH_SHORT).show();
                 }
@@ -891,7 +892,7 @@ public class popupRecarga extends AppCompatActivity {
                                 public void run() {
                                     verificarEstadoTransaccion();
                                 }
-                            }, 2000);
+                            }, 3000);
                         }
                     }
 
