@@ -86,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:hint="MM_AA"
+                    android:hint="MM/AA"
                     android:maxWidth="150dp"
                     android:minWidth="150dp"
                     android:paddingTop="1dp"

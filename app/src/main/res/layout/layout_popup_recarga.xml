@@ -11,6 +11,7 @@
     tools:ignore="NamespaceTypo"
     tools:context=".popupRecarga">
 
+
     <androidx.cardview.widget.CardView
         android:id="@+id/carview_inicial"
         android:layout_width="match_parent"
@@ -47,6 +48,11 @@
                 android:layout_height="wrap_content"
                 android:padding="25dp"
                 android:orientation="vertical">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/disMetodo"/>
 
                 <EditText
                     android:layout_width="match_parent"
