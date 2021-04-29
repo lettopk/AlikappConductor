@@ -180,8 +180,8 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 if(!cardConfirmado){
+                    btnPagoTarjeta.setChecked(false);
                     quitarFondoPagoTarjeta();
-                    desactivarBotonRecarga();
                 }
             }
         });
@@ -190,8 +190,8 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 if(!bancoloConfirmado){
+                    btnPagoBancolo.setChecked(false);
                     quitarFondobtnPagoBancolombia();
-                    desactivarBotonRecarga();
                 }
             }
         });
@@ -200,8 +200,8 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 if(!nequiConfirmado){
+                    btnPagoNequi.setChecked(false);
                     quitarFondobtnPagoNequi();
-                    desactivarBotonRecarga();
                 }
             }
         });
@@ -210,8 +210,8 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 if(!pseConfirmado){
+                    btnPagoPSE.setChecked(false);
                     quitarFondobtnPagoPSE();
-                    desactivarBotonRecarga();
                 }
             }
         });
@@ -686,7 +686,10 @@ public class popupRecarga extends AppCompatActivity {
             public void onClick(View v) {
                 int numcuotas = Integer.parseInt(numCTC.getText().toString());
                 if (numcuotas>= 1 && numcuotas<=36){
-
+                    pseConfirmado = false;
+                    cardConfirmado = true;
+                    bancoloConfirmado = false;
+                    nequiConfirmado = false;
                     NUMCUOTAS = numcuotas;
                     myDialog.dismiss();
                     activarBotonRecarga();
@@ -833,10 +836,6 @@ public class popupRecarga extends AppCompatActivity {
                             sb.deleteCharAt(mNameCard.getText().length()-1);
                             mNameCard.setText(sb.toString());
                         } else {
-                            pseConfirmado = false;
-                            cardConfirmado = true;
-                            bancoloConfirmado = false;
-                            nequiConfirmado = false;
                             NUMERO_TARJETA = mCardNumber.getText().toString();
                             CVC = mNumCcv.getText().toString();
                             CARD_HOLDER = mNameCard.getText().toString();
