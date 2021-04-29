@@ -44,6 +44,7 @@ public class ActivityBilletera extends AppCompatActivity {
     private Button btnRecarga;
     private TextView copDisponib;
     private TextView credDisponib;
+    private Boolean newPago = false;
 
     private static final String TAG = "WOMPI";
     private Retrofit retrofit;
@@ -69,6 +70,7 @@ public class ActivityBilletera extends AppCompatActivity {
         btnRecarga.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                newPago = true;
                 Intent intent = new Intent( ActivityBilletera.this, popupRecarga.class);
                 startActivity(intent);
             }
@@ -129,10 +131,9 @@ public class ActivityBilletera extends AppCompatActivity {
                         estTransaccion = map.get("estadoUltimaTransaccion").toString();
 
                         if (estTransaccion.equals("PENDING")){
+                            if(!newPago){ verificarEstadoTransaccion(); }
 
-                            verificarEstadoTransaccion();
-
-                        }
+                        } else { newPago = true; }
                     }
                 }
 
@@ -197,7 +198,7 @@ public class ActivityBilletera extends AppCompatActivity {
                         if (metodoPago.getExtra()!= null) {
                             ResponseExtra metodoResponse = metodoPago.getExtra();
 
-                            if (metodoResponse.getAsync_payment_url() != null) {
+                            if (metodoResponse.getAsync_payment_url() != null && (metodoPago.getType().equals("PSE") || metodoPago.getType().equals("BANCOLOMBIA_TRANSFER"))) {
                                 System.out.println(metodoResponse.getAsync_payment_url());
 
                                 if (metodoPago.getType().equals("PSE")) {
@@ -211,6 +212,13 @@ public class ActivityBilletera extends AppCompatActivity {
                                     startActivity(intent);
 
                                 }
+                            } else {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        verificarEstadoTransaccion();
+                                    }
+                                }, 5000);
                             }
 
                         } else {
@@ -219,7 +227,7 @@ public class ActivityBilletera extends AppCompatActivity {
                                 public void run() {
                                     verificarEstadoTransaccion();
                                 }
-                            }, 10000);
+                            }, 5000);
                         }
                     }
 

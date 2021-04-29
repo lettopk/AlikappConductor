@@ -199,15 +199,6 @@ public class popupRecarga extends AppCompatActivity {
         btnOk = (Button) findViewById(R.id.btnOK);
         avi1 = (AVLoadingIndicatorView) findViewById(R.id.avi1);
 
-        Button btndismetodo = findViewById(R.id.disMetodo);
-        btndismetodo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                verificarEstadoTransaccion();
-            }
-        });
-
         btnPagoTarjeta = (ToggleButton) findViewById(R.id.metPagoCard);
         btnPagoBancolo = (ToggleButton) findViewById(R.id.metPagoBancolo);
         btnPagoNequi = (ToggleButton) findViewById(R.id.metPagoNequi);
@@ -435,6 +426,16 @@ public class popupRecarga extends AppCompatActivity {
     }
 
     private void showPopupPagoPSE() {
+        if(NOMBRE != null){
+            nombrePSE.setText(NOMBRE);
+        }
+        if(EMAIL != null){
+            emailPSE.setText(EMAIL);
+        }
+        if(NUMCC != null){
+            numDocumentoPSE.setText(NUMCC);
+        }
+
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.opcionesTipoDocumento, android.R.layout.simple_spinner_item);
         opcionesTipoDocumentoPSE.setAdapter(adapter1);
 
@@ -502,6 +503,12 @@ public class popupRecarga extends AppCompatActivity {
   
 
     private void showPopupPagoNequi() {
+        if (NUMTELEFONOCEL != null){
+            numCelularNequi.setText(NUMTELEFONOCEL);
+        }
+        if(EMAIL!= null){
+            emailNequi.setText(EMAIL);
+        }
 
         btnConfirNQ.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -532,6 +539,15 @@ public class popupRecarga extends AppCompatActivity {
     }
 
     private void showPopupPagoBancolo() {
+        if (EMAIL != null){
+            emailBancolo.setText(EMAIL);
+        }
+        if (NUMTELEFONOCEL != null){
+            numCelularBancolo.setText(NUMTELEFONOCEL);
+        }
+        if (NOMBRE != null){
+            nombreBancolo.setText(NOMBRE);
+        }
         btnConfirBC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -908,7 +924,7 @@ public class popupRecarga extends AppCompatActivity {
                         public void run() {
                             verificarEstadoTransaccion();
                         }
-                    }, 10000);
+                    }, 5000);
                     guardarInormacion("estado");
                 } else {
                     try {
@@ -967,6 +983,7 @@ public class popupRecarga extends AppCompatActivity {
 
     }
 
+    private Boolean redireccionado = false;
     private void verificarEstadoTransaccion() {
         Call<TransactionResponse> transaction = service.verificarEstadoTransaccion(idTransaccion);
 
@@ -980,10 +997,12 @@ public class popupRecarga extends AppCompatActivity {
                     if (informationyeye.getStatus().equals("PENDING")) {
                         PaymentMethod metodoPago = informationyeye.getPayment_method();
 
-                        if (metodoPago.getExtra()!= null) {
+                        if (metodoPago.getExtra()!= null && (!btnPagoNequi.isChecked() || !btnPagoTarjeta.isChecked())) {
+
+                            System.out.println("Entra donde no debe");
                             ResponseExtra metodoResponse = metodoPago.getExtra();
 
-                            if (metodoResponse.getAsync_payment_url() != null) {
+                            if (metodoResponse.getAsync_payment_url() != null && !redireccionado) {
                                 System.out.println(metodoResponse.getAsync_payment_url());
 
                                 if (btnPagoPSE.isChecked()) {
@@ -992,20 +1011,26 @@ public class popupRecarga extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                                 else {
-
                                     Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(metodoResponse.getAsync_payment_url()));
                                     startActivity(intent);
-
                                 }
+                                redireccionado = true;
+                            } else {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        verificarEstadoTransaccion();
+                                    }
+                                }, 5000);
                             }
 
-                        } else /*if (metodoPago.getExtra() == null && (btnPagoBancolo.isChecked() || btnPagoPSE.isChecked()))*/{
+                        } else {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     verificarEstadoTransaccion();
                                 }
-                            }, 10000);
+                            }, 5000);
                         }
                     }
                     else {
@@ -1127,6 +1152,23 @@ public class popupRecarga extends AppCompatActivity {
                     if (map.get("dineroDisponible") != null){
 
                         cantDineroDisponible = map.get("dineroDisponible").toString();
+                    }
+
+                    if (map.get("phone")!= null){
+
+                        NUMTELEFONOCEL = map.get("phone").toString();
+
+                    }
+
+                    if (map.get("name")!= null){
+
+                        NOMBRE = map.get("name").toString();
+
+                    }
+
+                    if (map.get("cedula")!= null){
+
+                        NUMCC = map.get("cedula").toString();
 
                     }
 
