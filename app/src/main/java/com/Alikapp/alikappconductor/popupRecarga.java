@@ -180,6 +180,7 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 if(!cardConfirmado){
+                    btnPagoTarjeta.setChecked(false);
                     quitarFondoPagoTarjeta();
                     desactivarBotonRecarga();
                 }
@@ -190,6 +191,7 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 if(!bancoloConfirmado){
+                    btnPagoBancolo.setChecked(false);
                     quitarFondobtnPagoBancolombia();
                     desactivarBotonRecarga();
                 }
@@ -200,6 +202,7 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 if(!nequiConfirmado){
+                    btnPagoNequi.setChecked(false);
                     quitarFondobtnPagoNequi();
                     desactivarBotonRecarga();
                 }
@@ -210,6 +213,7 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 if(!pseConfirmado){
+                    btnPagoPSE.setChecked(false);
                     quitarFondobtnPagoPSE();
                     desactivarBotonRecarga();
                 }
