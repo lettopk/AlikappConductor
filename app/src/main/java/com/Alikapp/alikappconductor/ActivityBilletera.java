@@ -1,6 +1,7 @@
 package com.Alikapp.alikappconductor;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Alikapp.alikappconductor.models.transaction.responses.PaymentMethod;
@@ -29,6 +31,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.internal.cache.DiskLruCache;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,6 +43,7 @@ public class ActivityBilletera extends AppCompatActivity {
 
     private Button btnRecarga;
     private TextView copDisponib;
+    private TextView credDisponib;
 
     private static final String TAG = "WOMPI";
     private Retrofit retrofit;
@@ -60,6 +64,7 @@ public class ActivityBilletera extends AppCompatActivity {
 
         btnRecarga = (Button) findViewById(R.id.btnRecarga);
         copDisponib = (TextView) findViewById(R.id.copDisponib);
+        credDisponib = (TextView) findViewById(R.id.credDisponib);
 
         btnRecarga.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +79,32 @@ public class ActivityBilletera extends AppCompatActivity {
 
     private String idTransaccion, estTransaccion;
     private String conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private int costoCredito = 0;
 
     private void getUserInfo(){
+
+        DatabaseReference valorCreditoReference =  FirebaseDatabase.getInstance().getReference().child("CostoPorCredito");
+        valorCreditoReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+
+
+                    if (map.get("Usuario") != null){
+
+                        costoCredito = Integer.parseInt(map.get("Usuario").toString());
+                        setearDineroPantalla();
+                     }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         DatabaseReference mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         mDriverDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -115,13 +144,38 @@ public class ActivityBilletera extends AppCompatActivity {
         });
     }
 
+    String v1 = "" ;
+    @SuppressLint("SetTextI18n")
     private void setearDineroPantalla() {
 
-        String cantidad = (cantDineroDisponible);
+        v1 = "";
+        if(cantDineroDisponible.length()>3) {
+            int j = 0;
+            for (int i = 0; i < cantDineroDisponible.length(); i++) {
+                System.out.println("cantDineroDisponible.length()" + cantDineroDisponible.length());
+                if (j == 3) {
+                    String a = new StringBuilder().append(".").append(v1).toString();
+                    System.out.println("valor de a " + a);
+                    v1 = a;
+                    j = 0;
+                }
+                j++;
+                String b = new StringBuilder().append(cantDineroDisponible.charAt(cantDineroDisponible.length()-(i+1))).append(v1).toString();
+                v1 = b;
+            }
+        } else {
+            v1 = cantDineroDisponible;
+        }
 
-     
+        int v2 = Integer.parseInt(cantDineroDisponible);
 
-        copDisponib.setText(cantidad);
+        if (costoCredito > 0) {
+
+            int v3 = v2/ costoCredito;
+            credDisponib.setText(v3 + " Creditos");
+            }
+
+        copDisponib.setText("$" + v1 +" COP");
 
     }
 
