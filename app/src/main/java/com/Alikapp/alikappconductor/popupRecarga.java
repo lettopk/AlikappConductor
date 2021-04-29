@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,8 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.Alikapp.alikappconductor.models.acceptance_token.ParametrosAceptacion;
 import com.Alikapp.alikappconductor.models.acceptance_token.WompiData;
@@ -42,8 +45,16 @@ import com.Alikapp.alikappconductor.models.transaction.responses.TransactionResp
 import com.Alikapp.alikappconductor.models.transaction.responses.TransactionInformation;
 import com.Alikapp.alikappconductor.wompiApi.WompiapiService;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,6 +63,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,6 +87,7 @@ public class popupRecarga extends AppCompatActivity {
     private static String EMAIL;
     private static String NUMTELEFONOCEL;
     private static String NOMBRE;
+    private static int NUMCUOTAS = 1;
     private static int TIPOPERSONA;
     private static String TIPOID;
     private static String NUMCC;
@@ -93,9 +106,9 @@ public class popupRecarga extends AppCompatActivity {
 
 
     private Dialog myDialog;
-    private View linearLayout3;
-    private EditText mCardNumber, mNameCard, mNumCcv, mDateExpiry;
-    private Button mConfir;
+    private View linearLayout3, linearLayout4;
+    private EditText mCardNumber, mNameCard, mNumCcv, mDateExpiry, numCTC;
+    private Button mConfir, mConfirCTC;
     private TextView frontCardNUmber, fromCardName, fromCardExpiry, cvvNumber;
     private View creditCardFront, creditCardBack;
     private Boolean a1 = false, a2 = false, a3 = false, a4 = false;
@@ -110,11 +123,18 @@ public class popupRecarga extends AppCompatActivity {
     private static String CARD_HOLDER;
 
 
-    private String aceptanceToken;
+    private String aceptanceToken,  cantDineroDisponible;
     private String urlWompiTerminos;
     private double amount;
+    private boolean fromDataBase = false;
 
     private String tokenCreditCard;
+
+    private CardView carviewCarga, carviewExito, carviewInicial;
+    private Button btnOk;
+    private ImageView procesadoExito;
+    private TextView mensajeProcesado;
+    private AVLoadingIndicatorView avi1;
 
     private static final String TAG = "WOMPI";
     private Retrofit retrofit;
@@ -153,8 +173,6 @@ public class popupRecarga extends AppCompatActivity {
         pagoPSE = new Dialog(this);
         pagoPSE.setContentView(R.layout.layout_popup_pago_pse);
 
-
-
         creditCardFront = myDialog.findViewById(R.id.Creditcardfront);
         creditCardBack = myDialog.findViewById(R.id.Creditcardback);
 
@@ -169,6 +187,26 @@ public class popupRecarga extends AppCompatActivity {
         mDateExpiry = (EditText) myDialog.findViewById(R.id.fecVenc);
         mConfir = (Button) myDialog.findViewById(R.id.btnConfirTC);
         linearLayout3 =  myDialog.findViewById(R.id.linearLayout3);
+        linearLayout4 =  myDialog.findViewById(R.id.linearLayout4);
+        numCTC = (EditText) myDialog.findViewById(R.id.numCTC);
+        mConfirCTC = (Button) myDialog.findViewById(R.id.btnConfirCTC);
+
+        carviewInicial = (CardView) findViewById(R.id.carviewInicial);
+        carviewCarga = (CardView) findViewById(R.id.carviewCarga);
+        carviewExito = (CardView) findViewById(R.id.carviewExito);
+        mensajeProcesado = (TextView) findViewById(R.id.mensajeProcesado);
+        procesadoExito = (ImageView) findViewById(R.id.procesadoExito);
+        btnOk = (Button) findViewById(R.id.btnOK);
+        avi1 = (AVLoadingIndicatorView) findViewById(R.id.avi1);
+
+        Button btndismetodo = findViewById(R.id.disMetodo);
+        btndismetodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                verificarEstadoTransaccion();
+            }
+        });
 
         btnPagoTarjeta = (ToggleButton) findViewById(R.id.metPagoCard);
         btnPagoBancolo = (ToggleButton) findViewById(R.id.metPagoBancolo);
@@ -207,7 +245,7 @@ public class popupRecarga extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     amount = Double.parseDouble(mCantidad.getText().toString());
-                    if(amount < 2000) {
+                    if(amount < 400) {
                         isEnabledValue = false;
                         mCantidad.setTextColor(Color.parseColor("#c22828"));
                     } else {
@@ -241,9 +279,16 @@ public class popupRecarga extends AppCompatActivity {
             public void onClick(View v) {
                 if(!isEnabled) {
                     Toast.makeText(popupRecarga.this, "Debes aceptar los términos y condiciones para efectuar el pago", Toast.LENGTH_LONG).show();
-                } else if (!isEnabledValue) {
+                }
+
+                else if (!isEnabledValue) {
                     Toast.makeText(popupRecarga.this, "Transacción inválida, el monto debe ser igual o superior a $20.000", Toast.LENGTH_LONG).show();
-                } else {
+                }
+
+                else {
+                    carviewInicial.setVisibility(View.GONE);
+                    carviewCarga.setVisibility(View.VISIBLE);
+                    avi1.show();
                     recagar();
                 }
             }
@@ -352,7 +397,6 @@ public class popupRecarga extends AppCompatActivity {
                     quitarFondobtnPagoBancolombia();
                     quitarFondobtnPagoNequi();
                     getPseBancos();
-                    desactivarBotonRecarga();
 
                 }
 
@@ -365,13 +409,22 @@ public class popupRecarga extends AppCompatActivity {
             }
         });
 
+        getUserInfo();
 
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+            }
+        });
     }
 
     private void desactivarBotonRecarga() {
 
         mRecargar.setBackgroundResource(R.drawable.btn_recarga_desactivado);
         mRecargar.setEnabled(false);
+
 
     }
 
@@ -459,6 +512,7 @@ public class popupRecarga extends AppCompatActivity {
                     Toast.makeText(popupRecarga.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
                     activarBotonRecarga();
                     pagoNqui.dismiss();
+                    activarBotonRecarga();
                 } else {
                     Toast.makeText(popupRecarga.this, "Diligencia todos lo campos disponibles", Toast.LENGTH_SHORT).show();
                 }
@@ -555,6 +609,24 @@ public class popupRecarga extends AppCompatActivity {
     /**
      * permite visualizar los campos para diligenciar la terjeta dde crédito**/
     private void showPopup() {
+
+        mConfirCTC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int numcuotas = Integer.parseInt(numCTC.getText().toString());
+                if (numcuotas>= 1 && numcuotas<=36){
+
+                    NUMCUOTAS = numcuotas;
+                    myDialog.dismiss();
+                    activarBotonRecarga();
+                }
+                else {
+
+                    Toast.makeText(popupRecarga.this, "Numero de cuotas inválido, edbe ser menor a 36", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
         mNameCard.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -630,6 +702,7 @@ public class popupRecarga extends AppCompatActivity {
                     case 4: fromCardExpiry.setText(mDateExpiry.getText().toString().substring(0,2) + "/"+ mDateExpiry.getText().toString().substring(2));
                         break;
                 }
+
                 a3 = mDateExpiry.getText().length() == 4;
             }
 
@@ -695,7 +768,7 @@ public class popupRecarga extends AppCompatActivity {
                             EXP_MONT = mDateExpiry.getText().toString().substring(0,2);
                             EXP_YEAR = mDateExpiry.getText().toString().substring(2);
                             tokenizarCreditCard();
-                            activarBotonRecarga();
+
                             break;
 
                         }
@@ -706,6 +779,7 @@ public class popupRecarga extends AppCompatActivity {
             }
         });
 
+        mCardNumber.setText(NUMERO_TARJETA);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
     }
@@ -752,7 +826,7 @@ public class popupRecarga extends AppCompatActivity {
     }
 
     public void tokenizarCreditCard() {
-        CreditCardTokenizar creditCardTokenizar = new CreditCardTokenizar(NUMERO_TARJETA, CVC, EXP_MONT, EXP_YEAR, CARD_HOLDER);
+        CreditCardTokenizar creditCardTokenizar = new CreditCardTokenizar(NUMERO_TARJETA,CVC, EXP_MONT, EXP_YEAR, CARD_HOLDER);
         Call<CreditCardData> creditCardDataCall = service.tokenizarTarjeta(creditCardTokenizar);
 
         creditCardDataCall.enqueue(new Callback<CreditCardData>() {
@@ -762,10 +836,14 @@ public class popupRecarga extends AppCompatActivity {
                     CreditCardData creditCard = response.body();
                     CreditCardRespose creditCardRespose = creditCard.getData();
                     tokenCreditCard = creditCardRespose.getId();
-                    myDialog.dismiss();
-                    Toast.makeText(popupRecarga.this, "Tarjeta válida", Toast.LENGTH_SHORT).show();
+                    if (!fromDataBase) {
+                        Toast.makeText(popupRecarga.this, "Tarjeta válida", Toast.LENGTH_SHORT).show();
+                    }
                     System.out.println(tokenCreditCard);
                     linearLayout3.setVisibility(View.GONE);
+                    linearLayout4.setVisibility(View.VISIBLE);
+                    guardarInormacion("encriptar");
+
                 } else {
                     Toast.makeText(popupRecarga.this, "Datos de tarjeta erróneos", Toast.LENGTH_LONG).show();
                     try {
@@ -783,10 +861,10 @@ public class popupRecarga extends AppCompatActivity {
         });
     }
 
-    private String idTransaccion;
+    private String idTransaccion, estadoTransaccion;
+    private String conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private void recagar() {
         Long timestamp = System.currentTimeMillis();
-        String conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String referencia = new StringBuilder()
                 .append(timestamp)
                 .append("//")
@@ -802,19 +880,36 @@ public class popupRecarga extends AppCompatActivity {
                     TransactionResponse transaction = response.body();
                     TransactionInformation informationyeye = transaction.getData();
                     PaymentMethod metodoPago = informationyeye.getPayment_method();
-                    System.out.println(informationyeye.getPayment_method());
                     if (metodoPago.getExtra()!= null) {
 
-                        System.out.println(metodoPago.getExtra());
                         ResponseExtra metodoResponse = metodoPago.getExtra();
-                        Intent intent = new Intent(popupRecarga.this, LayoutWebview.class);
-                        intent.putExtra("pack", metodoResponse.getAsync_payment_url());
-                        startActivity(intent);
+                        if (metodoResponse.getAsync_payment_url() != null){
+
+                            if (btnPagoPSE.isChecked()) {
+                                Intent intent = new Intent(popupRecarga.this, LayoutWebview.class);
+                                intent.putExtra("pack", metodoResponse.getAsync_payment_url());
+                                startActivity(intent);
+                            }
+                            else if (btnPagoBancolo.isChecked()){
+
+                                Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(metodoResponse.getAsync_payment_url()));
+                                startActivity(intent);
+
+                            }
+
+                        }
                     }
                     System.out.println(informationyeye.getId());
                     idTransaccion = informationyeye.getId();
+                    estadoTransaccion = informationyeye.getStatus();
                     System.out.println(informationyeye.getStatus());
-                    verificarEstadoTransaccion();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            verificarEstadoTransaccion();
+                        }
+                    }, 10000);
+                    guardarInormacion("estado");
                 } else {
                     try {
                         Log.e(TAG, "Recarga onResponse: " + response.errorBody().string());
@@ -838,7 +933,7 @@ public class popupRecarga extends AppCompatActivity {
         if (btnPagoTarjeta.isChecked()) {
 
             metPago.put("type", "CARD");
-            metPago.put("installments", 2);
+            metPago.put("installments", NUMCUOTAS);
             metPago.put("token", tokenCreditCard);
 
         }
@@ -887,21 +982,61 @@ public class popupRecarga extends AppCompatActivity {
 
                         if (metodoPago.getExtra()!= null) {
                             ResponseExtra metodoResponse = metodoPago.getExtra();
-                            System.out.println(metodoResponse.getAsync_payment_url());
-                            //Intent intent = new Intent(popupRecarga.this, LayoutWebview.class);
-                            //intent.putExtra("pack", metodoResponse.getAsync_payment_url());
-                            //startActivity(intent);
-                            Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(metodoResponse.getAsync_payment_url()));
-                            startActivity(intent);
 
-                        } else if (metodoPago.getExtra() == null && btnPagoBancolo.isChecked()){
+                            if (metodoResponse.getAsync_payment_url() != null) {
+                                System.out.println(metodoResponse.getAsync_payment_url());
+
+                                if (btnPagoPSE.isChecked()) {
+                                    Intent intent = new Intent(popupRecarga.this, LayoutWebview.class);
+                                    intent.putExtra("pack", metodoResponse.getAsync_payment_url());
+                                    startActivity(intent);
+                                }
+                                else {
+
+                                    Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(metodoResponse.getAsync_payment_url()));
+                                    startActivity(intent);
+
+                                }
+                            }
+
+                        } else /*if (metodoPago.getExtra() == null && (btnPagoBancolo.isChecked() || btnPagoPSE.isChecked()))*/{
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     verificarEstadoTransaccion();
                                 }
-                            }, 2000);
+                            }, 10000);
                         }
+                    }
+                    else {
+
+                        estadoTransaccion = informationyeye.getStatus();
+
+                        if (estadoTransaccion.equals("APPROVED")){
+
+                            double valorActual = Double.parseDouble(cantDineroDisponible);
+                            valorActual += amount;
+                            cantDineroDisponible = (int) valorActual + "";
+                            mensajeProcesado.setText("Transaccion Exitosa");
+                            procesadoExito.setImageResource(R.drawable.ic_check);
+
+                        }
+
+                        else {
+
+                            if (informationyeye.getStatus_message() != null) {
+
+                                mensajeProcesado.setText(informationyeye.getStatus_message());
+                                procesadoExito.setImageResource(R.drawable.ic_user);
+
+                            }
+
+                        }
+
+
+                        carviewCarga.setVisibility(View.GONE);
+                        carviewExito.setVisibility(View.VISIBLE);
+                        guardarInormacion("estado");
                     }
 
                     System.out.println(informationyeye.getId());
@@ -948,5 +1083,107 @@ public class popupRecarga extends AppCompatActivity {
             }
         });
     }
+
+    private void getUserInfo(){
+        DatabaseReference mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        mDriverDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                    if (map.get("email")!= null){
+
+                        EMAIL = map.get("email").toString();
+
+                    }
+
+                    if (map.get("numTarjeta")!= null){
+
+                        NUMERO_TARJETA = hexStringToString(map.get("numTarjeta").toString());
+                    }
+
+                    if (map.get("nomTarjeta")!= null){
+
+                        CARD_HOLDER = hexStringToString(map.get("nomTarjeta").toString());
+                    }
+
+                    if (map.get("fecExpiracion")!= null){
+
+                        String fechadex = map.get("fecExpiracion").toString();
+                        String[] fecha =  fechadex.split("/");
+                        EXP_MONT = fecha[0];
+                        EXP_YEAR = fecha[1];
+
+                    }
+
+                    if (map.get("cvv")!= null){
+
+                       CVC = hexStringToString(map.get("cvv").toString());
+                       fromDataBase = true;
+                       tokenizarCreditCard();
+                    }
+
+                    if (map.get("dineroDisponible") != null){
+
+                        cantDineroDisponible = map.get("dineroDisponible").toString();
+
+                    }
+
+                    System.out.println(CARD_HOLDER +" " + NUMERO_TARJETA + " " +EXP_MONT +"/"+ EXP_YEAR + " " + CVC);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void guardarInormacion(String procedencia){
+
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+
+        Map usuarioInfo = new HashMap();
+            if(procedencia.equals("encriptar")) {
+
+                usuarioInfo.put("numTarjeta", toHex(NUMERO_TARJETA));
+                usuarioInfo.put("nomTarjeta", toHex(CARD_HOLDER));
+                usuarioInfo.put("fecExpiracion", EXP_MONT + "/" + EXP_YEAR);
+                usuarioInfo.put("cvv", toHex(CVC));
+
+            }
+
+            else if (procedencia.equals("estado")) {
+
+                usuarioInfo.put("estadoUltimaTransaccion", estadoTransaccion);
+                usuarioInfo.put("idUltimaTransaccion", idTransaccion);
+                usuarioInfo.put("dineroDisponible", cantDineroDisponible);
+
+            }
+            enableReference.updateChildren(usuarioInfo);
+    }
+
+    private String toHex(String arg) {
+        String result = String.format("%040x", new BigInteger(1, arg.getBytes(StandardCharsets.UTF_8)));
+        while(result.substring(0,1).equals("0")){
+            result = result.substring(1);
+        }
+        return result;
+    }
+
+    public static String hexStringToString(String hex) {
+        int l = hex.length();
+        byte[] data = new byte[l / 2];
+        for (int i = 0; i < l; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
+                    + Character.digit(hex.charAt(i + 1), 16));
+        }
+        String st = new String(data, StandardCharsets.UTF_8);
+        return st;
+    }
+
+
 
 }

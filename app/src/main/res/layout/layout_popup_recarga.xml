@@ -12,12 +12,116 @@
     tools:context=".popupRecarga">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/carview_inicial"
+        android:id="@+id/carviewCarga"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
+        android:visibility="gone"
+        android:layout_marginEnd="0dp"
+        app:cardBackgroundColor="#ffffff"
+        app:cardCornerRadius="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/avi1"
+                style="@style/AVLoadingIndicatorView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="15dp"
+                android:layout_marginTop="20dp"
+                app:indicatorColor="#959595"
+                app:indicatorName="TriangleSkewSpinIndicator" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Procesando Pago..."
+                android:textColor="#959595"
+                android:textSize="20sp"
+                android:layout_marginBottom="10dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/carviewExito"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:visibility="gone"
+        android:layout_marginEnd="0dp"
+        app:cardBackgroundColor="#ffffff"
+        app:cardCornerRadius="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/procesadoExito"
+                android:src="@mipmap/ic_pse"
+                android:padding="10dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/abeezee"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="mensaje"
+                android:id="@+id/mensajeProcesado"
+                android:textColor="#959595"
+                android:textSize="20sp"
+                android:layout_marginBottom="10dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:text="OK"
+                android:id="@+id/btnOK"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_recargar"/>
+
+        </LinearLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/carviewInicial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:visibility="visible"
         android:layout_marginEnd="0dp"
         app:cardBackgroundColor="#ffffff"
         app:cardCornerRadius="20dp">
@@ -36,16 +140,22 @@
                 android:layout_marginTop="25dp"
                 android:textSize="20dp"
                 android:textStyle="bold"/>
+
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_identificacion"/>
+                android:layout_height="66dp"
+                android:src="@mipmap/ic_tarjetacreditoicononegro" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="25dp"
                 android:orientation="vertical">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/disMetodo"/>
 
                 <EditText
                     android:layout_width="match_parent"
@@ -96,7 +206,7 @@
                             android:layout_height="wrap_content"
                             android:padding="5dp"
                             android:background="@drawable/btn_auxiliar_recargas"
-                            android:drawableLeft="@drawable/ic_creditcard"
+                            android:drawableLeft="@mipmap/ic_tarjetacredito"
                             android:gravity="center"
                             android:textOn=" Tarjeta Crédito   ✓"
                             android:textOff=" Tarjeta Crédito"
@@ -198,10 +308,6 @@
              </LinearLayout>
 
         </LinearLayout>
-
-
-
-
 
     </androidx.cardview.widget.CardView>
 
