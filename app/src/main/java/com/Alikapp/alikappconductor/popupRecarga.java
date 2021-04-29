@@ -3,6 +3,7 @@ package com.Alikapp.alikappconductor;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -102,6 +103,8 @@ public class popupRecarga extends AppCompatActivity {
     private Dialog pagoPSE;
     private EditText emailPSE, nombrePSE, numDocumentoPSE;
 
+    private Boolean cardConfirmado = false, nequiConfirmado = false, bancoloConfirmado = false, pseConfirmado = false;
+
     private Button btnConfirPSE, btnCancelPSE;
 
 
@@ -172,6 +175,46 @@ public class popupRecarga extends AppCompatActivity {
 
         pagoPSE = new Dialog(this);
         pagoPSE.setContentView(R.layout.layout_popup_pago_pse);
+
+        myDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if(!cardConfirmado){
+                    quitarFondoPagoTarjeta();
+                    desactivarBotonRecarga();
+                }
+            }
+        });
+
+        transferenciaBancolo.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if(!bancoloConfirmado){
+                    quitarFondobtnPagoBancolombia();
+                    desactivarBotonRecarga();
+                }
+            }
+        });
+
+        pagoNqui.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if(!nequiConfirmado){
+                    quitarFondobtnPagoNequi();
+                    desactivarBotonRecarga();
+                }
+            }
+        });
+
+        pagoPSE.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if(!pseConfirmado){
+                    quitarFondobtnPagoPSE();
+                    desactivarBotonRecarga();
+                }
+            }
+        });
 
         creditCardFront = myDialog.findViewById(R.id.Creditcardfront);
         creditCardBack = myDialog.findViewById(R.id.Creditcardback);
@@ -475,6 +518,10 @@ public class popupRecarga extends AppCompatActivity {
 
                 if (nombrePSE.getText().length()>0 && emailPSE.getText().length()>0
                         && numDocumentoPSE.toString().length()>0 && !code.equals("0")){
+                    pseConfirmado = true;
+                    cardConfirmado = false;
+                    bancoloConfirmado = false;
+                    nequiConfirmado = false;
                     NOMBRE = nombrePSE.getText().toString();
                     EMAIL = emailPSE.getText().toString();
                     NUMCC = numDocumentoPSE.getText().toString();
@@ -514,6 +561,10 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (emailNequi.getText().length()>0 && numCelularNequi.getText().length()>0){
+                    pseConfirmado = false;
+                    cardConfirmado = false;
+                    bancoloConfirmado = false;
+                    nequiConfirmado = true;
                     EMAIL = emailNequi.getText().toString();
                     NUMTELEFONOCEL = numCelularNequi.getText().toString();
                     Toast.makeText(popupRecarga.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
@@ -552,6 +603,10 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (nombreBancolo.getText().length()>0 && emailBancolo.getText().length()>0 && numCelularBancolo.getText().length()>0){
+                    pseConfirmado = false;
+                    cardConfirmado = false;
+                    bancoloConfirmado = true;
+                    nequiConfirmado = false;
                     NOMBRE = nombreBancolo.getText().toString();
                     EMAIL = emailBancolo.getText().toString();
                     NUMTELEFONOCEL = numCelularBancolo.getText().toString();
@@ -778,6 +833,10 @@ public class popupRecarga extends AppCompatActivity {
                             sb.deleteCharAt(mNameCard.getText().length()-1);
                             mNameCard.setText(sb.toString());
                         } else {
+                            pseConfirmado = false;
+                            cardConfirmado = true;
+                            bancoloConfirmado = false;
+                            nequiConfirmado = false;
                             NUMERO_TARJETA = mCardNumber.getText().toString();
                             CVC = mNumCcv.getText().toString();
                             CARD_HOLDER = mNameCard.getText().toString();
@@ -1015,6 +1074,12 @@ public class popupRecarga extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                                 redireccionado = true;
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        verificarEstadoTransaccion();
+                                    }
+                                }, 5000);
                             } else {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
