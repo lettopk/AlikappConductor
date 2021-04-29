@@ -218,6 +218,56 @@ public class popupRecarga extends AppCompatActivity {
 
         creditCardFront = myDialog.findViewById(R.id.Creditcardfront);
         creditCardBack = myDialog.findViewById(R.id.Creditcardback);
+        creditCardFront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(NUMERO_TARJETA != null ){
+                    Toast.makeText(popupRecarga.this, "Manet pulsado para eliminar los dátos de la tarjeta", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        creditCardFront.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(NUMERO_TARJETA != null) {
+                    mCardNumber.setText("");
+                    mNameCard.setText("");
+                    mNumCcv.setText("");
+                    mDateExpiry.setText("");
+                    cardConfirmado = false;
+                    linearLayout3.setVisibility(View.VISIBLE);
+                    linearLayout4.setVisibility(View.GONE);
+                    eliminarCreitCard();
+                }
+                return false;
+            }
+        });
+
+        creditCardBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(NUMERO_TARJETA != null){
+                    Toast.makeText(popupRecarga.this, "Manet pulsado para eliminar los dátos de la tarjeta", Toast.LENGTH_LONG).show();
+                }            }
+        });
+
+        creditCardBack.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(NUMERO_TARJETA != null) {
+                    mCardNumber.setText("");
+                    mNameCard.setText("");
+                    mNumCcv.setText("");
+                    mDateExpiry.setText("");
+                    cardConfirmado = false;
+                    linearLayout3.setVisibility(View.VISIBLE);
+                    linearLayout4.setVisibility(View.GONE);
+                    eliminarCreitCard();
+                }
+                return false;
+            }
+        });
 
         frontCardNUmber = myDialog.findViewById(R.id.front_card_number);
         fromCardName = myDialog.findViewById(R.id.front_card_name);
@@ -1197,7 +1247,7 @@ public class popupRecarga extends AppCompatActivity {
                         CARD_HOLDER = hexStringToString(map.get("nomTarjeta").toString());
                     }
 
-                    if (map.get("fecExpiracion")!= null){
+                    if (map.get("fecExpiracion")!= null && !map.get("fecExpiracion").toString().isEmpty()){
 
                         String fechadex = map.get("fecExpiracion").toString();
                         String[] fecha =  fechadex.split("/");
@@ -1206,7 +1256,7 @@ public class popupRecarga extends AppCompatActivity {
 
                     }
 
-                    if (map.get("cvv")!= null){
+                    if (map.get("cvv")!= null && !map.get("cvv").toString().isEmpty()){
 
                        CVC = hexStringToString(map.get("cvv").toString());
                        fromDataBase = true;
@@ -1290,6 +1340,19 @@ public class popupRecarga extends AppCompatActivity {
         return st;
     }
 
-
+    private void eliminarCreitCard() {
+        NUMERO_TARJETA = null;
+        CARD_HOLDER = null;
+        EXP_MONT = null;
+        EXP_YEAR = null;
+        CVC = null;
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put("numTarjeta", null);
+        usuarioInfo.put("nomTarjeta", null);
+        usuarioInfo.put("fecExpiracion", null);
+        usuarioInfo.put("cvv", null);
+        enableReference.updateChildren(usuarioInfo);
+    }
 
 }
