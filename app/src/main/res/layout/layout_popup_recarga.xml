@@ -12,7 +12,7 @@
     tools:context=".popupRecarga">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/carview_carga"
+        android:id="@+id/carviewCarga"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -42,7 +42,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/abeezee"
                 android:gravity="center"
                 android:padding="10dp"
                 android:text="Procesando Pago..."
@@ -60,7 +59,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/carview_exito"
+        android:id="@+id/carviewExito"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -90,6 +89,7 @@
                 android:gravity="center"
                 android:padding="10dp"
                 android:text="mensaje"
+                android:id="@+id/mensajeProcesado"
                 android:textColor="#959595"
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
@@ -115,7 +115,7 @@
 
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/carview_inicial"
+        android:id="@+id/carviewInicial"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -308,10 +308,6 @@
              </LinearLayout>
 
         </LinearLayout>
-
-
-
-
 
     </androidx.cardview.widget.CardView>
 
