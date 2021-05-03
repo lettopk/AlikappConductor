@@ -247,6 +247,20 @@
                             android:textOff=" PAgos PSE"
                             android:id="@+id/metPagoPSE"
                             android:layout_marginRight="5dp"/>
+
+                        <ToggleButton
+                            android:layout_width="220dp"
+                            android:padding="5dp"
+                            android:background="@drawable/btn_auxiliar_recargas"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@mipmap/ic_pagoefectivo"
+                            android:text="  Bancolombia"
+                            android:visibility="visible"
+                            android:gravity="center"
+                            android:textOn=" Referencia Bancaria   ✓"
+                            android:textOff=" Referencia Bancaria"
+                            android:id="@+id/metCorrespBancario"
+                            android:layout_marginRight="10dp"/>
                     </LinearLayout>
                 </HorizontalScrollView>
 
@@ -284,9 +298,9 @@
                     android:enabled="false"
                     android:textColor="#ffffff"
                     android:background="@drawable/btn_recarga_desactivado"
-                    android:layout_marginRight="20dp"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
+                    android:layout_marginRight="15dp"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
                     android:id="@+id/aceptarRecarga"/>
 
                 <Button
@@ -294,8 +308,8 @@
                     android:layout_height="wrap_content"
                     android:text="Cancelar"
                     android:textColor="@color/colorPrimaryDark"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
                     android:background="@drawable/btn_auxiliar_recargas"
                     android:id="@+id/cancelarRecarga"/>
 

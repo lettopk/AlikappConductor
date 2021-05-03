@@ -76,7 +76,7 @@ public class popupRecarga extends AppCompatActivity {
 
     private CheckBox checkBox;
     private Button mRecargar, mCancela;
-    private ToggleButton btnPagoTarjeta, btnPagoBancolo, btnPagoNequi, btnPagoPSE;
+    private ToggleButton btnPagoTarjeta, btnPagoBancolo, btnPagoNequi, btnPagoPSE, btnPagoRefBanco;
     private EditText mCantidad;
 
     private Dialog transferenciaBancolo;
@@ -99,9 +99,13 @@ public class popupRecarga extends AppCompatActivity {
     private EditText emailNequi, nombreNequi, numCelularNequi;
     private Button btnConfirNQ, btnCancelNQ;
 
+    private Dialog refBnacaria;
+    private TextView textReferencia, numConBanco, numRefBanco, montoReferenciaBancaria;
+    private Button btnRefBanco;
 
     private Dialog pagoPSE;
     private EditText emailPSE, nombrePSE, numDocumentoPSE;
+
 
     private Boolean cardConfirmado = false, nequiConfirmado = false, bancoloConfirmado = false, pseConfirmado = false;
 
@@ -133,7 +137,7 @@ public class popupRecarga extends AppCompatActivity {
 
     private String tokenCreditCard;
 
-    private CardView carviewCarga, carviewExito, carviewInicial;
+    private CardView carviewCarga, carviewExito, carviewInicial, carviewBorrarDatos;
     private Button btnOk;
     private ImageView procesadoExito;
     private TextView mensajeProcesado;
@@ -169,12 +173,14 @@ public class popupRecarga extends AppCompatActivity {
         transferenciaBancolo = new Dialog(this);
         transferenciaBancolo.setContentView(R.layout.layout_popup_pago_bancolombia);
 
-
         pagoNqui = new Dialog(this);
         pagoNqui.setContentView(R.layout.layout_popup_pago_nequi);
 
         pagoPSE = new Dialog(this);
         pagoPSE.setContentView(R.layout.layout_popup_pago_pse);
+
+        refBnacaria = new Dialog(this);
+        refBnacaria.setContentView(R.layout.layout_popup_pago_recaudo);
 
         myDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -296,7 +302,12 @@ public class popupRecarga extends AppCompatActivity {
         btnPagoBancolo = (ToggleButton) findViewById(R.id.metPagoBancolo);
         btnPagoNequi = (ToggleButton) findViewById(R.id.metPagoNequi);
         btnPagoPSE = (ToggleButton) findViewById(R.id.metPagoPSE);
+        btnPagoRefBanco = (ToggleButton) findViewById(R.id.metCorrespBancario);
 
+        textReferencia = (TextView) findViewById(R.id.textReferencia);
+        numConBanco = (TextView) findViewById(R.id.numConBanco);
+        montoReferenciaBancaria = (TextView) findViewById(R.id.montoReferenciaBancaria);
+        numRefBanco = (TextView) findViewById(R.id.numRefBanco);
 
         emailBancolo = (EditText) transferenciaBancolo.findViewById(R.id.emailBancolo);
         nombreBancolo = (EditText) transferenciaBancolo.findViewById(R.id.nombreApellidosBancolo);
@@ -411,6 +422,8 @@ public class popupRecarga extends AppCompatActivity {
                      quitarFondobtnPagoNequi();
                      quitarFondobtnPagoBancolombia();
                      quitarFondobtnPagoPSE();
+                     quitarFondobtnPagoRefBanco();
+                     quitarFondobtnPagoRefBanco();
                      showPopup();
 
                  }
@@ -434,6 +447,7 @@ public class popupRecarga extends AppCompatActivity {
                   quitarFondoPagoTarjeta();
                   quitarFondobtnPagoNequi();
                   quitarFondobtnPagoPSE();
+                  quitarFondobtnPagoRefBanco();
                   showPopupPagoBancolo();
 
               }
@@ -457,6 +471,7 @@ public class popupRecarga extends AppCompatActivity {
                     quitarFondoPagoTarjeta();
                     quitarFondobtnPagoBancolombia();
                     quitarFondobtnPagoPSE();
+                    quitarFondobtnPagoRefBanco();
                     showPopupPagoNequi();
 
                 }
@@ -480,6 +495,7 @@ public class popupRecarga extends AppCompatActivity {
                     quitarFondoPagoTarjeta();
                     quitarFondobtnPagoBancolombia();
                     quitarFondobtnPagoNequi();
+                    quitarFondobtnPagoRefBanco();
                     getPseBancos();
 
                 }
@@ -490,6 +506,19 @@ public class popupRecarga extends AppCompatActivity {
                     desactivarBotonRecarga();
                 }
 
+            }
+        });
+
+        btnPagoRefBanco.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                cambiarFondobtnPagoRefBanco();
+                quitarFondoPagoTarjeta();
+                quitarFondobtnPagoBancolombia();
+                quitarFondobtnPagoNequi();
+                quitarFondobtnPagoPSE();
+                showPopupPagoRefBanco();
             }
         });
 
@@ -597,7 +626,12 @@ public class popupRecarga extends AppCompatActivity {
         pagoPSE.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         pagoPSE.show();
     }
-  
+
+
+    private void showPopupPagoRefBanco() {
+
+        refBnacaria.show();
+    }
 
     private void showPopupPagoNequi() {
         if (NUMTELEFONOCEL != null){
@@ -722,10 +756,24 @@ public class popupRecarga extends AppCompatActivity {
         btnPagoNequi.setChecked(false);
         btnPagoBancolo.setChecked(false);
     }
-
     public void quitarFondobtnPagoPSE(){
         this.btnPagoPSE.setBackgroundResource(R.drawable.btn_auxiliar_recargas);
     }
+
+    private void cambiarFondobtnPagoRefBanco() {
+
+        btnPagoRefBanco.setBackgroundResource(R.drawable.btn_met_pgo_seleccion);
+        btnPagoPSE.setChecked(false);
+        btnPagoTarjeta.setChecked(false);
+        btnPagoNequi.setChecked(false);
+        btnPagoBancolo.setChecked(false);
+    }
+
+    private void quitarFondobtnPagoRefBanco() {
+
+        this.btnPagoRefBanco.setBackgroundResource(R.drawable.btn_auxiliar_recargas);
+    }
+
 
     /**
      * permite visualizar los campos para diligenciar la terjeta dde crédito**/

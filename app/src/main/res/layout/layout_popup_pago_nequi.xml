@@ -106,7 +106,7 @@
                     android:layout_width="135dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_recargar"
-                    android:text="CONFORMAR"
+                    android:text="PAsar al PAgo"
                     android:textColor="@color/white"
                     android:layout_marginRight="10sp"
                     android:id="@+id/btnConfirNQ"/>
