@@ -149,7 +149,7 @@
                     android:text="OK"
                     android:textColor="@color/white"
                     android:layout_marginRight="10sp"
-                    android:id="@+id/btnConfirNQ"/>
+                    android:id="@+id/btnOkRefBanc"/>
 
 
             </LinearLayout>

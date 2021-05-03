@@ -28,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,11 +52,20 @@ public class ActivityBilletera extends AppCompatActivity {
     private Retrofit retrofit;
     private WompiapiService service;
     private static final String URL_BASE_WOMPI = "https://production.wompi.co/v1/";
+    private String actualMonth, actualYear, actualDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_billetera);
+
+        Calendar currentTime = Calendar.getInstance();
+        SimpleDateFormat dateFormatDay = new SimpleDateFormat("DD");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM");
+        SimpleDateFormat dateFormatYear = new SimpleDateFormat("yy");
+        actualDay = dateFormatDay.format(currentTime.getTime());
+        actualMonth = dateFormat.format(currentTime.getTime());
+        actualYear = dateFormatYear.format(currentTime.getTime());
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(URL_BASE_WOMPI)
@@ -133,7 +144,7 @@ public class ActivityBilletera extends AppCompatActivity {
                         if (estTransaccion.equals("PENDING")){
                             if(!newPago){ verificarEstadoTransaccion(); }
 
-                        } else { newPago = true; }
+                        }
                     }
                 }
 
@@ -195,10 +206,15 @@ public class ActivityBilletera extends AppCompatActivity {
                     if (informationyeye.getStatus().equals("PENDING")) {
                         PaymentMethod metodoPago = informationyeye.getPayment_method();
 
-                        if (metodoPago.getExtra()!= null) {
+                        if (metodoPago.getExtra()!= null && (metodoPago.getType().equals("PSE") || metodoPago.getType().equals("BANCOLOMBIA_TRANSFER")  || metodoPago.getType().equals("BANCOLOMBIA_COLLECT"))) {
                             ResponseExtra metodoResponse = metodoPago.getExtra();
 
-                            if (metodoResponse.getAsync_payment_url() != null && (metodoPago.getType().equals("PSE") || metodoPago.getType().equals("BANCOLOMBIA_TRANSFER"))) {
+                            if(metodoPago.getType().equals("BANCOLOMBIA_COLLECT") && metodoResponse.getBusiness_agreement_code() != null){
+                                Toast.makeText(ActivityBilletera.this, "No olvides que puedes realizar tu pago en cualquier corresponsal Bancolombia", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ActivityBilletera.this, "Ref. de Pago: " + metodoResponse.getPayment_intention_identifier(), Toast.LENGTH_LONG).show();
+                            }
+
+                            else if (metodoResponse.getAsync_payment_url() != null) {
                                 System.out.println(metodoResponse.getAsync_payment_url());
 
                                 if (metodoPago.getType().equals("PSE")) {
@@ -238,6 +254,7 @@ public class ActivityBilletera extends AppCompatActivity {
                             int dinerActual = Integer.parseInt(cantDineroDisponible);
 
                             cantDineroDisponible = (dineroEntrante + dinerActual)+ "";
+                            pagoExitoso();
                         }
                         estTransaccion = informationyeye.getStatus();
                         guardarInormacion();
@@ -264,12 +281,17 @@ public class ActivityBilletera extends AppCompatActivity {
     private void guardarInormacion(){
 
         DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
-
         Map usuarioInfo = new HashMap();
+        usuarioInfo.put("estadoUltimaTransaccion", estTransaccion);
+        usuarioInfo.put("idUltimaTransaccion", idTransaccion);
+        usuarioInfo.put("dineroDisponible", cantDineroDisponible);
+        enableReference.updateChildren(usuarioInfo);
+    }
 
-            usuarioInfo.put("estadoUltimaTransaccion", estTransaccion);
-            usuarioInfo.put("idUltimaTransaccion", idTransaccion);
-            usuarioInfo.put("dineroDisponible", cantDineroDisponible);
+    private void pagoExitoso() {
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID).child("Transacciones");
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put(idTransaccion, actualDay + "/" + actualMonth + "/" + actualYear);
         enableReference.updateChildren(usuarioInfo);
     }
 }

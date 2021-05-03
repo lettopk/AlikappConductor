@@ -257,8 +257,8 @@
                             android:text="  Bancolombia"
                             android:visibility="visible"
                             android:gravity="center"
-                            android:textOn=" Referencia Bancaria   ✓"
-                            android:textOff=" Referencia Bancaria"
+                            android:textOn=" Corresponsal Bancario   ✓"
+                            android:textOff=" Corresponsal Bancario"
                             android:id="@+id/metCorrespBancario"
                             android:layout_marginRight="10dp"/>
                     </LinearLayout>

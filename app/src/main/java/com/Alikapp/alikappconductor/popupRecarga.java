@@ -100,7 +100,7 @@ public class popupRecarga extends AppCompatActivity {
     private Button btnConfirNQ, btnCancelNQ;
 
     private Dialog refBnacaria;
-    private TextView textReferencia, numConBanco, numRefBanco, montoReferenciaBancaria;
+    private TextView numConBanco, numRefBanco, montoReferenciaBancaria;
     private Button btnRefBanco;
 
     private Dialog pagoPSE;
@@ -148,7 +148,7 @@ public class popupRecarga extends AppCompatActivity {
     private WompiapiService service;
     private static final String URL_BASE_WOMPI = "https://production.wompi.co/v1/";
 
-    private String actualMonth, actualYear;
+    private String actualMonth, actualYear, actualDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,8 +156,10 @@ public class popupRecarga extends AppCompatActivity {
         setContentView(R.layout.layout_popup_recarga);
 
         Calendar currentTime = Calendar.getInstance();
+        SimpleDateFormat dateFormatDay = new SimpleDateFormat("DD");
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM");
         SimpleDateFormat dateFormatYear = new SimpleDateFormat("yy");
+        actualDay = dateFormatDay.format(currentTime.getTime());
         actualMonth = dateFormat.format(currentTime.getTime());
         actualYear = dateFormatYear.format(currentTime.getTime());
 
@@ -254,7 +256,7 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(NUMERO_TARJETA != null){
-                    Toast.makeText(popupRecarga.this, "Manet pulsado para eliminar los dátos de la tarjeta", Toast.LENGTH_LONG).show();
+                    Toast.makeText(popupRecarga.this, "Manten pulsado para eliminar los dátos de la tarjeta", Toast.LENGTH_LONG).show();
                 }            }
         });
 
@@ -304,11 +306,6 @@ public class popupRecarga extends AppCompatActivity {
         btnPagoPSE = (ToggleButton) findViewById(R.id.metPagoPSE);
         btnPagoRefBanco = (ToggleButton) findViewById(R.id.metCorrespBancario);
 
-        textReferencia = (TextView) findViewById(R.id.textReferencia);
-        numConBanco = (TextView) findViewById(R.id.numConBanco);
-        montoReferenciaBancaria = (TextView) findViewById(R.id.montoReferenciaBancaria);
-        numRefBanco = (TextView) findViewById(R.id.numRefBanco);
-
         emailBancolo = (EditText) transferenciaBancolo.findViewById(R.id.emailBancolo);
         nombreBancolo = (EditText) transferenciaBancolo.findViewById(R.id.nombreApellidosBancolo);
         numCelularBancolo = (EditText) transferenciaBancolo.findViewById(R.id.numeroCelularBancolo);
@@ -328,6 +325,11 @@ public class popupRecarga extends AppCompatActivity {
         nombrePSE = (EditText) pagoPSE.findViewById(R.id.nombreApellidosPSE);
         btnConfirPSE = (Button) pagoPSE.findViewById(R.id.btnConfirPSE);
         btnCancelPSE = (Button) pagoPSE.findViewById(R.id.btnCancelPSE);
+
+        numConBanco = refBnacaria.findViewById(R.id.numConBanco);
+        numRefBanco = refBnacaria.findViewById(R.id.numRefBanco);
+        montoReferenciaBancaria = refBnacaria.findViewById(R.id.montoReferenciaBancaria);
+        btnRefBanco = refBnacaria.findViewById(R.id.btnOkRefBanc);
 
         mCantidad = findViewById(R.id.valorRecarga);
         mCantidad.addTextChangedListener(new TextWatcher() {
@@ -512,13 +514,17 @@ public class popupRecarga extends AppCompatActivity {
         btnPagoRefBanco.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                cambiarFondobtnPagoRefBanco();
-                quitarFondoPagoTarjeta();
-                quitarFondobtnPagoBancolombia();
-                quitarFondobtnPagoNequi();
-                quitarFondobtnPagoPSE();
-                showPopupPagoRefBanco();
+                if(btnPagoRefBanco.isChecked()){
+                    cambiarFondobtnPagoRefBanco();
+                    quitarFondoPagoTarjeta();
+                    quitarFondobtnPagoBancolombia();
+                    quitarFondobtnPagoNequi();
+                    quitarFondobtnPagoPSE();
+                    activarBotonRecarga();
+                } else {
+                    quitarFondobtnPagoRefBanco();
+                    desactivarBotonRecarga();
+                }
             }
         });
 
@@ -630,6 +636,14 @@ public class popupRecarga extends AppCompatActivity {
 
     private void showPopupPagoRefBanco() {
 
+        btnRefBanco.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        refBnacaria.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         refBnacaria.show();
     }
 
@@ -652,7 +666,6 @@ public class popupRecarga extends AppCompatActivity {
                     EMAIL = emailNequi.getText().toString();
                     NUMTELEFONOCEL = numCelularNequi.getText().toString();
                     Toast.makeText(popupRecarga.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
-                    activarBotonRecarga();
                     pagoNqui.dismiss();
                     activarBotonRecarga();
                 } else {
@@ -952,6 +965,9 @@ public class popupRecarga extends AppCompatActivity {
         });
 
         mCardNumber.setText(NUMERO_TARJETA);
+        if(NUMERO_TARJETA != null){
+            frontCardNUmber.setText("XXXX XXXX XXXX " + NUMERO_TARJETA.substring(12));
+        }
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
     }
@@ -1052,29 +1068,9 @@ public class popupRecarga extends AppCompatActivity {
                     TransactionResponse transaction = response.body();
                     TransactionInformation informationyeye = transaction.getData();
                     PaymentMethod metodoPago = informationyeye.getPayment_method();
-                    if (metodoPago.getExtra()!= null) {
 
-                        ResponseExtra metodoResponse = metodoPago.getExtra();
-                        if (metodoResponse.getAsync_payment_url() != null){
-
-                            if (btnPagoPSE.isChecked()) {
-                                Intent intent = new Intent(popupRecarga.this, LayoutWebview.class);
-                                intent.putExtra("pack", metodoResponse.getAsync_payment_url());
-                                startActivity(intent);
-                            }
-                            else if (btnPagoBancolo.isChecked()){
-
-                                Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(metodoResponse.getAsync_payment_url()));
-                                startActivity(intent);
-
-                            }
-
-                        }
-                    }
-                    System.out.println(informationyeye.getId());
                     idTransaccion = informationyeye.getId();
                     estadoTransaccion = informationyeye.getStatus();
-                    System.out.println(informationyeye.getStatus());
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -1114,7 +1110,6 @@ public class popupRecarga extends AppCompatActivity {
             metPago.put("type", "BANCOLOMBIA_TRANSFER");
             metPago.put("user_type", "PERSON");
             metPago.put("payment_description", DEScPAGO);
-            //metPago.put("sandbox_status", "APPROVED");
 
         }
 
@@ -1122,6 +1117,7 @@ public class popupRecarga extends AppCompatActivity {
 
             metPago.put("type", "NEQUI");
             metPago.put("phone_number", NUMTELEFONOCEL);
+
         }
 
         else if (btnPagoPSE.isChecked()){
@@ -1132,6 +1128,12 @@ public class popupRecarga extends AppCompatActivity {
             metPago.put("user_legal_id", NUMCC);
             metPago.put("financial_institution_code", BANCO);
             metPago.put("payment_description", DEScPAGO);
+
+        }
+
+        else if (btnPagoRefBanco.isChecked()){
+
+            metPago.put("type", "BANCOLOMBIA_COLLECT");
 
         }
 
@@ -1153,12 +1155,18 @@ public class popupRecarga extends AppCompatActivity {
                     if (informationyeye.getStatus().equals("PENDING")) {
                         PaymentMethod metodoPago = informationyeye.getPayment_method();
 
-                        if (metodoPago.getExtra()!= null && (!btnPagoNequi.isChecked() || !btnPagoTarjeta.isChecked())) {
+                        if (metodoPago.getExtra()!= null && (!btnPagoNequi.isChecked() || !btnPagoTarjeta.isChecked() || btnPagoRefBanco.isChecked())) {
 
-                            System.out.println("Entra donde no debe");
                             ResponseExtra metodoResponse = metodoPago.getExtra();
 
-                            if (metodoResponse.getAsync_payment_url() != null && !redireccionado) {
+                            if (btnPagoRefBanco.isChecked() && metodoResponse.getBusiness_agreement_code() != null){
+                                numConBanco.setText(metodoResponse.getBusiness_agreement_code());
+                                numRefBanco.setText(metodoResponse.getPayment_intention_identifier());
+                                montoReferenciaBancaria.setText(setearDineroPantalla((int) amount + ""));
+                                showPopupPagoRefBanco();
+                            }
+
+                            else if (metodoResponse.getAsync_payment_url() != null && !redireccionado) {
                                 System.out.println(metodoResponse.getAsync_payment_url());
 
                                 if (btnPagoPSE.isChecked()) {
@@ -1206,7 +1214,7 @@ public class popupRecarga extends AppCompatActivity {
                             cantDineroDisponible = (int) valorActual + "";
                             mensajeProcesado.setText("Transaccion Exitosa");
                             procesadoExito.setImageResource(R.drawable.ic_check);
-
+                            pagoExitoso();
                         }
 
                         else {
@@ -1242,6 +1250,13 @@ public class popupRecarga extends AppCompatActivity {
                 Log.e(TAG, "verificarEstadoTransaccion onFailure: " + t.getMessage());
             }
         });
+    }
+
+    private void pagoExitoso() {
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID).child("Transacciones");
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put(idTransaccion, actualDay + "/" + actualMonth + "/" + actualYear);
+        enableReference.updateChildren(usuarioInfo);
     }
 
     private ArrayList<PseResponse> repustaApiBancosPSE;
@@ -1401,6 +1416,31 @@ public class popupRecarga extends AppCompatActivity {
         usuarioInfo.put("fecExpiracion", null);
         usuarioInfo.put("cvv", null);
         enableReference.updateChildren(usuarioInfo);
+    }
+
+    String v1 = "" ;
+    @SuppressLint("SetTextI18n")
+    private String setearDineroPantalla(String monto) {
+
+        v1 = "";
+        if(monto.length()>3) {
+            int j = 0;
+            for (int i = 0; i < monto.length(); i++) {
+                if (j == 3) {
+                    String a = new StringBuilder().append(".").append(v1).toString();
+                    System.out.println("valor de a " + a);
+                    v1 = a;
+                    j = 0;
+                }
+                j++;
+                String b = new StringBuilder().append(monto.charAt(monto.length()-(i+1))).append(v1).toString();
+                v1 = b;
+            }
+        } else {
+            v1 = monto;
+        }
+
+        return v1;
     }
 
 }
