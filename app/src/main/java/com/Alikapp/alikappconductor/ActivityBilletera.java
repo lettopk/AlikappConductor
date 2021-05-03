@@ -291,7 +291,7 @@ public class ActivityBilletera extends AppCompatActivity {
     private void pagoExitoso() {
         DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID).child("Transacciones");
         Map usuarioInfo = new HashMap();
-        usuarioInfo.put(actualYear + "/" + actualMonth + "/" + actualDay, idTransaccion);
+        usuarioInfo.put(idTransaccion, actualYear + "/" + actualMonth + "/" + actualDay);
         enableReference.updateChildren(usuarioInfo);
     }
 }

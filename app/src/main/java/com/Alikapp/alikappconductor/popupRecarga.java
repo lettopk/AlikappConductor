@@ -1255,7 +1255,7 @@ public class popupRecarga extends AppCompatActivity {
     private void pagoExitoso() {
         DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID).child("Transacciones");
         Map usuarioInfo = new HashMap();
-        usuarioInfo.put(actualYear + "/" + actualMonth + "/" + actualDay, idTransaccion);
+        usuarioInfo.put(idTransaccion, actualDay + "/" + actualMonth + "/" + actualYear);
         enableReference.updateChildren(usuarioInfo);
     }
 
