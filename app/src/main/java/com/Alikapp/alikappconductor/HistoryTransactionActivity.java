@@ -53,12 +53,14 @@ public class HistoryTransactionActivity extends AppCompatActivity {
     }
 
     private void getUserHistoryTransactions() {
-        DatabaseReference userHistoryDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID).child("Transacciones");
+        DatabaseReference userHistoryDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         userHistoryDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    for(DataSnapshot history : dataSnapshot.getChildren()){
+                    dataSnapshot.child("Transacciones");
+                    DataSnapshot data = dataSnapshot.child("Transacciones");
+                    for(DataSnapshot history : data.getChildren()){
                         String id = history.getKey();
                         Long timestamp = 0L;
                         timestamp = Long.valueOf(history.getValue().toString());
