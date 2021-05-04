@@ -150,6 +150,9 @@ public class popupRecarga extends AppCompatActivity {
 
     private String actualMonth, actualYear, actualDay;
 
+    private Boolean pagoEnEfectivo;
+    private String referenciaPago, numConvenio, catidadDineroPagarEfectivo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -514,7 +517,19 @@ public class popupRecarga extends AppCompatActivity {
         btnPagoRefBanco.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(btnPagoRefBanco.isChecked()){
+                if(!pagoEnEfectivo){
+                    cambiarFondobtnPagoRefBanco();
+                    quitarFondoPagoTarjeta();
+                    quitarFondobtnPagoBancolombia();
+                    quitarFondobtnPagoNequi();
+                    quitarFondobtnPagoPSE();
+                    activarBotonRecarga();
+                    numConBanco.setText(numConvenio);
+                    numRefBanco.setText(referenciaPago);
+                    montoReferenciaBancaria.setText(catidadDineroPagarEfectivo);
+                    showPopupPagoRefBanco();
+                }
+                else if(btnPagoRefBanco.isChecked()){
                     cambiarFondobtnPagoRefBanco();
                     quitarFondoPagoTarjeta();
                     quitarFondobtnPagoBancolombia();
@@ -537,6 +552,14 @@ public class popupRecarga extends AppCompatActivity {
                 finish();
             }
         });
+
+        Intent refPago = getIntent();
+        pagoEnEfectivo = refPago.getBooleanExtra("pagoEnEfectivo", true);
+        if(!pagoEnEfectivo){
+            referenciaPago = refPago.getStringExtra("referenciaPago");
+            numConvenio = refPago.getStringExtra("numConvenio");
+            catidadDineroPagarEfectivo = refPago.getStringExtra("catidadDineroPagarEfectivo");
+        }
     }
 
     private void desactivarBotonRecarga() {

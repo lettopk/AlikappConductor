@@ -53,6 +53,8 @@ public class ActivityBilletera extends AppCompatActivity {
     private WompiapiService service;
     private static final String URL_BASE_WOMPI = "https://production.wompi.co/v1/";
     private String actualMonth, actualYear, actualDay;
+    private Boolean pagoEnEfectivo = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,10 @@ public class ActivityBilletera extends AppCompatActivity {
             public void onClick(View v) {
                 newPago = true;
                 Intent intent = new Intent( ActivityBilletera.this, popupRecarga.class);
+                intent.putExtra("pagoEnEfectivo", pagoEnEfectivo);
+                intent.putExtra("referenciaPago", referenciaPago);
+                intent.putExtra("numConvenio", numConvenio);
+                intent.putExtra("catidadDineroPagarEfectivo", catidadDineroPagarEfectivo);
                 startActivity(intent);
             }
         });
@@ -191,8 +197,7 @@ public class ActivityBilletera extends AppCompatActivity {
 
     }
 
-    private String cantDineroDisponible="0";
-
+    private String cantDineroDisponible="0", referenciaPago, numConvenio, catidadDineroPagarEfectivo;
     private void verificarEstadoTransaccion() {
         Call<TransactionResponse> transaction = service.verificarEstadoTransaccion(idTransaccion);
 
@@ -210,6 +215,11 @@ public class ActivityBilletera extends AppCompatActivity {
                             ResponseExtra metodoResponse = metodoPago.getExtra();
 
                             if(metodoPago.getType().equals("BANCOLOMBIA_COLLECT") && metodoResponse.getBusiness_agreement_code() != null){
+                                pagoEnEfectivo = false;
+                                numConvenio =metodoResponse.getBusiness_agreement_code();
+                                referenciaPago = metodoResponse.getPayment_intention_identifier();
+                                int A = informationyeye.getAmount_in_cents()/100;
+                                catidadDineroPagarEfectivo = A + "";
                                 Toast.makeText(ActivityBilletera.this, "No olvides que puedes realizar tu pago en cualquier corresponsal Bancolombia", Toast.LENGTH_LONG).show();
                                 Toast.makeText(ActivityBilletera.this, "Ref. de Pago: " + metodoResponse.getPayment_intention_identifier(), Toast.LENGTH_LONG).show();
                             }
