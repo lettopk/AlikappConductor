@@ -221,8 +221,8 @@ public class ActivityBilletera extends AppCompatActivity {
                                 referenciaPago = metodoResponse.getPayment_intention_identifier();
                                 int A = informationyeye.getAmount_in_cents()/100;
                                 catidadDineroPagarEfectivo = A + "";
-                                Toast.makeText(ActivityBilletera.this, "No olvides que puedes realizar tu pago en cualquier corresponsal Bancolombia", Toast.LENGTH_LONG).show();
-                                Toast.makeText(ActivityBilletera.this, "Ref. de Pago: " + metodoResponse.getPayment_intention_identifier(), Toast.LENGTH_LONG).show();
+                                //Toast.makeText(ActivityBilletera.this, "No olvides que puedes realizar tu pago en cualquier corresponsal Bancolombia", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(ActivityBilletera.this, "Ref. de Pago: " + metodoResponse.getPayment_intention_identifier(), Toast.LENGTH_LONG).show();
                             }
 
                             else if (metodoResponse.getAsync_payment_url() != null) {
