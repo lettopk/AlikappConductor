@@ -44,7 +44,9 @@
 
             </LinearLayout>
 
-
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <LinearLayout
                 android:id="@+id/linearLayout4"
                 android:layout_width="match_parent"
@@ -72,12 +74,12 @@
                     android:layout_marginTop="2dp"
                     android:textSize="18dp"
                     android:text="Dirigete a cualquier corresponsal o sede Bancolombia para realizar tu pago con la siguiente referencia:"
-                    android:id="@+id/textReferencia"/>
+                    android:id="@+id/textReferenciaBanc"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="5dp"
                     android:gravity="center"
 
                     android:text="Monto a Pagar"
@@ -130,16 +132,17 @@
                     android:id="@+id/numRefBanco"/>
 
 
-
-
-
             </LinearLayout>
+
+            </ScrollView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:padding="10dp"
+                android:id="@+id/vista1"
+                android:visibility="gone"
                 android:gravity="center">
 
                 <Button
@@ -150,6 +153,35 @@
                     android:textColor="@color/white"
                     android:layout_marginRight="10sp"
                     android:id="@+id/btnOkRefBanc"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/vista2"
+                android:visibility="visible"
+                android:gravity="center">
+
+                <Button
+                    android:layout_width="135dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_recargar"
+                    android:text="Nueva Referencia"
+                    android:textColor="@color/white"
+                    android:padding="5dp"
+                    android:layout_marginRight="10sp"
+                    android:id="@+id/btnNuevaRefBanc"/>
+
+                <Button
+                    android:layout_width="135dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_auxiliar_recargas"
+                    android:text="Cancelar"
+                    android:layout_marginRight="10sp"
+                    android:id="@+id/btnCancelRefBanc"/>
+
 
 
             </LinearLayout>

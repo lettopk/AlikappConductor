@@ -100,7 +100,7 @@ public class popupRecarga extends AppCompatActivity {
     private Button btnConfirNQ, btnCancelNQ;
 
     private Dialog refBnacaria;
-    private TextView numConBanco, numRefBanco, montoReferenciaBancaria;
+    private TextView numConBanco, numRefBanco, montoReferenciaBancaria, textReferenciaBnc;
     private Button btnRefBanco;
 
     private Dialog pagoPSE;
@@ -330,6 +330,7 @@ public class popupRecarga extends AppCompatActivity {
         numRefBanco = refBnacaria.findViewById(R.id.numRefBanco);
         montoReferenciaBancaria = refBnacaria.findViewById(R.id.montoReferenciaBancaria);
         btnRefBanco = refBnacaria.findViewById(R.id.btnOkRefBanc);
+        textReferenciaBnc = refBnacaria.findViewById(R.id.textReferenciaBanc);
 
         mCantidad = findViewById(R.id.valorRecarga);
         mCantidad.addTextChangedListener(new TextWatcher() {
@@ -1163,6 +1164,8 @@ public class popupRecarga extends AppCompatActivity {
                                 numConBanco.setText(metodoResponse.getBusiness_agreement_code());
                                 numRefBanco.setText(metodoResponse.getPayment_intention_identifier());
                                 montoReferenciaBancaria.setText(setearDineroPantalla((int) amount + ""));
+                                textReferenciaBnc.setText("Dirigete a cualquier corresponsal o sede Bancolombia para " +
+                                        "realizar tu pago con la siguiente referencia:");
                                 showPopupPagoRefBanco();
                             }
 
