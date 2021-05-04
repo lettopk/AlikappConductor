@@ -43,7 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ActivityBilletera extends AppCompatActivity {
 
-    private Button btnRecarga;
+    private Button btnRecarga, btnHistorial;
     private TextView copDisponib;
     private TextView credDisponib;
     private Boolean newPago = false;
@@ -79,6 +79,7 @@ public class ActivityBilletera extends AppCompatActivity {
         btnRecarga = (Button) findViewById(R.id.btnRecarga);
         copDisponib = (TextView) findViewById(R.id.copDisponib);
         credDisponib = (TextView) findViewById(R.id.credDisponib);
+        btnHistorial = findViewById(R.id.btnHistorial);
 
         btnRecarga.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +92,14 @@ public class ActivityBilletera extends AppCompatActivity {
                 intent.putExtra("catidadDineroPagarEfectivo", catidadDineroPagarEfectivo);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        btnHistorial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityBilletera.this, HistoryTransactionActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -299,10 +308,11 @@ public class ActivityBilletera extends AppCompatActivity {
         enableReference.updateChildren(usuarioInfo);
     }
 
+    Long timestamp = System.currentTimeMillis();
     private void pagoExitoso() {
         DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID).child("Transacciones");
         Map usuarioInfo = new HashMap();
-        usuarioInfo.put(idTransaccion, actualYear + "/" + actualMonth + "/" + actualDay);
+        usuarioInfo.put(idTransaccion, timestamp);
         enableReference.updateChildren(usuarioInfo);
     }
 }

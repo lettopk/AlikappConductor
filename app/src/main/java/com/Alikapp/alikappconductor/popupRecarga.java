@@ -150,7 +150,7 @@ public class popupRecarga extends AppCompatActivity {
     private WompiapiService service;
     private static final String URL_BASE_WOMPI = "https://production.wompi.co/v1/";
 
-    private String actualMonth, actualYear, actualDay;
+    private String actualMonth, actualYear;
 
     private Boolean pagoEnEfectivo;
     private String referenciaPago, numConvenio, catidadDineroPagarEfectivo;
@@ -161,10 +161,8 @@ public class popupRecarga extends AppCompatActivity {
         setContentView(R.layout.layout_popup_recarga);
 
         Calendar currentTime = Calendar.getInstance();
-        SimpleDateFormat dateFormatDay = new SimpleDateFormat("DD");
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM");
         SimpleDateFormat dateFormatYear = new SimpleDateFormat("yy");
-        actualDay = dateFormatDay.format(currentTime.getTime());
         actualMonth = dateFormat.format(currentTime.getTime());
         actualYear = dateFormatYear.format(currentTime.getTime());
 
@@ -1105,8 +1103,8 @@ public class popupRecarga extends AppCompatActivity {
 
     private String idTransaccion, estadoTransaccion;
     private String conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    Long timestamp = System.currentTimeMillis();
     private void recagar() {
-        Long timestamp = System.currentTimeMillis();
         String referencia = new StringBuilder()
                 .append(timestamp)
                 .append("//")
@@ -1313,7 +1311,7 @@ public class popupRecarga extends AppCompatActivity {
     private void pagoExitoso() {
         DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID).child("Transacciones");
         Map usuarioInfo = new HashMap();
-        usuarioInfo.put(idTransaccion, actualDay + "/" + actualMonth + "/" + actualYear);
+        usuarioInfo.put(idTransaccion, timestamp);
         enableReference.updateChildren(usuarioInfo);
     }
 

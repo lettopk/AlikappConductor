@@ -26,7 +26,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".LayoutWebview"></activity>
+        <activity android:name=".DetailTransactionActivity"></activity>
+        <activity android:name=".HistoryTransactionActivity" />
+        <activity android:name=".HistoryTransactionsActivity" />
+        <activity android:name=".LayoutWebview" />
         <activity android:name=".LegalActivity" />
 
         <meta-data
