@@ -20,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -101,7 +102,8 @@ public class popupRecarga extends AppCompatActivity {
 
     private Dialog refBnacaria;
     private TextView numConBanco, numRefBanco, montoReferenciaBancaria, textReferenciaBnc;
-    private Button btnRefBanco;
+    private Button btnRefBanco, btnNewRef, btnCancelarRef;
+    private LinearLayout vista1, vista2;
 
     private Dialog pagoPSE;
     private EditText emailPSE, nombrePSE, numDocumentoPSE;
@@ -193,6 +195,16 @@ public class popupRecarga extends AppCompatActivity {
                 if(!cardConfirmado){
                     btnPagoTarjeta.setChecked(false);
                     quitarFondoPagoTarjeta();
+                }
+            }
+        });
+
+        refBnacaria.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if(!pagoEnEfectivo){
+                    btnPagoRefBanco.setChecked(false);
+                    quitarFondobtnPagoRefBanco();
                 }
             }
         });
@@ -334,6 +346,10 @@ public class popupRecarga extends AppCompatActivity {
         montoReferenciaBancaria = refBnacaria.findViewById(R.id.montoReferenciaBancaria);
         btnRefBanco = refBnacaria.findViewById(R.id.btnOkRefBanc);
         textReferenciaBnc = refBnacaria.findViewById(R.id.textReferenciaBanc);
+        vista1 = refBnacaria.findViewById(R.id.vista1);
+        vista2 = refBnacaria.findViewById(R.id.vista2);
+        btnNewRef = refBnacaria.findViewById(R.id.btnNuevaRefBanc);
+        btnCancelarRef = refBnacaria.findViewById(R.id.btnCancelRefBanc);
 
         mCantidad = findViewById(R.id.valorRecarga);
         mCantidad.addTextChangedListener(new TextWatcher() {
@@ -518,25 +534,23 @@ public class popupRecarga extends AppCompatActivity {
         btnPagoRefBanco.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(!pagoEnEfectivo){
+                if(btnPagoRefBanco.isChecked()){
                     cambiarFondobtnPagoRefBanco();
                     quitarFondoPagoTarjeta();
                     quitarFondobtnPagoBancolombia();
                     quitarFondobtnPagoNequi();
                     quitarFondobtnPagoPSE();
-                    activarBotonRecarga();
-                    numConBanco.setText(numConvenio);
-                    numRefBanco.setText(referenciaPago);
-                    montoReferenciaBancaria.setText(catidadDineroPagarEfectivo);
-                    showPopupPagoRefBanco();
-                }
-                else if(btnPagoRefBanco.isChecked()){
-                    cambiarFondobtnPagoRefBanco();
-                    quitarFondoPagoTarjeta();
-                    quitarFondobtnPagoBancolombia();
-                    quitarFondobtnPagoNequi();
-                    quitarFondobtnPagoPSE();
-                    activarBotonRecarga();
+                    if(!pagoEnEfectivo){
+                        vista1.setVisibility(View.GONE);
+                        vista2.setVisibility(View.VISIBLE);
+                        numConBanco.setText(numConvenio);
+                        numRefBanco.setText(referenciaPago);
+                        montoReferenciaBancaria.setText(catidadDineroPagarEfectivo);
+                        textReferenciaBnc.setText("Actualmente cuentas con una transacción activa pendiente por realizar el pago:");
+                        showPopupPagoRefBanco();
+                    } else {
+                        activarBotonRecarga();
+                    }
                 } else {
                     quitarFondobtnPagoRefBanco();
                     desactivarBotonRecarga();
@@ -664,6 +678,22 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        btnCancelarRef.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refBnacaria.dismiss();
+            }
+        });
+
+        btnNewRef.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pagoEnEfectivo = true;
+                activarBotonRecarga();
+                refBnacaria.dismiss();
             }
         });
 
@@ -1091,7 +1121,6 @@ public class popupRecarga extends AppCompatActivity {
                 if(response.isSuccessful()){
                     TransactionResponse transaction = response.body();
                     TransactionInformation informationyeye = transaction.getData();
-                    PaymentMethod metodoPago = informationyeye.getPayment_method();
 
                     idTransaccion = informationyeye.getId();
                     estadoTransaccion = informationyeye.getStatus();
@@ -1184,11 +1213,14 @@ public class popupRecarga extends AppCompatActivity {
                             ResponseExtra metodoResponse = metodoPago.getExtra();
 
                             if (btnPagoRefBanco.isChecked() && metodoResponse.getBusiness_agreement_code() != null){
+                                vista1.setVisibility(View.VISIBLE);
+                                vista2.setVisibility(View.GONE);
                                 numConBanco.setText(metodoResponse.getBusiness_agreement_code());
                                 numRefBanco.setText(metodoResponse.getPayment_intention_identifier());
                                 montoReferenciaBancaria.setText(setearDineroPantalla((int) amount + ""));
                                 textReferenciaBnc.setText("Dirigete a cualquier corresponsal o sede Bancolombia para " +
                                         "realizar tu pago con la siguiente referencia:");
+                                pagoEnEfectivo = false;
                                 showPopupPagoRefBanco();
                             }
 

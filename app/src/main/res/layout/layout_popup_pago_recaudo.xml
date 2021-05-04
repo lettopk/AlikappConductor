@@ -142,7 +142,6 @@
                 android:orientation="vertical"
                 android:padding="10dp"
                 android:id="@+id/vista1"
-                android:visibility="gone"
                 android:gravity="center">
 
                 <Button
@@ -161,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:id="@+id/vista2"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:gravity="center">
 
                 <Button

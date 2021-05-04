@@ -90,6 +90,7 @@ public class ActivityBilletera extends AppCompatActivity {
                 intent.putExtra("numConvenio", numConvenio);
                 intent.putExtra("catidadDineroPagarEfectivo", catidadDineroPagarEfectivo);
                 startActivity(intent);
+                finish();
             }
         });
 
