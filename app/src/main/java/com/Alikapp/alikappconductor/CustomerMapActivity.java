@@ -160,7 +160,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private SegmentedButtonGroup mSegmentedButtonGroup;
 
-    private RatingBar mRatingBar;
+    private TextView mRatingBar;
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -250,7 +250,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         myDialogTaller = new Dialog(this);
 
 
-        mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
+        mRatingBar = (TextView) findViewById(R.id.driverRate);
 
         conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseMessaging.getInstance().getToken()
@@ -1000,13 +1000,19 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
                     if(dataSnapshot.child("name")!=null){
-                        mDriverName.setText("Mecanico: " + dataSnapshot.child("name").getValue().toString());
+                        String nombre = dataSnapshot.child("name").getValue().toString();
+                        String[] nombSeparado = nombre.split(" ");
+                        if (nombSeparado.length>=3){
+
+                            nombre = nombSeparado[0] + " " + nombSeparado[2];
+                        }
+                        mDriverName.setText(nombre);
                          }
                     if(dataSnapshot.child("phone")!=null){
-                        mDriverPhone.setText("Telefono: " + dataSnapshot.child("phone").getValue().toString());
+                        mDriverPhone.setText(dataSnapshot.child("phone").getValue().toString());
                     }
                     if(dataSnapshot.child("car")!=null){
-                        mDriverCar.setText("Taller: " + dataSnapshot.child("car").getValue().toString());
+                        mDriverCar.setText(dataSnapshot.child("car").getValue().toString());
                     }
                     if(dataSnapshot.child("profileImageUrl").getValue()!=null){
                         com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);
@@ -1021,7 +1027,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
                     if(ratingsTotal!= 0){
                         ratingsAvg = ratingSum/ratingsTotal;
-                        mRatingBar.setRating(ratingsAvg);
+                        mRatingBar.setText(ratingsAvg + "");
                     }
                 }
             }
