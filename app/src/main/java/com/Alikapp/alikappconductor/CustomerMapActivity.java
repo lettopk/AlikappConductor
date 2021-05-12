@@ -107,6 +107,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -154,7 +156,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     public ImageView mDriverProfileImage;
     private CircleImageView mImagenPerfil;
 
-    private android.widget.TextView mDriverName, mDriverPhone, mDriverCar;
+    private android.widget.TextView mDriverName, mDriverPhone, mDriverCar, mDriverDistance, mDriverTime;
 
     //private RadioGroup mRadioGroup;
 
@@ -282,6 +284,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverName = (android.widget.TextView) findViewById(R.id.driverName);
         mDriverPhone = (android.widget.TextView) findViewById(R.id.driverPhone);
         mDriverCar = (android.widget.TextView)findViewById(R.id.driverCar);
+        mDriverDistance = findViewById(R.id.driverDistance);
+        mDriverTime = findViewById(R.id.driverTiempo);
         mChat =(Button) findViewById(R.id.mChat);
         mLogout =(Button) findViewById(R.id.logout);
         mTerminosCondiciones = findViewById(R.id.TerminosCondiciones);
@@ -951,14 +955,20 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     loc2.setLatitude(driverLatLng.latitude);
                     loc2.setLongitude(driverLatLng.longitude);
 
-                    float distance = loc1.distanceTo(loc2);
+                    double distance = loc1.distanceTo(loc2);
+                    long time = loc2.getTime();
 
-                    if (distance<100){
-                        mRequest.setText("Su Mecanico esta Aquí");
-                    }else{
+                    mDriverTime.setText(time + " min");
 
-                        mRequest.setText("Mecanico Encontrado: " + String.valueOf((distance)/1000)+" Kms");
-
+                    if (distance >= 1000){
+                        BigDecimal distanceShort = new BigDecimal((distance)/1000).setScale(1, RoundingMode.HALF_UP);
+                        mDriverDistance.setText(String.valueOf(distanceShort)+" Km");
+                        //mRequest.setText("Su Mecanico esta Aquí");
+                    } else if (distance < 1000 && distance >= 50){
+                        BigDecimal distanceShort = new BigDecimal(distance).setScale(1, RoundingMode.HALF_UP);
+                        mDriverDistance.setText(String.valueOf((distanceShort))+" m");
+                    } else {
+                        mDriverDistance.setText("Aquí");
                     }
 
 
@@ -1003,7 +1013,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         String nombre = dataSnapshot.child("name").getValue().toString();
                         String[] nombSeparado = nombre.split(" ");
                         if (nombSeparado.length>=3){
-
                             nombre = nombSeparado[0] + " " + nombSeparado[2];
                         }
                         mDriverName.setText(nombre);
