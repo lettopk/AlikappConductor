@@ -955,10 +955,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     loc2.setLatitude(driverLatLng.latitude);
                     loc2.setLongitude(driverLatLng.longitude);
 
-                    double distance = loc1.distanceTo(loc2);
-                    long time = loc2.getTime();
+                    float distance = loc1.distanceTo(loc2);
 
-                    mDriverTime.setText(time + " min");
 
                     if (distance >= 1000){
                         BigDecimal distanceShort = new BigDecimal((distance)/1000).setScale(1, RoundingMode.HALF_UP);
@@ -971,14 +969,26 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mDriverDistance.setText("Aquí");
                     }
 
-
+                    float speed = (float) 0.0;
+                    boolean hasSpeed = false;
                     if(requestService.equals("Taller")){
+                        speed = loc1.getSpeed();
+                        hasSpeed = loc1.hasSpeed();
                         getRouteToMarker(new LatLng(DriverlocationLat, DriverlocationLng),
                                 new  LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
                     } else {
+                        speed = loc2.getSpeed();
+                        hasSpeed = loc2.hasSpeed();
                         getRouteToMarker( new  LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()),
                                 new LatLng(DriverlocationLat, DriverlocationLng));
                     }
+
+                    if(!hasSpeed){
+                        speed = (float) 4.0;
+                    }
+                    int time = (int) ((distance/speed)/60);
+                    mDriverTime.setText(time + " min");
+
                     if (mDriverMarker == null) {
                         mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Su Mecanico")
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.mecanico)));
@@ -1027,17 +1037,20 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);
                     }
 
-                    int ratingSum = 0;
-                    float ratingsTotal = 0;
-                    float ratingsAvg = 0;
-                    for (DataSnapshot child : dataSnapshot.child("rating").getChildren()){
-                        ratingSum = ratingSum + Integer.valueOf(child.getValue().toString());
-                        ratingsTotal++;
-                    }
-                    if(ratingsTotal!= 0){
-                        ratingsAvg = ratingSum/ratingsTotal;
-                        mRatingBar.setText(ratingsAvg + "");
-                    }
+                    if (dataSnapshot.child("rating").getValue() != null){
+                        int ratingSum = 0;
+                        float ratingsTotal = 0;
+                        float ratingsAvg = 0;
+                        for (DataSnapshot child : dataSnapshot.child("rating").getChildren()){
+                            ratingSum = ratingSum + Integer.valueOf(child.getValue().toString());
+                            ratingsTotal++;
+                        }
+                        if(ratingsTotal!= 0){
+                            ratingsAvg = ratingSum/ratingsTotal;
+                            mRatingBar.setText(ratingsAvg + "");
+                        }
+                    } else { mRatingBar.setText("5.0"); }
+
                 }
             }
             @Override
