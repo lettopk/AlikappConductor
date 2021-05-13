@@ -38,6 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="25dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/btn_auxiliar_recargas"
                 android:orientation="vertical">
 
                 <TextView
@@ -48,7 +50,7 @@
                     android:layout_marginRight="20dp"
                     android:text="¿Qué Ayuda Necesitas?"
                     android:textColor="@color/white"
-                    android:textSize="20dp"/>
+                    android:textSize="18dp"/>
 
                 <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
                     android:id="@+id/buttonGroup"
@@ -130,7 +132,7 @@
                     android:layout_marginRight="20dp"
                     android:text="Describe la situacion"
                     android:textColor="@color/white"
-                    android:textSize="20dp" />
+                    android:textSize="18dp" />
 
                 <LinearLayout
 
@@ -146,6 +148,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="250"
+                        android:layout_marginBottom="5dp"
                         android:textColor="@color/AlikappGris"
                         android:paddingStart="20dp"/>
 
@@ -163,39 +166,41 @@
 
                 </LinearLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    >
 
-                    <com.skyfishjy.library.RippleBackground
-                        android:id="@+id/help"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        map:rb_color="@color/teal_200"
-                        map:rb_duration="5000"
-                        map:rb_radius="20dp"
-                        map:rb_rippleAmount="6"
-                        map:rb_scale="10">
-
-                        <Button
-                            android:id="@+id/request"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:background="@drawable/boton_confirmacion"
-                            android:backgroundTint="@color/AlikappBlue"
-                            android:outlineSpotShadowColor="@color/AlikappRed"
-                            android:text="E"
-                            android:textColor="@color/AlikappGris"
-                            android:visibility="visible" />
-                    </com.skyfishjy.library.RippleBackground>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                >
+
+                <com.skyfishjy.library.RippleBackground
+                    android:id="@+id/help"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    map:rb_color="@color/teal_700"
+                    map:rb_duration="5000"
+                    map:rb_radius="20dp"
+                    map:rb_rippleAmount="6"
+                    map:rb_scale="10">
+
+                    <Button
+                        android:id="@+id/request"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:padding="10dp"
+                        android:background="@drawable/background_request_popup"
+                        android:text="E"
+                        android:textColor="@color/AlikappGris"
+                        android:visibility="visible" />
+                </com.skyfishjy.library.RippleBackground>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 
