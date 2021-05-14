@@ -124,7 +124,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
-    private Dialog myDialog, myDialogTaller;
+    private Dialog myDialog, myDialogTaller, myDialogRate;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -175,6 +175,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private String detalle1;
 
     private String info1;
+
+    private RatingBar ratingBarDib;
+    private float rateDib;
 
     private RippleBackground rippleBackground, rippleBackgroundhelp, rippleBackgroundEspera;
     private ConstraintLayout constraintLayout;
@@ -251,7 +254,45 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         myDialog = new Dialog(this);
         myDialogTaller = new Dialog(this);
 
+        myDialogRate =new Dialog(this);
+        myDialogRate.setContentView(R.layout.popup_calificacion);
 
+        myDialog.setContentView(R.layout.layout_popup);
+        myDialogTaller.setContentView(R.layout.layout_popup_taller);
+
+        mDriverInfo = (ConstraintLayout) findViewById(R.id.driverInfo);
+        mDriverProfileImage = (ImageView) findViewById(R.id.driverProfileImage);
+        mDriverName = (android.widget.TextView) findViewById(R.id.driverName);
+        mDriverPhone = (android.widget.TextView) findViewById(R.id.driverPhone);
+        mDriverCar = (android.widget.TextView)findViewById(R.id.driverCar);
+        mDriverDistance = findViewById(R.id.driverDistance);
+        mDriverTime = findViewById(R.id.driverTiempo);
+        mChat =(Button) findViewById(R.id.mChat);
+        mLogout =(Button) findViewById(R.id.logout);
+        mTerminosCondiciones = findViewById(R.id.TerminosCondiciones);
+
+        mRequest = (Button) myDialog.findViewById(R.id.request);
+        mRequest.setText("Pedir Ayuda");
+        mDescripcion = myDialog.findViewById(R.id.descripcion);
+        mLongDescrip = myDialog.findViewById(R.id.longDescrip);
+        mSegmentedButtonGroup = (SegmentedButtonGroup) myDialog.findViewById(R.id.buttonGroup);
+        mSegmentedButtonGroup.setPosition(0, true);
+        cardViewInicial = myDialog.findViewById(R.id.carview_inicial);
+        cardViewOutSide = myDialog.findViewById(R.id.cardViewOutSide);
+        cardViewInicial.setVisibility(View.VISIBLE);
+        cardViewBusqueda = myDialog.findViewById(R.id.cardViewBusqueda);
+        cardViewBusqueda.setVisibility(View.GONE);
+        mCancelar = myDialog.findViewById(R.id.cancelarPedido);
+
+        mCardViewTaller = myDialogTaller.findViewById(R.id.carview_cargando);
+        mCardViewCarca = myDialogTaller.findViewById(R.id.carview_taller_info);
+        mCardViewTaller.setVisibility(View.GONE);
+        mCardViewCarca.setVisibility(View.VISIBLE);
+        mNombreTaller = myDialogTaller.findViewById(R.id.nombreTaller);
+        mImagenTaller = myDialogTaller.findViewById(R.id.imagenTaller);
+        mDireccionTaller = myDialogTaller.findViewById(R.id.dirccionTaller);
+
+        ratingBarDib = (RatingBar) myDialogRate.findViewById(R.id.ratingBarDib);
         mRatingBar = (TextView) findViewById(R.id.driverRate);
 
         conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -276,19 +317,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         getUserInfo();
 
-        myDialog.setContentView(R.layout.layout_popup);
-        myDialogTaller.setContentView(R.layout.layout_popup_taller);
-
-        mDriverInfo = (ConstraintLayout) findViewById(R.id.driverInfo);
-        mDriverProfileImage = (ImageView) findViewById(R.id.driverProfileImage);
-        mDriverName = (android.widget.TextView) findViewById(R.id.driverName);
-        mDriverPhone = (android.widget.TextView) findViewById(R.id.driverPhone);
-        mDriverCar = (android.widget.TextView)findViewById(R.id.driverCar);
-        mDriverDistance = findViewById(R.id.driverDistance);
-        mDriverTime = findViewById(R.id.driverTiempo);
-        mChat =(Button) findViewById(R.id.mChat);
-        mLogout =(Button) findViewById(R.id.logout);
-        mTerminosCondiciones = findViewById(R.id.TerminosCondiciones);
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -329,20 +357,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-        mRequest = (Button) myDialog.findViewById(R.id.request);
-        mRequest.setText("Pedir Ayuda");
-        mDescripcion = myDialog.findViewById(R.id.descripcion);
-        mLongDescrip = myDialog.findViewById(R.id.longDescrip);
-        mSegmentedButtonGroup = (SegmentedButtonGroup) myDialog.findViewById(R.id.buttonGroup);
-        mSegmentedButtonGroup.setPosition(0, true);
-        cardViewInicial = myDialog.findViewById(R.id.carview_inicial);
-        cardViewOutSide = myDialog.findViewById(R.id.cardViewOutSide);
-        cardViewInicial.setVisibility(View.VISIBLE);
-        cardViewBusqueda = myDialog.findViewById(R.id.cardViewBusqueda);
-        cardViewBusqueda.setVisibility(View.GONE);
-        mCancelar = myDialog.findViewById(R.id.cancelarPedido);
-        // mRadioGroup = (RadioGroup) myDialog.findViewById(R.id.radioGroup);
-        // mRadioGroup.check(R.id.Mecanico);
         myDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -355,13 +369,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-        mCardViewTaller = myDialogTaller.findViewById(R.id.carview_cargando);
-        mCardViewCarca = myDialogTaller.findViewById(R.id.carview_taller_info);
-        mCardViewTaller.setVisibility(View.GONE);
-        mCardViewCarca.setVisibility(View.VISIBLE);
-        mNombreTaller = myDialogTaller.findViewById(R.id.nombreTaller);
-        mImagenTaller = myDialogTaller.findViewById(R.id.imagenTaller);
-        mDireccionTaller = myDialogTaller.findViewById(R.id.dirccionTaller);
         myDialogTaller.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -676,6 +683,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverProfileImage.setImageResource(R.mipmap.ic_default_user);
         erasePolylines();
         servicioTermina();
+        showPopupCalificacion();
+    }
+
+    private void showPopupCalificacion() {
+
+        ratingBarDib.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                rateDib = rating;
+
+            }
+        });
+        myDialogRate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialogRate.show();
+
     }
 
     @Override

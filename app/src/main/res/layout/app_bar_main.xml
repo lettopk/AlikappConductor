@@ -11,7 +11,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/mainCoordinator">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -127,6 +127,16 @@ z
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
+
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/secondCoodinator">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -137,9 +147,10 @@ z
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:cardBackgroundColor="#303030"
                 app:cardCornerRadius="20dp"
+                android:layout_margin="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -154,7 +165,7 @@ z
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:padding="20dp"
+                        android:layout_marginTop="50dp"
                         app:indicatorColor="@color/AlikappGris"
                         app:indicatorName="TriangleSkewSpinIndicator" />
 
@@ -164,9 +175,10 @@ z
                         android:fontFamily="@font/abeezee"
                         android:gravity="center"
                         android:padding="20dp"
-                        android:text="CARGANDO..."
+                        android:layout_marginBottom="10dp"
+                        android:text="Cargando..."
                         android:textColor="@color/AlikappGris"
-                        android:textSize="30sp"
+                        android:textSize="25dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -179,13 +191,6 @@ z
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/secondCoodinator">
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
