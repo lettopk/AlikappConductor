@@ -185,6 +185,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     public static String clicknotify="";
 
+    private String lastRideCode;
+
     private DatabaseReference mDriverDatabase;
     private CoordinatorLayout mMain, mSecond;
     private DrawerLayout drawer;
@@ -818,6 +820,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             mRequest.setText("Buscando la Ubicacion de su Mecanico....");
                             enServicio();
                             myDialog.dismiss();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(map.get("LastRide")!=null){
+                                        lastRideCode = map.get("LastRide").toString();
+                                    }
+                                }
+                            },3000);
                         } else if (A.equals("No")) {
                             driverFound = false;
                             requestBol = true;
@@ -1628,8 +1638,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void isOnService() {
-        String conductorId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorId);
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         enableReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1682,6 +1691,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 constraintLayout.setVisibility(View.GONE);
                                                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                                                 servicioPendiente = true;
+                                                new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        if(map.get("LastRide")!=null){
+                                                            lastRideCode = map.get("LastRide").toString();
+                                                        }
+                                                    }
+                                                },3000);
                                             } else {
                                                 isOnService = false;
                                                 Map usuarioInfo = new HashMap();
@@ -1814,6 +1831,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     .toString();
             //Toast.makeText(service, datoshechos, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void saveRating() {
+        DatabaseReference mecanico = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("rating");
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put(lastRideCode, "rate");
+        mecanico.updateChildren(usuarioInfo);
     }
 }
 
