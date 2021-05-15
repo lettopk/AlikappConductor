@@ -113,6 +113,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private GoogleMap mMap;
     Location mLastLocation;
     LocationRequest mLocationRequest;
+    final static float ZOOM_CAMARA = (float) 15.5;
 
     private Dialog myDialog, myDialogTaller, myDialogRate;
 
@@ -349,7 +350,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     } catch (Exception e) {
                         romper = true;
-                        finRide();
+                        endRide();
                         CustomerMapActivity.super.onRestart();
                         Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
                     }
@@ -533,7 +534,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     endRide();
                 } catch (Exception e) {
                     romper = true;
-                    finRide();
+                    endRide();
                     CustomerMapActivity.super.onRestart();
                     Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
                 }
@@ -550,7 +551,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         endRide();
                     } catch (Exception e) {
                         romper = true;
-                        finRide();
+                        endRide();
                         CustomerMapActivity.super.onRestart();
                         Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
                     }
@@ -643,68 +644,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Boolean romper = true;
     private void finalizarEspera() {
         if(!romper){
-            finRide();
+            endRide();
             romper = true;
             Toast.makeText(this,"No hay mecánicos cerca",Toast.LENGTH_LONG).show();
         }
     }
 
-    final static float ZOOM_CAMARA = (float) 15.5;
-    private void finRide() {
-        if (isOnService){
-
-            showPopupCalificacion();
-        }
-        requestBol = false;
-        isOnService = false;
-        cardViewInicial.setVisibility(View.VISIBLE);
-        cardViewBusqueda.setVisibility(View.GONE);
-        mDesplegar.setVisibility(View.VISIBLE);
-        rippleBackground.setVisibility(View.VISIBLE);
-        constraintLayout.setVisibility(View.VISIBLE);
-        temporizador.reIniciarConteo();
-        service.removeLocationUpdates();
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), ZOOM_CAMARA));
-        try {
-            geoQuery.removeAllListeners();
-        } catch (Exception e){
-
-        }
-
-        if (driverFoundID != null){
-            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
-            driverRef.removeValue();
-            //driverFoundID = null;
-
-        }
-        driverFound = false;
-        radius = 1;
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-        GeoFire geoFire = new GeoFire(ref);
-        geoFire.removeLocation(userId);
-
-        if(pickupMarker != null){
-            pickupMarker.remove();
-            pickupMarker = null;
-        }
-        if (mDriverMarker != null){
-            mDriverMarker.remove();
-            mDriverMarker = null;
-        }
-        mRequest.setText("Pedir Ayuda");
-
-        mDriverInfo.setVisibility(android.view.View.GONE);
-        mDriverName.setText("");
-        mDriverPhone.setText("");
-        mDriverCar.setText("Destination: --");
-        mDriverProfileImage.setImageResource(R.mipmap.ic_default_user);
-        erasePolylines();
-        servicioTermina();
-    }
-
-    private void showPopupCalificacion() {
+       private void showPopupCalificacion() {
 
         btnEnviarRate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1142,11 +1088,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 if(dataSnapshot.exists()){
 
                 }else{
-                    try {
-                        endRide();
-                    } catch (Exception e) {
-                        finRide();
-                    }
+                    endRide();
                 }
             }
 
@@ -1176,8 +1118,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         } catch (Exception e){
 
         }
-        driverLocationRef.removeEventListener(driverLocationRefListener);
-        driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
+        if(driverLocationRef != null){
+            driverLocationRef.removeEventListener(driverLocationRefListener);
+        }
+        if(driveHasEndedRef != null){
+            driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
+        }
 
         if (driverFoundID != null){
             DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
@@ -1793,7 +1739,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         usuarioInfo.put("MecanicoServicio", "");
                         usuarioInfo.put("TipoServicio", "");
                         enableReference.updateChildren(usuarioInfo);
-                        finRide();
+                        endRide();
                     }
                 }
             }
