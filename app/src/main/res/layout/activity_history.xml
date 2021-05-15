@@ -35,11 +35,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Aqui Podras encontrar el Historial de tus servicios"
-            android:textColor="@color/AlikappBlue"
-            android:fontFamily="@font/abeezee"
-            android:textStyle="bold"
-            android:textSize="25sp"
+            android:background="@color/colorPrimary"
+            android:text="Historial de servicios"
+            android:textColor="@color/white"
+            android:textSize="18dp"
             android:padding="20dp"
             />
     </LinearLayout>
@@ -52,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/historyRecyclerView"
                 android:scrollbars="vertical"
-                android:background="@color/AlikappGris">
+                android:background="@color/white">
             </androidx.recyclerview.widget.RecyclerView>
 
         </androidx.core.widget.NestedScrollView>
