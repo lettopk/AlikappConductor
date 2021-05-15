@@ -1048,11 +1048,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
 
                     if (dataSnapshot.child("rating").getValue() != null){
-                        int ratingSum = 0;
+                        float ratingSum = 0;
                         float ratingsTotal = 0;
                         float ratingsAvg = 0;
                         for (DataSnapshot child : dataSnapshot.child("rating").getChildren()){
-                            ratingSum = ratingSum + Integer.valueOf(child.getValue().toString());
+                            ratingSum = ratingSum + Float.valueOf(child.getValue().toString());
                             ratingsTotal++;
                         }
                         if(ratingsTotal!= 0){
@@ -1109,8 +1109,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         } catch (Exception e){
 
         }
-        driverLocationRef.removeEventListener(driverLocationRefListener);
-        driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
+        if(driverLocationRef != null && driveHasEndedRef != null){
+            driverLocationRef.removeEventListener(driverLocationRefListener);
+            driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
+        }
 
         if (driverFoundID != null){
             DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
