@@ -115,11 +115,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     LocationRequest mLocationRequest;
     final static float ZOOM_CAMARA = (float) 15.5;
 
-    private Dialog myDialog, myDialogTaller, myDialogRate;
+    private Dialog myDialog, myDialogTaller, myDialogRate, myDialogCancel, myDialogConfirCancel;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mRequest, mRequestt, mChat, mCancelar, mLogout;
+    private Button mRequest, mRequestt, mChat, mCancelar, mLogout, btnoOkCanelService, btnConfCancelServ, btnNoCancel;
 
     private FloatingActionButton mDesplegar;
 
@@ -297,6 +297,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mecanicoProfileImage = (CircleImageView) myDialogRate.findViewById(R.id.mecanicoProfileImage);
         textRtaeMecanico = (TextView) myDialogRate.findViewById(R.id.textRtaeMecanico);
 
+        myDialogCancel = new Dialog(this);
+        myDialogCancel.setContentView(R.layout.layout_popup_serv_cancelado);
+        btnoOkCanelService = (Button) myDialogCancel.findViewById(R.id.btnoOkCanelService);
+
+        myDialogConfirCancel = new Dialog(this);
+        myDialogConfirCancel.setContentView(R.layout.layout_popup_confirmar_cancelacion);
+        btnNoCancel = (Button) myDialogConfirCancel.findViewById(R.id.btnNoCancel);
+        btnConfCancelServ = (Button) myDialogConfirCancel.findViewById(R.id.btnConfCancelServ);
+
         conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -344,18 +353,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(android.view.View v) {
 
-                if (requestBol){
-                    try {
-                        endRide();
-
-                    } catch (Exception e) {
-                        romper = true;
-                        endRide();
-                        CustomerMapActivity.super.onRestart();
-                        Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
-                    }
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }
+                showPopupConfirCancel();
             }
         });
 
@@ -531,7 +529,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
                 try {
-                    endRide();
+                    popupController("cancelUser");
                 } catch (Exception e) {
                     romper = true;
                     endRide();
@@ -682,6 +680,53 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         myDialogRate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialogRate.show();
 
+    }
+
+    private void showPopupMecanicoCancel() {
+
+        btnoOkCanelService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                myDialogCancel.dismiss();
+            }
+        });
+
+        myDialogCancel.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialogCancel.show();
+    }
+
+    private void showPopupConfirCancel() {
+
+        btnNoCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                myDialogConfirCancel.dismiss();
+            }
+        });
+
+        btnConfCancelServ.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (requestBol){
+                    try {
+                        popupController("cancelUser");
+
+                    } catch (Exception e) {
+                        romper = true;
+                        popupController("cancelUser");
+                        CustomerMapActivity.super.onRestart();
+                        Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
+                    }
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+            }
+        });
+
+        myDialogConfirCancel.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialogConfirCancel.show();
     }
 
     @Override
@@ -1088,7 +1133,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 if(dataSnapshot.exists()){
 
                 }else{
-                    endRide();
+                    popupController("cancelMecanico");
                 }
             }
 
@@ -1855,6 +1900,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         usuarioInfo.put(lastRideCode, rateDib);
         mecanico.updateChildren(usuarioInfo);
         driverFoundID = null;
+    }
+
+    private void popupController(String provided) {
+
+        if (provided.equals("cancelUser")){
+
+            if (distance <0.1 &&  )
+        }
+        else if (provided.equals("cancelMecanico")){
+
+            showPopupMecanicoCancel();
+        }
     }
 }
 
