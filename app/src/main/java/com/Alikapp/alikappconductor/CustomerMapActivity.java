@@ -1995,16 +1995,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         
         if (provided.equals("cancelUser")){
-<<<<<<< HEAD
 
-
-=======
             if (distance < 30 || tiempoServicio.getSegundosTotal() == 0){
                 showPopupCalificacion();
                 descontarCredito();
             }
             endRide();
->>>>>>> cbabb76291c8337ad4ba471e05d6443fff97e727
+
         }
         else if (provided.equals("cancelMecanico")){
 
