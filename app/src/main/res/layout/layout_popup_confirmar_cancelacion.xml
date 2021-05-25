@@ -38,7 +38,18 @@
                 android:layout_marginTop="25dp"
                 android:gravity="center"
                 android:text="¿Desea Cancelar el servicio?"
-                android:textSize="20dp"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/descuentaCredito"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:gravity="center"
+                android:text="Si cancelas en este momento te será descontado un crédito"
+                android:textSize="13dp"
                 android:textStyle="bold" />
 
             <LinearLayout

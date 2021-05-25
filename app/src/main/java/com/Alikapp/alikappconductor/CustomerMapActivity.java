@@ -125,7 +125,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private EditText mDescripcion;
 
-    private TextView mLongDescrip, mMenuNombre, mTerminosCondiciones;
+    private TextView mLongDescrip, mMenuNombre, mTerminosCondiciones, descuentaCredito;
 
     private LatLng pickupLocation;
 
@@ -305,6 +305,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         myDialogConfirCancel.setContentView(R.layout.layout_popup_confirmar_cancelacion);
         btnNoCancel = (Button) myDialogConfirCancel.findViewById(R.id.btnNoCancel);
         btnConfCancelServ = (Button) myDialogConfirCancel.findViewById(R.id.btnConfCancelServ);
+        descuentaCredito = myDialogConfirCancel.findViewById(R.id.descuentaCredito);
 
         conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseMessaging.getInstance().getToken()
@@ -544,25 +545,27 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(android.view.View v) {
 
-                if (requestBol){
-                    try {
-                        endRide();
-                    } catch (Exception e) {
-                        romper = true;
-                        endRide();
-                        CustomerMapActivity.super.onRestart();
-                        Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
-                    }
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }else{
-                    if (!mLongDescrip.getText().equals("250")){
+                if((dineroDisponible/CostoPorCredito) >= 1){
 
-                        int selectId = mSegmentedButtonGroup.getPosition();
-                        if (selectId == 0)
-                        {
-                            requestService = "Mecanico";
+                    if (requestBol){
+                        try {
+                            endRide();
+                        } catch (Exception e) {
+                            romper = true;
+                            endRide();
+                            CustomerMapActivity.super.onRestart();
+                            Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
                         }
-                        else
+                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    }else{
+                        if (!mLongDescrip.getText().equals("250")){
+
+                            int selectId = mSegmentedButtonGroup.getPosition();
+                            if (selectId == 0)
+                            {
+                                requestService = "Mecanico";
+                            }
+                            else
                             if ( selectId == 1)
                             {
                                 requestService = "Taller";
@@ -577,40 +580,42 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                         requestService = radioButton.getText().toString();*/
 
-                        requestBol = true;
+                            requestBol = true;
 
-                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                        GeoFire geoFire = new GeoFire(ref);
-                        geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-                        //poner un try catch con un mensaje de permitir hubicación en el dispositivo
-                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                        if (pickupMarker == null) {
-                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                            GeoFire geoFire = new GeoFire(ref);
+                            geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                            //poner un try catch con un mensaje de permitir hubicación en el dispositivo
+                            pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                            if (pickupMarker == null) {
+                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                            }
+
+                            mRequest.setText("Buscando Mecanico");
+
+                            getClosestDriver();
+                            temporizador.continuarConteo();
+                            tiempoEspera();
+                            romper = false;
+
+                            //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+                            Map usuarioInfo = new HashMap();
+                            usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
+                            enableReference.updateChildren(usuarioInfo);
+
+                            final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
+                            cardViewInicial.setVisibility(View.GONE);
+                            cardViewBusqueda.setVisibility(View.VISIBLE);
+                            rippleBackgroundEspera.startRippleAnimation();
+                        } else {
+                            Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
                         }
-
-                        mRequest.setText("Buscando Mecanico");
-
-                        getClosestDriver();
-                        temporizador.continuarConteo();
-                        tiempoEspera();
-                        romper = false;
-
-                        //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
-                        Map usuarioInfo = new HashMap();
-                        usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
-                        enableReference.updateChildren(usuarioInfo);
-
-                        final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
-                        cardViewInicial.setVisibility(View.GONE);
-                        cardViewBusqueda.setVisibility(View.VISIBLE);
-                        rippleBackgroundEspera.startRippleAnimation();
-                    } else {
-                       Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(CustomerMapActivity.this, "No tienes créditos suficientes", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -622,6 +627,37 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private void guardartoken(String token) {
         DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         ref.child("token").setValue(token);
+    }
+
+    private Temporizador tiempoServicio = new Temporizador(0,5,0);
+    private int conteoTiempo = 0;
+    private void conteoTiempoServicio(){
+        System.out.println( "tiempo: " + tiempoServicio.getSegundosTotal());
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(tiempoServicio.getSegundosTotal() > 0 && !tiempoServicio.getDetenido()){
+                    if(conteoTiempo >= 60){
+                        saveTiempoDB();
+                        conteoTiempo = 0;
+                    }
+                    conteoTiempo ++;
+                    tiempoServicio.conteoRegresivo();
+                    conteoTiempoServicio();
+                } else {
+                    saveTiempoDB();
+                    conteoTiempo = 0;
+                }
+            }
+        }, 1000);
+    }
+
+    private void saveTiempoDB(){
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put("tiempoRstanteServicio", tiempoServicio.getSegundosTotal() + "");
+        enableReference.updateChildren(usuarioInfo);
     }
 
     private Temporizador temporizador = new Temporizador(0,4,0);
@@ -698,6 +734,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private void showPopupConfirCancel() {
 
+        if(distance < 30 || tiempoServicio.getSegundosTotal() == 0){
+            descuentaCredito.setVisibility(View.VISIBLE);
+        } else {
+            descuentaCredito.setVisibility(View.GONE);
+        }
+
         btnNoCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -713,6 +755,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 if (requestBol){
                     try {
                         popupController("cancelUser");
+                        myDialogConfirCancel.dismiss();
 
                     } catch (Exception e) {
                         romper = true;
@@ -862,6 +905,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             getDriverLocation();
                             getDriverInfo();
                             getHasRideEnded();
+                            tiempoServicio = new Temporizador(0,5,0);
+                            conteoTiempoServicio();
+                            saveTiempoDB();
                             if(requestService.equals("Taller")) {
                                 service.requestLocationUpdates();
                             }
@@ -874,7 +920,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 public void run() {
                                     if(map.get("LastRide")!=null){
                                         lastRideCode = map.get("LastRide").toString();
-                                        System.out.println(lastRideCode);
+                                        System.out.println("lastRide: " + lastRideCode);
                                     }
                                 }
                             },3000);
@@ -985,6 +1031,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Marker mDriverMarker;
     private DatabaseReference driverLocationRef;
     private ValueEventListener driverLocationRefListener;
+    float distance;
     private void getDriverLocation(){
         driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
         driverLocationRefListener = driverLocationRef.addValueEventListener(new ValueEventListener() {
@@ -1015,8 +1062,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     loc2.setLatitude(driverLatLng.latitude);
                     loc2.setLongitude(driverLatLng.longitude);
 
-                    float distance = loc1.distanceTo(loc2);
-
+                    distance = loc1.distanceTo(loc2);
+                    System.out.println("ditanciaa: " + distance);
 
                     if (distance >= 1000){
                         BigDecimal distanceShort = new BigDecimal((distance)/1000).setScale(1, RoundingMode.HALF_UP);
@@ -1027,6 +1074,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mDriverDistance.setText(String.valueOf((distanceShort))+" m");
                     } else {
                         mDriverDistance.setText("Aquí");
+                    }
+
+                    if(distance < 15){
+                        mRequestt.setVisibility(View.GONE);
+                    } else {
+                        mRequestt.setVisibility(View.VISIBLE);
                     }
 
                     float speed = (float) 0.0;
@@ -1144,10 +1197,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void endRide(){
-        if (isOnService){
-
-            showPopupCalificacion();
-        }
         requestBol = false;
         isOnService = false;
         cardViewInicial.setVisibility(View.VISIBLE);
@@ -1156,6 +1205,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         rippleBackground.setVisibility(View.VISIBLE);
         constraintLayout.setVisibility(View.VISIBLE);
         temporizador.reIniciarConteo();
+        tiempoServicio.setDetenido(true);
         service.removeLocationUpdates();
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), ZOOM_CAMARA));
         try {
@@ -1676,8 +1726,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void enServicio() {
-        String conductorId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorId);
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         Map usuarioInfo = new HashMap();
         usuarioInfo.put("EnServicio", "Si");
         usuarioInfo.put("MecanicoServicio", driverFoundID.toString());
@@ -1687,8 +1736,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Boolean servicioPendiente = false;
     private void servicioTermina() {
         isOnService = false;
-        String conductorId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorId);
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         Map usuarioInfo = new HashMap();
         usuarioInfo.put("EnServicio", "No");
         usuarioInfo.put("MecanicoServicio", "");
@@ -1708,8 +1756,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         String B = map.get("MecanicoServicio").toString();
                         String C = map.get("Descripcion").toString();
                         String D = map.get("TipoServicio").toString();
+                        String E = "300";
+                        if(map.get("tiempoRstanteServicio") != null){
+                            E = map.get("tiempoRstanteServicio").toString();
+                        }
                         if(A != null && B != null  && C != null){
                             DatabaseReference driverReference = FirebaseDatabase.getInstance().getReference().child("driversWorking");
+                            String finalE = E;
                             driverReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -1723,6 +1776,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 requestBol = true;
                                                 isOnService = true;
                                                 requestService = D;
+                                                int seg = Integer.parseInt(finalE);
+                                                tiempoServicio = new Temporizador(0,0, seg);
+                                                conteoTiempoServicio();
                                                 if(D.equals("Taller")) {
                                                     mSegmentedButtonGroup.setPosition(1, true);
                                                     service.requestLocationUpdates();
@@ -1755,7 +1811,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                     public void run() {
                                                         if(map.get("LastRide")!=null){
                                                             lastRideCode = map.get("LastRide").toString();
-                                                            System.out.println(lastRideCode);
+                                                            System.out.println("lastRide: " + lastRideCode);
                                                         }
                                                     }
                                                 },3000);
@@ -1796,7 +1852,29 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         });
     }
 
+    private int dineroDisponible = 0;
+    private int CostoPorCredito = 50000;
+
     private void getUserInfo(){
+        DatabaseReference valorCreditoReference =  FirebaseDatabase.getInstance().getReference().child("CostoPorCredito");
+        valorCreditoReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+                    if (map.get("Usuario") != null){
+                        CostoPorCredito = Integer.parseInt(map.get("Usuario").toString());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         mDriverDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1808,6 +1886,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             com.bumptech.glide.Glide.with(getApplication()).load(map.get("profileImageUrl").toString())
                                     .into(mImagenPerfil);
 
+                        }
+
+                        if (map.get("dineroDisponible") != null){
+                            dineroDisponible = Integer.parseInt(map.get("dineroDisponible").toString());
                         }
                         final Handler handler =new Handler();
                         handler.postDelayed(new Runnable(){
@@ -1894,12 +1976,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void saveRating() {
-
-        DatabaseReference mecanico = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("rating");
-        Map usuarioInfo = new HashMap();
-        usuarioInfo.put(lastRideCode, rateDib);
-        mecanico.updateChildren(usuarioInfo);
-        driverFoundID = null;
+        if(lastRideCode != null && driverFoundID != null){
+            DatabaseReference mecanico = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("rating");
+            Map usuarioInfo = new HashMap();
+            usuarioInfo.put(lastRideCode, rateDib);
+            mecanico.updateChildren(usuarioInfo);
+            driverFoundID = null;
+        }
     }
 
     private void popupController(String provided) {
@@ -1912,13 +1995,40 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         
         if (provided.equals("cancelUser")){
+<<<<<<< HEAD
 
 
+=======
+            if (distance < 30 || tiempoServicio.getSegundosTotal() == 0){
+                showPopupCalificacion();
+                descontarCredito();
+            }
+            endRide();
+>>>>>>> cbabb76291c8337ad4ba471e05d6443fff97e727
         }
         else if (provided.equals("cancelMecanico")){
 
-            showPopupMecanicoCancel();
+            if (distance < 30 || tiempoServicio.getSegundosTotal() == 0){
+                showPopupCalificacion();
+            } else {
+                if(driverFoundID != null){
+                    showPopupMecanicoCancel();
+                }
+            }
+            if (distance < 30 && tiempoServicio.getSegundosTotal() == 0){
+                descontarCredito();
+            }
+            endRide();
+
         }
+    }
+
+    private void descontarCredito(){
+        dineroDisponible -= CostoPorCredito;
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put("dineroDisponible", dineroDisponible + "");
+        enableReference.updateChildren(usuarioInfo);
     }
 }
 
