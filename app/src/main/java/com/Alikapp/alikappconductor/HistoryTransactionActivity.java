@@ -41,7 +41,7 @@ public class HistoryTransactionActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 System.out.println(parent.getItemAtPosition(position).toString());
-                String[] parts = parent.getItemAtPosition(position).toString().split("       ");
+                String[] parts = parent.getItemAtPosition(position).toString().split("/");
                 Intent intent = new Intent(HistoryTransactionActivity.this, DetailTransactionActivity.class);
                 intent.putExtra("idTransaction", parts[0]);
                 intent.putExtra("date", parts[1]);
@@ -63,9 +63,11 @@ public class HistoryTransactionActivity extends AppCompatActivity {
                     for(DataSnapshot history : data.getChildren()){
                         String id = history.getKey();
                         Long timestamp = 0L;
-                        timestamp = Long.valueOf(history.getValue().toString());
+                        String B = history.getValue().toString();
+                        String[] A = B.split("-");
+                        timestamp = Long.valueOf(A[0]);
                         String date = getDate(timestamp);
-                        HistoryTransactions.add(id + "       " + date);
+                        HistoryTransactions.add(id + "/" + date + "/" + A[1]);
                     }
                     adapter = new ArrayAdapter<String>(HistoryTransactionActivity.this, android.R.layout.simple_spinner_item, HistoryTransactions);
                     listTransactions.setAdapter(adapter);
