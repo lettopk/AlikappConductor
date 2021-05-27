@@ -531,6 +531,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onClick(View v) {
                 try {
                     popupController("cancelUser");
+                    romper = true;
+                    Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     romper = true;
                     endRide();
@@ -756,7 +758,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     try {
                         popupController("cancelUser");
                         myDialogConfirCancel.dismiss();
-
+                        romper = true;
+                        Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         romper = true;
                         popupController("cancelUser");
@@ -1033,7 +1036,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private ValueEventListener driverLocationRefListener;
     float distance;
     private void getDriverLocation(){
-        driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
+        if(requestService.equals("Mecanico")){
+            driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
+        } else if(requestService.equals("Taller")) {
+            driverLocationRef = FirebaseDatabase.getInstance().getReference().child("TallerDisponible").child(driverFoundID).child("l");
+        }
         driverLocationRefListener = driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1288,6 +1295,38 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         tallerMarker2.remove();
                         tallerMarker2 = null;
                     }
+                    if(tallerMarker3 != null){
+                        tallerMarker3.remove();
+                        tallerMarker3 = null;
+                    }
+                    if(tallerMarker4 != null){
+                        tallerMarker4.remove();
+                        tallerMarker4 = null;
+                    }
+                    if(tallerMarker5 != null){
+                        tallerMarker5.remove();
+                        tallerMarker5 = null;
+                    }
+                    if(tallerMarker6 != null){
+                        tallerMarker6.remove();
+                        tallerMarker6 = null;
+                    }
+                    if(tallerMarker7 != null){
+                        tallerMarker7.remove();
+                        tallerMarker7 = null;
+                    }
+                    if(tallerMarker8 != null){
+                        tallerMarker8.remove();
+                        tallerMarker8 = null;
+                    }
+                    if(tallerMarker9 != null){
+                        tallerMarker9.remove();
+                        tallerMarker9 = null;
+                    }
+                    if(tallerMarker10 != null){
+                        tallerMarker10.remove();
+                        tallerMarker10 = null;
+                    }
                 }
                 final Handler handler =new Handler();
                 handler.postDelayed(new Runnable(){
@@ -1525,11 +1564,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     boolean getTallerStarted = false;
-    private Marker tallerMarker1, tallerMarker2;
-    private String tallerKey1, tallerKey2;
+    private Marker tallerMarker1, tallerMarker2, tallerMarker3, tallerMarker4, tallerMarker5, tallerMarker6, tallerMarker7, tallerMarker8, tallerMarker9, tallerMarker10;
+    private String tallerKey1, tallerKey2, tallerKey3, tallerKey4, tallerKey5, tallerKey6, tallerKey7, tallerKey8, tallerKey9, tallerKey10;
     GeoQuery geoRequest;
     private void getTallerAround(){
-        DatabaseReference TalleresLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+        DatabaseReference TalleresLocation = FirebaseDatabase.getInstance().getReference().child("TallerDisponible");
         GeoFire geoFire = new GeoFire(TalleresLocation);
         float expo = (float) (17.2247 - 0.6867*mMap.getCameraPosition().zoom);
         float radio = (float) Math.exp(expo)/1000;
@@ -1540,7 +1579,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 if (key != null && camaraEnMovimiento) {
-                    DatabaseReference Tallersitos = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child(key).child("l");
+                    DatabaseReference Tallersitos = FirebaseDatabase.getInstance().getReference().child("TallerDisponible").child(key).child("l");
                     Tallersitos.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1564,6 +1603,30 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 } else if(tallerMarker2 == null){
                                     tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
                                     tallerKey2 = key;
+                                } else if(tallerMarker3 == null){
+                                    tallerMarker3 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerKey3 = key;
+                                } else if(tallerMarker4 == null){
+                                    tallerMarker4 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerKey4 = key;
+                                } else if(tallerMarker5 == null){
+                                    tallerMarker5 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerKey5 = key;
+                                } else if(tallerMarker6 == null){
+                                    tallerMarker6 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerKey6 = key;
+                                } else if(tallerMarker7 == null){
+                                    tallerMarker7 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerKey7 = key;
+                                } else if(tallerMarker8 == null){
+                                    tallerMarker8 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerKey8 = key;
+                                } else if(tallerMarker9 == null){
+                                    tallerMarker9 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerKey9 = key;
+                                } else if(tallerMarker10 == null){
+                                    tallerMarker10 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerKey10 = key;
                                 }
                                 mMap.getUiSettings().setMapToolbarEnabled(true);
                                 mMap.setPadding(0, 0, 0, 250);
@@ -1987,16 +2050,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private void popupController(String provided) {
 
-        int i = 0;
-        while (i<30){
-
-            i= i+1;
-        }
-
-        
         if (provided.equals("cancelUser")){
 
-            if (distance < 30 || tiempoServicio.getSegundosTotal() == 0){
+            if ((distance < 30 || tiempoServicio.getSegundosTotal() == 0) && isOnService){
                 showPopupCalificacion();
                 descontarCredito();
             }
