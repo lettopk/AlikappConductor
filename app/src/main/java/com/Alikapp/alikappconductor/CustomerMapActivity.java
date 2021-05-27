@@ -1987,12 +1987,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private void popupController(String provided) {
 
+        int i = 0;
+        while (i<30){
+
+            i= i+1;
+        }
+
+        
         if (provided.equals("cancelUser")){
+
             if (distance < 30 || tiempoServicio.getSegundosTotal() == 0){
                 showPopupCalificacion();
                 descontarCredito();
             }
             endRide();
+
         }
         else if (provided.equals("cancelMecanico")){
 
