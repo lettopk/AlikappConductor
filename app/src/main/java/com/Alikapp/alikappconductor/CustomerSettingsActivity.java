@@ -52,6 +52,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.Alikapp.alikappconductor.CustomerMapActivity.conductorUID;
+
 public class CustomerSettingsActivity extends AppCompatActivity {
 
     private EditText mNameField, mPhoneField, mCedulaCiudadania,mNumPlaca, mvehiculo, mEmail;
@@ -217,7 +219,38 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         isPrimeraVez = mPv.getBooleanExtra("PrimeraVez",true);
         if(isPrimeraVez){
             mBack.setVisibility(View.GONE);
+            dineroObseqio();
         }
+    }
+
+    private String dinero;
+    private void dineroObseqio() {
+
+        DatabaseReference valorCreditoReference =  FirebaseDatabase.getInstance().getReference().child("dineroObsequio");
+        valorCreditoReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+                    if (map.get("Usuario") != null){
+                        dinero= map.get("Usuario").toString();
+                        subirDinero();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void subirDinero(){
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put("dineroDisponible", dinero);
+        enableReference.updateChildren(usuarioInfo);
     }
 
 
