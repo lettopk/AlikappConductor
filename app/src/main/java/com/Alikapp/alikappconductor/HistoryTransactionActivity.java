@@ -48,13 +48,6 @@ public class HistoryTransactionActivity extends AppCompatActivity {
                 intent.putExtra("date",  extraerDatos.getFechaTransaction());
                 startActivity(intent);
 
-               /* System.out.println(parent.getItemAtPosition(position).toString());
-                System.out.println(parent.getItemAtPosition(position).toString());
-                String[] parts = parent.getItemAtPosition(position).toString().split("/");
-                Intent intent = new Intent(HistoryTransactionActivity.this, DetailTransactionActivity.class);
-                intent.putExtra("idTransaction", parts[0]);
-                intent.putExtra("date", parts[1]);
-                startActivity(intent);*/
             }
         });
 
@@ -128,8 +121,6 @@ public class HistoryTransactionActivity extends AppCompatActivity {
                     }
                     individualTransactionAdapter i= new individualTransactionAdapter(HistoryTransactionActivity.this, getData());
                     listTransactions.setAdapter(i);
-                    //adapter = new ArrayAdapter<String>(HistoryTransactionActivity.this, android.R.layout.simple_spinner_item, HistoryTransactions);
-                    //listTransactions.setAdapter(adapter);
                 }
             }
             @Override

@@ -80,7 +80,7 @@ public class DetailTransactionActivity extends AppCompatActivity {
                     TransactionInformation informationyeye = transaction.getData();
 
                     if(informationyeye.getStatus() != null){
-                        mEstado.setText(informationyeye.getStatus());
+                        mEstado.setText(getEstadoPago(informationyeye.getStatus()));
                     }
 
                     if(informationyeye.getAmount_in_cents() > 0){
@@ -89,7 +89,7 @@ public class DetailTransactionActivity extends AppCompatActivity {
                     }
 
                     if(informationyeye.getPayment_method_type() != null){
-                        mTipo.setText(informationyeye.getPayment_method_type());
+                        mTipo.setText(getMetPago(informationyeye.getPayment_method_type()));
                     }
 
                     if(informationyeye.getReference() != null){
@@ -138,5 +138,58 @@ public class DetailTransactionActivity extends AppCompatActivity {
             v1 = amount;
         }
         return "$ " + v1 + " COP";
+    }
+
+    private  String getMetPago(String s) {
+
+        String respuesta= "";
+
+        if (s.equals("CARD")){
+
+            respuesta= "Tarjeta de Crédito";
+        }
+
+        else if (s.equals("BANCOLOMBIA_TRANSFER")){
+
+            respuesta = "Transferencia Bancolombia";
+        }
+
+        else if (s.equals("NEQUI")){
+
+            respuesta = "NEQUI";
+        }
+
+        else if (s.equals("PSE")){
+
+            respuesta = "Pagos en Linea";
+        }
+
+        else if (s.equals("BANCOLOMBIA_COLLECT")){
+
+            respuesta = "Corresponsal Bancario";
+        }
+        else {
+
+            respuesta = "Pago Exitoso";
+        }
+
+        return respuesta;
+    }
+
+    private  String getEstadoPago(String s) {
+
+        String respuesta= "";
+
+        if (s.equals("APPROVED")){
+
+            respuesta= "Aprobado";
+        }
+
+        else {
+
+            respuesta = "Exitoso";
+        }
+
+        return respuesta;
     }
 }
