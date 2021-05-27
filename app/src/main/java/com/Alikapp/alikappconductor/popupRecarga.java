@@ -1270,7 +1270,7 @@ public class popupRecarga extends AppCompatActivity {
                             cantDineroDisponible = (int) valorActual + "";
                             mensajeProcesado.setText("Transaccion Exitosa");
                             procesadoExito.setImageResource(R.drawable.ic_check);
-                            pagoExitoso();
+                            pagoExitoso(informationyeye.getPayment_method_type());
                         }
 
                         else {
@@ -1308,10 +1308,10 @@ public class popupRecarga extends AppCompatActivity {
         });
     }
 
-    private void pagoExitoso() {
+    private void pagoExitoso(String pay) {
         DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID).child("Transacciones");
         Map usuarioInfo = new HashMap();
-        usuarioInfo.put(idTransaccion, timestamp);
+        usuarioInfo.put(idTransaccion, timestamp + "-" + pay);
         enableReference.updateChildren(usuarioInfo);
     }
 

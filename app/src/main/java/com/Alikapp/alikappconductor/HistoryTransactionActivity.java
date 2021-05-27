@@ -49,6 +49,7 @@ public class HistoryTransactionActivity extends AppCompatActivity {
                 startActivity(intent);
 
                /* System.out.println(parent.getItemAtPosition(position).toString());
+                System.out.println(parent.getItemAtPosition(position).toString());
                 String[] parts = parent.getItemAtPosition(position).toString().split("/");
                 Intent intent = new Intent(HistoryTransactionActivity.this, DetailTransactionActivity.class);
                 intent.putExtra("idTransaction", parts[0]);
