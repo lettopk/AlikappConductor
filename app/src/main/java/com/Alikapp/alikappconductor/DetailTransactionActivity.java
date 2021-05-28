@@ -1,6 +1,7 @@
 package com.Alikapp.alikappconductor;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import com.Alikapp.alikappconductor.models.transaction.responses.ResponseExtra;
 import com.Alikapp.alikappconductor.models.transaction.responses.TransactionInformation;
 import com.Alikapp.alikappconductor.models.transaction.responses.TransactionResponse;
 import com.Alikapp.alikappconductor.wompiApi.WompiapiService;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.IOException;
 
@@ -36,6 +38,9 @@ public class DetailTransactionActivity extends AppCompatActivity {
     private WompiapiService service;
     private static final String URL_BASE_WOMPI = "https://production.wompi.co/v1/";
 
+    private AVLoadingIndicatorView avi1;
+    private ConstraintLayout detailTransaction, constrainCarga;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +58,10 @@ public class DetailTransactionActivity extends AppCompatActivity {
         mId = findViewById(R.id.idPagoDetalle);
         mEstado = findViewById(R.id.estadoPagoDetalle);
         mDate = findViewById(R.id.fechaDetalle);
+        detailTransaction = findViewById(R.id.detailTransaction);
+        constrainCarga = findViewById(R.id.constrainCarga);
+        avi1 = (AVLoadingIndicatorView) findViewById(R.id.avi1);
+        avi1.show();
 
         mVolver = findViewById(R.id.btnHistorial);
         mVolver.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +107,9 @@ public class DetailTransactionActivity extends AppCompatActivity {
 
                     mId.setText(id);
                     mDate.setText(date);
+
+                    constrainCarga.setVisibility(View.GONE);
+                    detailTransaction.setVisibility(View.VISIBLE);
 
                 } else {
                     try {
