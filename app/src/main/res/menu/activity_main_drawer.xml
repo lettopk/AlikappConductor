@@ -6,15 +6,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_history"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_history" />
+            android:icon="@drawable/ic_misservicios"
+            android:title="@string/menu_history"
+            android:iconTint="@color/AlikappBlue"
+            android:iconTintMode="add"/>
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_gallery" />
+            android:icon="@drawable/ic_perfil"
+            android:title="@string/menu_gallery"
+            android:iconTint="@color/AlikappBlue"/>
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/taller1"
-            android:title="@string/menu_slideshow"/>
+            android:icon="@drawable/ic_creditos"
+            android:title="@string/menu_slideshow"
+            android:iconTint="@color/AlikappBlue"/>
     </group>
 </menu>

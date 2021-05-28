@@ -592,7 +592,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             //poner un try catch con un mensaje de permitir hubicación en el dispositivo
                             pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                             if (pickupMarker == null) {
-                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
                             }
 
                             mRequest.setText("Buscando Mecanico");
@@ -954,7 +954,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
                             pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                             if (pickupMarker == null) {
-                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
                             }
                             mRequest.setText("Buscando Mecanico....");
 
@@ -1111,7 +1111,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     if (mDriverMarker == null) {
                         mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Su Mecanico")
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mecanico)));
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pointmecanico)));
                     }
                 }
 
@@ -1524,7 +1524,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                 LatLng driverLocation = new LatLng(location.latitude, location.longitude);
                 if(mDriverMarker == null){
-                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.drawable.mecanico)));
+                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.drawable.pointmecanico)));
                 }
                 mDriverMarker.setTag(key);
 
@@ -1598,34 +1598,34 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                 tallerLatLng = new LatLng(locationLat,locationLng);
                                 if(tallerMarker1 == null){
-                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
                                     tallerKey1 = key;
                                 } else if(tallerMarker2 == null){
-                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
                                     tallerKey2 = key;
                                 } else if(tallerMarker3 == null){
-                                    tallerMarker3 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker3 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
                                     tallerKey3 = key;
                                 } else if(tallerMarker4 == null){
-                                    tallerMarker4 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker4 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
                                     tallerKey4 = key;
                                 } else if(tallerMarker5 == null){
-                                    tallerMarker5 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker5 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
                                     tallerKey5 = key;
                                 } else if(tallerMarker6 == null){
-                                    tallerMarker6 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker6 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
                                     tallerKey6 = key;
                                 } else if(tallerMarker7 == null){
-                                    tallerMarker7 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker7 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
                                     tallerKey7 = key;
                                 } else if(tallerMarker8 == null){
-                                    tallerMarker8 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker8 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
                                     tallerKey8 = key;
                                 } else if(tallerMarker9 == null){
-                                    tallerMarker9 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker9 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
                                     tallerKey9 = key;
                                 } else if(tallerMarker10 == null){
-                                    tallerMarker10 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker10 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
                                     tallerKey10 = key;
                                 }
                                 mMap.getUiSettings().setMapToolbarEnabled(true);
@@ -1855,9 +1855,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 handler.postDelayed(new Runnable(){
                                                     @Override
                                                     public void run() {
-                                                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                                                        if (mLastLocation!= null) {
+
+                                                            pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                                                        }
                                                         if (pickupMarker == null) {
-                                                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+
+                                                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
                                                         }
                                                         getDriverLocation();
                                                     }
