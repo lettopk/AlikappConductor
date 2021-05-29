@@ -360,7 +360,7 @@ public class popupRecarga extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     amount = Double.parseDouble(mCantidad.getText().toString());
-                    if(amount < 400) {
+                    if(amount < 20000) {
                         isEnabledValue = false;
                         mCantidad.setTextColor(Color.parseColor("#c22828"));
                     } else {
