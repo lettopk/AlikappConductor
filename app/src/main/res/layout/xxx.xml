@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             android:text="Taller"
             android:textColor="@color/black"
-            android:textSize="18dp"
+            android:textSize="14dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/request"
             app:layout_constraintEnd_toEndOf="parent"

@@ -1858,11 +1858,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                         if (mLastLocation!= null) {
 
                                                             pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                                                        }
-                                                        if (pickupMarker == null) {
 
-                                                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
+                                                            if (pickupMarker == null) {
+
+                                                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
+                                                            }
                                                         }
+
                                                         getDriverLocation();
                                                     }
                                                 }, 1000);
