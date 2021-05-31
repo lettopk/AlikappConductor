@@ -19,7 +19,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:visibility="visible"
-        app:cardBackgroundColor="#464646"
+        
         app:cardCornerRadius="20dp">
 
 
@@ -30,16 +30,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary">
 
-                />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Solicita Ayuda"
+                    android:layout_margin="15dp"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    />
+
+            </LinearLayout>
+
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="25dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/btn_auxiliar_recargas"
                 android:orientation="vertical">
 
                 <TextView
@@ -48,8 +63,9 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
                     android:text="¿Qué Ayuda Necesitas?"
-                    android:textColor="@color/white"
+                    
                     android:textSize="18dp"/>
 
                 <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
@@ -79,7 +95,8 @@
                     android:outlineAmbientShadowColor="@color/white"
                     app:rippleColor="@color/purple_700"
                     app:selectedBackground="@color/teal_200"
-                    android:padding="15dp">
+                    android:layout_margin="10dp"
+                   >
 
 
                     <com.addisonelliott.segmentedbutton.SegmentedButton
@@ -125,24 +142,21 @@
                         app:textColor="@color/black" />
                 </com.addisonelliott.segmentedbutton.SegmentedButtonGroup>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginRight="20dp"
-                    android:text="Describe la situacion"
-                    android:textColor="@color/white"
-                    android:textSize="18dp" />
-
                 <LinearLayout
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/AlikappGris"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="10dp">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="Describe la situacion"
+
+                        android:textSize="18dp" />
 
                     <TextView
                         android:id="@+id/longDescrip"
@@ -150,7 +164,6 @@
                         android:layout_height="wrap_content"
                         android:text="250"
                         android:layout_marginBottom="5dp"
-                        android:textColor="@color/AlikappGris"
                         android:paddingStart="20dp"/>
 
                     <EditText
@@ -158,8 +171,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/edittext_descripcion"
-                        android:textColor="@color/AlikappGris"
                         android:hint="Describe la situación, maximo 250 Caracteres"
                         android:maxLength="250"
                         android:textColorHint="#909090"
@@ -183,7 +194,7 @@
                     android:id="@+id/help"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    map:rb_color="@color/teal_700"
+                    map:rb_color="#959595"
                     map:rb_duration="5000"
                     map:rb_radius="20dp"
                     map:rb_rippleAmount="6"
@@ -195,8 +206,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:padding="10dp"
-                        android:background="@drawable/background_request_popup"
+                        android:background="@drawable/btn_recargar"
                         android:text="E"
+                        android:layout_margin="15dp"
                         android:textColor="@color/AlikappGris"
                         android:visibility="visible" />
                 </com.skyfishjy.library.RippleBackground>
