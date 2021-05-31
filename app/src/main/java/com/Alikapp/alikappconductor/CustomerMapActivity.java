@@ -1379,6 +1379,22 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     id = tallerKey1;
                 } else if (tallerMarker2 != null && tallerMarker2.getId().equals(marker.getId())) {
                     id = tallerKey2;
+                } else if (tallerMarker3 != null && tallerMarker3.getId().equals(marker.getId())) {
+                    id = tallerKey3;
+                } else if (tallerMarker4 != null && tallerMarker4.getId().equals(marker.getId())) {
+                    id = tallerKey4;
+                } else if (tallerMarker5 != null && tallerMarker5.getId().equals(marker.getId())) {
+                    id = tallerKey5;
+                } else if (tallerMarker6 != null && tallerMarker6.getId().equals(marker.getId())) {
+                    id = tallerKey6;
+                } else if (tallerMarker7 != null && tallerMarker7.getId().equals(marker.getId())) {
+                    id = tallerKey7;
+                } else if (tallerMarker8 != null && tallerMarker8.getId().equals(marker.getId())) {
+                    id = tallerKey8;
+                } else if (tallerMarker9 != null && tallerMarker9.getId().equals(marker.getId())) {
+                    id = tallerKey9;
+                } else if (tallerMarker10 != null && tallerMarker10.getId().equals(marker.getId())) {
+                    id = tallerKey10;
                 }
                 if (marker.getTitle().equals("Taller Mecánico")) {
                     ShowPopupTaller(id);
