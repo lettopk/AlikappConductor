@@ -245,10 +245,9 @@
                 map:rb_duration="5000"
                 map:rb_radius="20dp"
                 map:rb_rippleAmount="1"
-                map:rb_scale="10">>
+                map:rb_scale="10">
 
                 <ImageView
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/averiado"
@@ -260,6 +259,7 @@
 
 
             <TextView
+                android:id="@+id/TipoServicioBuscar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"

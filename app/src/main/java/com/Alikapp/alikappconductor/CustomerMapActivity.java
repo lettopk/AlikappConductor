@@ -125,7 +125,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private EditText mDescripcion;
 
-    private TextView mLongDescrip, mMenuNombre, mTerminosCondiciones, descuentaCredito;
+    private TextView mLongDescrip, mTipoServicioBuscar, mMenuNombre, mTerminosCondiciones, descuentaCredito;
 
     private LatLng pickupLocation;
 
@@ -274,6 +274,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mRequest.setText("Pedir Ayuda");
         mDescripcion = myDialog.findViewById(R.id.descripcion);
         mLongDescrip = myDialog.findViewById(R.id.longDescrip);
+        mTipoServicioBuscar = myDialog.findViewById(R.id.TipoServicioBuscar);
         mSegmentedButtonGroup = (SegmentedButtonGroup) myDialog.findViewById(R.id.buttonGroup);
         mSegmentedButtonGroup.setPosition(0, true);
         cardViewInicial = myDialog.findViewById(R.id.carview_inicial);
@@ -566,11 +567,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             if (selectId == 0)
                             {
                                 requestService = "Mecanico";
+                                mTipoServicioBuscar.setText("BUSCANDO MECÁNICO...");
                             }
                             else
                             if ( selectId == 1)
                             {
                                 requestService = "Taller";
+                                mTipoServicioBuscar.setText("BUSCANDO TALLER...");
                             }
                         /*int selectId = mRadioGroup.getCheckedRadioButtonId();
 
