@@ -61,7 +61,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="¿Qué Ayuda Necesitas?"
-                    
+                    android:textStyle="bold"
                     android:textSize="18dp"/>
 
                 <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
@@ -74,26 +74,23 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:background="@color/AlikappGris"
-                    android:elevation="2dp"
-                    app:borderColor="@color/purple_200"
+
+                    app:borderColor="@color/colorPrimaryDark"
                     app:borderWidth="1dp"
                     app:divider="@color/purple_500"
-                    app:dividerPadding="10dp"
                     app:dividerWidth="1dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:position="0"
-                    app:radius="30dp"
+                    app:radius="10dp"
                     app:ripple="true"
                     android:outlineAmbientShadowColor="@color/white"
                     app:rippleColor="@color/purple_700"
                     app:selectedBackground="@color/teal_200"
-                    android:layout_margin="10dp"
-                   >
 
+                   >
 
                     <com.addisonelliott.segmentedbutton.SegmentedButton
                         android:layout_width="0dp"
@@ -102,9 +99,10 @@
                         android:fontFamily="sans-serif"
                         android:forceDarkAllowed="false"
                         android:padding="10dp"
-                        app:drawable="@drawable/ic_mecanico"
+                        app:drawable="@drawable/mecanico25px"
+                        app:drawableTint="#656565"
                         app:drawableGravity="top"
-                        app:selectedTextColor="@color/AlikappGris"
+                        app:selectedTextColor="@color/white"
                         app:text="Mecanico"
                         app:textColor="@color/black"
                         app:textSize="18dp"
@@ -115,7 +113,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        app:drawable="@drawable/ic_taller"
+                        app:drawableTint="#656565"
+                        app:drawable="@drawable/taller35px"
                         app:drawableGravity="top"
                         app:selectedTextColor="@color/white"
                         app:text="Taller"
@@ -151,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:text="Describe la situacion"
-
+                        android:textStyle="bold"
                         android:textSize="18dp" />
 
                     <TextView
@@ -190,7 +189,7 @@
                     android:id="@+id/help"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    map:rb_color="#959595"
+                    map:rb_color="@color/AlikappGris"
                     map:rb_duration="5000"
                     map:rb_radius="20dp"
                     map:rb_rippleAmount="6"
