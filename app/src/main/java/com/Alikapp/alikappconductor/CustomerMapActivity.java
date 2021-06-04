@@ -193,6 +193,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     // Intancias del popup Talleres
     private TextView mNombreTaller;
     private TextView mDireccionTaller;
+    private TextView rateTaller;
+    private TextView especialidadTaller;
+    private TextView telefonoTaller;
     private CircleImageView mImagenTaller;
     private CardView mCardViewTaller, mCardViewCarca;
 
@@ -290,6 +293,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mNombreTaller = myDialogTaller.findViewById(R.id.nombreTaller);
         mImagenTaller = myDialogTaller.findViewById(R.id.imagenTaller);
         mDireccionTaller = myDialogTaller.findViewById(R.id.dirccionTaller);
+        rateTaller = myDialogTaller.findViewById(R.id.rateTaller);
+        especialidadTaller = myDialogTaller.findViewById(R.id.especialidadTaller);
+        telefonoTaller = myDialogTaller.findViewById(R.id.telefonoTaller);
+
+
 
         ratingBarDib = (RatingBar) myDialogRate.findViewById(R.id.ratingBarDib);
         mRatingBar = (TextView) findViewById(R.id.driverRate);
@@ -1422,6 +1430,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if(map.get("profileImageUrl")!=null){
                         com.bumptech.glide.Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mImagenTaller);
                     }
+                    if (snapshot.child("rating").getValue() != null){
+                        float ratingSum = 0;
+                        float ratingsTotal = 0;
+                        float ratingsAvg = 0;
+                        for (DataSnapshot child : snapshot.child("rating").getChildren()){
+                            ratingSum = ratingSum + Float.valueOf(child.getValue().toString());
+                            ratingsTotal++;
+                        }
+                        if(ratingsTotal!= 0){
+                            ratingsAvg = ratingSum/ratingsTotal;
+                            BigDecimal rateAverage = new BigDecimal(ratingsAvg).setScale(2, RoundingMode.HALF_UP);
+                            rateTaller.setText(rateAverage + "");
+                        }
+                    } else { rateTaller.setText("5.0"); }
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -1614,38 +1637,37 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                 tallerLatLng = new LatLng(locationLat,locationLng);
                                 if(tallerMarker1 == null){
-                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
+                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey1 = key;
                                 } else if(tallerMarker2 == null){
-                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
+                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey2 = key;
                                 } else if(tallerMarker3 == null){
-                                    tallerMarker3 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
+                                    tallerMarker3 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey3 = key;
                                 } else if(tallerMarker4 == null){
-                                    tallerMarker4 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
+                                    tallerMarker4 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey4 = key;
                                 } else if(tallerMarker5 == null){
-                                    tallerMarker5 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
+                                    tallerMarker5 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey5 = key;
                                 } else if(tallerMarker6 == null){
-                                    tallerMarker6 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
+                                    tallerMarker6 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey6 = key;
                                 } else if(tallerMarker7 == null){
-                                    tallerMarker7 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
+                                    tallerMarker7 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey7 = key;
                                 } else if(tallerMarker8 == null){
-                                    tallerMarker8 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
+                                    tallerMarker8 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey8 = key;
                                 } else if(tallerMarker9 == null){
-                                    tallerMarker9 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
+                                    tallerMarker9 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey9 = key;
                                 } else if(tallerMarker10 == null){
-                                    tallerMarker10 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller)));
+                                    tallerMarker10 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey10 = key;
                                 }
                                 mMap.getUiSettings().setMapToolbarEnabled(true);
-                                mMap.setPadding(0, 0, 0, 250);
 
                             }
                         }

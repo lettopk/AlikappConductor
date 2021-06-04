@@ -74,7 +74,6 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-
                     app:borderColor="@color/colorPrimaryDark"
                     app:borderWidth="1dp"
                     app:divider="@color/purple_500"

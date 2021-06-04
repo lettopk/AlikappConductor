@@ -42,9 +42,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:backgroundTint="#204051"
-            android:drawableStart="@drawable/ic_mail4"
+            android:drawableStart="@drawable/ic_mail5"
             android:drawableTint="#353535"
-            android:hint=" email"
+            android:hint="   email"
             android:textColor="#204051"
             android:textColorHint="#204051" />
 
@@ -54,9 +54,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:backgroundTint="#204051"
-            android:drawableStart="@drawable/ic_password4"
+            android:drawableStart="@drawable/ic_password5"
             android:drawableTint="#353535"
-            android:hint="Contraseña"
+            android:hint="   Contraseña"
             android:inputType="textPassword"
             android:textColor="#204051"
             android:textColorHint="#204051" />

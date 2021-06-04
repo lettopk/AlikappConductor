@@ -19,6 +19,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
+        android:visibility="visible"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="20dp">
         <LinearLayout
@@ -48,8 +49,7 @@
                 android:layout_height="wrap_content"
                 android:text="nombre"
                 android:textAlignment="center"
-                
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:layout_margin="10dp"
                 android:textStyle="bold"
                 />
@@ -58,9 +58,34 @@
                 android:id="@+id/imagenTaller"
                 android:layout_width="107dp"
                 android:layout_height="105dp"
-                android:src="@drawable/averiado"
+                android:src="@drawable/ic_perfil"
                 android:layout_centerInParent="true"
                 />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5.0"
+                    android:textSize="20dp"
+                    android:id="@+id/rateTaller"
+                    android:textStyle="bold"
+  />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_star_rate_24"
+                    android:layout_gravity="center"
+                    app:tint="@color/colorPrimary" />
+
+
+
+            </LinearLayout>
             <TextView
                 android:id="@+id/dirccionTaller"
                 android:layout_width="match_parent"
@@ -69,8 +94,6 @@
                 android:layout_marginLeft="10dp"
                 android:text="direccion"
 
-                
-                android:textSize="18dp"
                 />
             <TextView
                 android:id="@+id/telefonoTaller"
@@ -79,8 +102,6 @@
                 android:layout_marginTop="5dp"
                 android:text="Telefono"
                 android:layout_marginLeft="10dp"
-                
-                android:textSize="18dp"
                 />
 
             <TextView
@@ -90,8 +111,6 @@
                 android:layout_marginTop="5dp"
                 android:text="Especialidad"
                 android:layout_marginLeft="10dp"
-                
-                android:textSize="18dp"
                 android:layout_marginBottom="15dp"
                 />
         </LinearLayout>
@@ -103,28 +122,26 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="0dp"
         android:visibility="gone"
-        android:layout_marginEnd="0dp"
-        app:cardBackgroundColor="#464646"
-        app:cardCornerRadius="20dp">
+        app:cardCornerRadius="10dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pointaller"
+                android:layout_margin="20dp"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="20dp"
                 android:text="CARGANDO..."
                 android:textAlignment="center"
-                android:textColor="@color/AlikappGris"
-                android:textSize="25dp"
-                android:fontFamily="@font/abeezee"
+                android:textSize="18dp"
                 android:textStyle="bold"
+                android:layout_marginBottom="20dp"
                 />
         </LinearLayout>
 
