@@ -81,12 +81,20 @@
             android:name=".CustomerMapActivity"
             android:screenOrientation="locked"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
-        <activity android:name=".CostumerRegistroActivity" />
-        <activity android:name=".CustomerSettingsActivity" />
-        <activity android:name=".HistoryActivity" />
-        <activity android:name=".HistorySingleActivity" />
+        <activity android:name=".CostumerRegistroActivity"
+            android:screenOrientation="locked"
+            />
+        <activity android:name=".CustomerSettingsActivity"
+            android:screenOrientation="locked"
+            />
+
+        <activity android:name=".HistoryActivity"
+            android:screenOrientation="locked"/>
+        <activity android:name=".HistorySingleActivity"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".ActivityBilletera"
+            android:screenOrientation="locked"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity android:name=".popupRecarga" />
 

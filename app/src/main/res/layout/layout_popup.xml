@@ -18,7 +18,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:cardCornerRadius="20dp">
 
         <LinearLayout
@@ -221,9 +221,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        app:cardBackgroundColor="#464646"
         app:cardCornerRadius="20dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
 
         <LinearLayout
@@ -242,13 +241,12 @@
                 map:rb_scale="10">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/averiado"
-                    android:padding="50dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="75dp"
+                    android:layout_margin="50dp"
+                    android:src="@drawable/pointvarado4"
                     android:layout_centerInParent="true"
-                    />
+                    app:tint="#404040" />
             </com.skyfishjy.library.RippleBackground>
 
 
@@ -256,16 +254,15 @@
                 android:id="@+id/TipoServicioBuscar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="20dp"
+                android:gravity="center"
                 android:text="BUSCANDO MECÁNICO..."
-                android:textSize="23sp"
-                android:fontFamily="@font/abeezee"
-                android:textStyle="bold"
-                android:textColor="@color/AlikappGris"
-                android:layout_gravity="center"
-                android:gravity="center"/>
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -276,11 +273,8 @@
                     android:id="@+id/cancelarPedido"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/cancelar_servicio"
+                    android:background="@drawable/btn_auxiliar_recargas"
                     android:text="CANCELAR"
-                    android:textColor="@color/AlikappGris"
-                    android:fontFamily="@font/abeezee"
-                    android:textStyle="bold"
                     android:textSize="18sp"/>
 
             </LinearLayout>
