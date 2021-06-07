@@ -399,7 +399,7 @@ public class popupRecarga extends AppCompatActivity {
                 }
 
                 else if (!isEnabledValue) {
-                    Toast.makeText(popupRecarga.this, "Transacción inválida, el monto debe ser igual o superior a $20.000", Toast.LENGTH_LONG).show();
+                    Toast.makeText(popupRecarga.this, "Transacción inválida, el monto debe ser igual o superior a $" + setearDineroPantalla(montoMinimoRecarga + ""), Toast.LENGTH_LONG).show();
                 }
 
                 else {
