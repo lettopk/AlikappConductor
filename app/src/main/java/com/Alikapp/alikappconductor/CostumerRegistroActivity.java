@@ -54,6 +54,8 @@ public class CostumerRegistroActivity extends AppCompatActivity {
                     Toast.makeText(CostumerRegistroActivity.this, "La contraseña no debe tener espacios, intenta nuevamente", Toast.LENGTH_SHORT).show();
                 } else if(!password.equals(ConfirmarPassword)) {
                     Toast.makeText(CostumerRegistroActivity.this, "Error al confirmar contraseña, intenta nuevamente", Toast.LENGTH_SHORT).show();
+                } else if(mPassword.getText().toString().isEmpty() || mEmail.getText().toString().isEmpty() || mConfirmarPassword.getText().toString().isEmpty()) {
+                    Toast.makeText(CostumerRegistroActivity.this, "Debes diligenciar todos los campos", Toast.LENGTH_SHORT).show();
                 } else {
                     final String email = mEmail.getText().toString();
                     mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(CostumerRegistroActivity.this, new OnCompleteListener<AuthResult>() {
@@ -71,8 +73,6 @@ public class CostumerRegistroActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
     @Override
     protected void onStart() {

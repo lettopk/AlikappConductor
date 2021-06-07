@@ -31,14 +31,10 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +45,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.addisonelliott.segmentedbutton.SegmentedButton;
 import com.addisonelliott.segmentedbutton.SegmentedButtonGroup;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -69,8 +64,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -88,7 +81,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -107,6 +99,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,25 +108,24 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.Alikapp.alikappconductor.notifyFirebase.tokeng;
-
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, RoutingListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private GoogleMap mMap;
     Location mLastLocation;
     LocationRequest mLocationRequest;
+    final static float ZOOM_CAMARA = (float) 15.5;
 
-    private Dialog myDialog, myDialogTaller;
+    private Dialog myDialog, myDialogTaller, myDialogRate, myDialogCancel, myDialogConfirCancel;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mRequest, mRequestt, mChat, mCancelar, mLogout;
+    private Button mRequest, mRequestt, mChat, mCancelar, mLogout, btnoOkCanelService, btnConfCancelServ, btnNoCancel;
 
     private FloatingActionButton mDesplegar;
 
     private EditText mDescripcion;
 
-    private TextView mLongDescrip, mMenuNombre, mTerminosCondiciones;
+    private TextView mLongDescrip, mTipoServicioBuscar, mMenuNombre, mTerminosCondiciones, descuentaCredito;
 
     private LatLng pickupLocation;
 
@@ -154,13 +147,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     public ImageView mDriverProfileImage;
     private CircleImageView mImagenPerfil;
 
-    private android.widget.TextView mDriverName, mDriverPhone, mDriverCar;
+    private android.widget.TextView mDriverName, mDriverPhone, mDriverCar, mDriverDistance, mDriverTime;
+
+    private TextView mDriverRateName;
 
     //private RadioGroup mRadioGroup;
 
     private SegmentedButtonGroup mSegmentedButtonGroup;
 
-    private RatingBar mRatingBar;
+    private TextView mRatingBar;
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -174,6 +169,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private String info1;
 
+    private RatingBar ratingBarDib;
+    private float rateDib = -1;
+    private Button btnEnviarRate;
+    private CircleImageView mecanicoProfileImage;
+    private  TextView textRtaeMecanico;
+
     private RippleBackground rippleBackground, rippleBackgroundhelp, rippleBackgroundEspera;
     private ConstraintLayout constraintLayout;
     private CardView cardViewInicial, cardViewBusqueda, cardViewOutSide;
@@ -183,6 +184,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     public static String clicknotify="";
 
+    private String lastRideCode;
+
     private DatabaseReference mDriverDatabase;
     private CoordinatorLayout mMain, mSecond;
     private DrawerLayout drawer;
@@ -190,6 +193,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     // Intancias del popup Talleres
     private TextView mNombreTaller;
     private TextView mDireccionTaller;
+    private TextView rateTaller;
+    private TextView especialidadTaller;
+    private TextView telefonoTaller;
     private CircleImageView mImagenTaller;
     private CardView mCardViewTaller, mCardViewCarca;
 
@@ -249,8 +255,66 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         myDialog = new Dialog(this);
         myDialogTaller = new Dialog(this);
 
+        myDialogRate =new Dialog(this);
+        myDialogRate.setContentView(R.layout.layout_popup_calificacion);
+        btnEnviarRate = myDialogRate.findViewById(R.id.btnEnviarRate);
 
-        mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
+        myDialog.setContentView(R.layout.layout_popup);
+        myDialogTaller.setContentView(R.layout.layout_popup_taller);
+
+        mDriverInfo = (ConstraintLayout) findViewById(R.id.driverInfo);
+        mDriverProfileImage = (ImageView) findViewById(R.id.driverProfileImage);
+        mDriverName = (android.widget.TextView) findViewById(R.id.driverName);
+        mDriverPhone = (android.widget.TextView) findViewById(R.id.driverPhone);
+        mDriverCar = (android.widget.TextView)findViewById(R.id.driverCar);
+        mDriverDistance = findViewById(R.id.driverDistance);
+        mDriverTime = findViewById(R.id.driverTiempo);
+        mChat =(Button) findViewById(R.id.mChat);
+        mLogout =(Button) findViewById(R.id.logout);
+        mTerminosCondiciones = findViewById(R.id.TerminosCondiciones);
+
+        mRequest = (Button) myDialog.findViewById(R.id.request);
+        mRequest.setText("Pedir Ayuda");
+        mDescripcion = myDialog.findViewById(R.id.descripcion);
+        mLongDescrip = myDialog.findViewById(R.id.longDescrip);
+        mTipoServicioBuscar = myDialog.findViewById(R.id.TipoServicioBuscar);
+        mSegmentedButtonGroup = (SegmentedButtonGroup) myDialog.findViewById(R.id.buttonGroup);
+        mSegmentedButtonGroup.setPosition(0, true);
+        cardViewInicial = myDialog.findViewById(R.id.carview_inicial);
+        cardViewOutSide = myDialog.findViewById(R.id.cardViewOutSide);
+        cardViewInicial.setVisibility(View.VISIBLE);
+        cardViewBusqueda = myDialog.findViewById(R.id.cardViewBusqueda);
+        cardViewBusqueda.setVisibility(View.GONE);
+        mCancelar = myDialog.findViewById(R.id.cancelarPedido);
+
+        mCardViewTaller = myDialogTaller.findViewById(R.id.carview_cargando);
+        mCardViewCarca = myDialogTaller.findViewById(R.id.carview_taller_info);
+        mCardViewTaller.setVisibility(View.GONE);
+        mCardViewCarca.setVisibility(View.VISIBLE);
+        mNombreTaller = myDialogTaller.findViewById(R.id.nombreTaller);
+        mImagenTaller = myDialogTaller.findViewById(R.id.imagenTaller);
+        mDireccionTaller = myDialogTaller.findViewById(R.id.dirccionTaller);
+        rateTaller = myDialogTaller.findViewById(R.id.rateTaller);
+        especialidadTaller = myDialogTaller.findViewById(R.id.especialidadTaller);
+        telefonoTaller = myDialogTaller.findViewById(R.id.telefonoTaller);
+
+
+
+        ratingBarDib = (RatingBar) myDialogRate.findViewById(R.id.ratingBarDib);
+        mRatingBar = (TextView) findViewById(R.id.driverRate);
+        mDriverRateName = (TextView) myDialogRate.findViewById(R.id.rateNombre);
+        mecanicoProfileImage = (CircleImageView) myDialogRate.findViewById(R.id.mecanicoProfileImage);
+        textRtaeMecanico = (TextView) myDialogRate.findViewById(R.id.textRtaeMecanico);
+
+        myDialogCancel = new Dialog(this);
+        myDialogCancel.setContentView(R.layout.layout_popup_serv_cancelado);
+        btnoOkCanelService = (Button) myDialogCancel.findViewById(R.id.btnoOkCanelService);
+
+        myDialogConfirCancel = new Dialog(this);
+        myDialogConfirCancel.setContentView(R.layout.layout_popup_confirmar_cancelacion);
+        btnNoCancel = (Button) myDialogConfirCancel.findViewById(R.id.btnNoCancel);
+        btnConfCancelServ = (Button) myDialogConfirCancel.findViewById(R.id.btnConfCancelServ);
+        descuentaCredito = myDialogConfirCancel.findViewById(R.id.descuentaCredito);
 
         conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseMessaging.getInstance().getToken()
@@ -274,17 +338,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         getUserInfo();
 
-        myDialog.setContentView(R.layout.layout_popup);
-        myDialogTaller.setContentView(R.layout.layout_popup_taller);
-
-        mDriverInfo = (ConstraintLayout) findViewById(R.id.driverInfo);
-        mDriverProfileImage = (ImageView) findViewById(R.id.driverProfileImage);
-        mDriverName = (android.widget.TextView) findViewById(R.id.driverName);
-        mDriverPhone = (android.widget.TextView) findViewById(R.id.driverPhone);
-        mDriverCar = (android.widget.TextView)findViewById(R.id.driverCar);
-        mChat =(Button) findViewById(R.id.mChat);
-        mLogout =(Button) findViewById(R.id.logout);
-        mTerminosCondiciones = findViewById(R.id.TerminosCondiciones);
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,35 +363,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(android.view.View v) {
 
-                if (requestBol){
-                    try {
-                        endRide();
-
-                    } catch (Exception e) {
-                        romper = true;
-                        finRide();
-                        CustomerMapActivity.super.onRestart();
-                        Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
-                    }
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }
+                showPopupConfirCancel();
             }
         });
 
-        mRequest = (Button) myDialog.findViewById(R.id.request);
-        mRequest.setText("Pedir Ayuda");
-        mDescripcion = myDialog.findViewById(R.id.descripcion);
-        mLongDescrip = myDialog.findViewById(R.id.longDescrip);
-        mSegmentedButtonGroup = (SegmentedButtonGroup) myDialog.findViewById(R.id.buttonGroup);
-        mSegmentedButtonGroup.setPosition(0, true);
-        cardViewInicial = myDialog.findViewById(R.id.carview_inicial);
-        cardViewOutSide = myDialog.findViewById(R.id.cardViewOutSide);
-        cardViewInicial.setVisibility(View.VISIBLE);
-        cardViewBusqueda = myDialog.findViewById(R.id.cardViewBusqueda);
-        cardViewBusqueda.setVisibility(View.GONE);
-        mCancelar = myDialog.findViewById(R.id.cancelarPedido);
-        // mRadioGroup = (RadioGroup) myDialog.findViewById(R.id.radioGroup);
-        // mRadioGroup.check(R.id.Mecanico);
         myDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -351,19 +379,26 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-        mCardViewTaller = myDialogTaller.findViewById(R.id.carview_cargando);
-        mCardViewCarca = myDialogTaller.findViewById(R.id.carview_taller_info);
-        mCardViewTaller.setVisibility(View.GONE);
-        mCardViewCarca.setVisibility(View.VISIBLE);
-        mNombreTaller = myDialogTaller.findViewById(R.id.nombreTaller);
-        mImagenTaller = myDialogTaller.findViewById(R.id.imagenTaller);
-        mDireccionTaller = myDialogTaller.findViewById(R.id.dirccionTaller);
         myDialogTaller.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 camaraEnMovimiento = true;
                 mCardViewTaller.setVisibility(View.VISIBLE);
                 mCardViewCarca.setVisibility(View.GONE);
+            }
+        });
+
+        myDialogRate.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (rateDib < 0){
+
+                    showPopupCalificacion();
+                }
+                else {
+
+                    rateDib = -1;
+                }
             }
         });
 
@@ -504,10 +539,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
                 try {
-                    endRide();
+                    popupController("cancelUser");
+                    romper = true;
+                    Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     romper = true;
-                    finRide();
+                    endRide();
                     CustomerMapActivity.super.onRestart();
                     Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
                 }
@@ -519,28 +556,32 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(android.view.View v) {
 
-                if (requestBol){
-                    try {
-                        endRide();
-                    } catch (Exception e) {
-                        romper = true;
-                        finRide();
-                        CustomerMapActivity.super.onRestart();
-                        Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
-                    }
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }else{
-                    if (!mLongDescrip.getText().equals("250")){
+                if((dineroDisponible/CostoPorCredito) >= 1){
 
-                        int selectId = mSegmentedButtonGroup.getPosition();
-                        if (selectId == 0)
-                        {
-                            requestService = "Mecanico";
+                    if (requestBol){
+                        try {
+                            endRide();
+                        } catch (Exception e) {
+                            romper = true;
+                            endRide();
+                            CustomerMapActivity.super.onRestart();
+                            Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
                         }
-                        else
+                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    }else{
+                        if (!mLongDescrip.getText().equals("250")){
+
+                            int selectId = mSegmentedButtonGroup.getPosition();
+                            if (selectId == 0)
+                            {
+                                requestService = "Mecanico";
+                                mTipoServicioBuscar.setText("BUSCANDO MECÁNICO...");
+                            }
+                            else
                             if ( selectId == 1)
                             {
                                 requestService = "Taller";
+                                mTipoServicioBuscar.setText("BUSCANDO TALLER...");
                             }
                         /*int selectId = mRadioGroup.getCheckedRadioButtonId();
 
@@ -552,40 +593,42 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                         requestService = radioButton.getText().toString();*/
 
-                        requestBol = true;
+                            requestBol = true;
 
-                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                        GeoFire geoFire = new GeoFire(ref);
-                        geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-                        //poner un try catch con un mensaje de permitir hubicación en el dispositivo
-                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                        if (pickupMarker == null) {
-                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                            GeoFire geoFire = new GeoFire(ref);
+                            geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                            //poner un try catch con un mensaje de permitir hubicación en el dispositivo
+                            pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                            if (pickupMarker == null) {
+                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
+                            }
+
+                            mRequest.setText("Buscando Mecanico");
+
+                            getClosestDriver();
+                            temporizador.continuarConteo();
+                            tiempoEspera();
+                            romper = false;
+
+                            //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+                            Map usuarioInfo = new HashMap();
+                            usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
+                            enableReference.updateChildren(usuarioInfo);
+
+                            final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
+                            cardViewInicial.setVisibility(View.GONE);
+                            cardViewBusqueda.setVisibility(View.VISIBLE);
+                            rippleBackgroundEspera.startRippleAnimation();
+                        } else {
+                            Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
                         }
-
-                        mRequest.setText("Buscando Mecanico");
-
-                        getClosestDriver();
-                        temporizador.continuarConteo();
-                        tiempoEspera();
-                        romper = false;
-
-                        //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
-                        Map usuarioInfo = new HashMap();
-                        usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
-                        enableReference.updateChildren(usuarioInfo);
-
-                        final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
-                        cardViewInicial.setVisibility(View.GONE);
-                        cardViewBusqueda.setVisibility(View.VISIBLE);
-                        rippleBackgroundEspera.startRippleAnimation();
-                    } else {
-                       Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(CustomerMapActivity.this, "No tienes créditos suficientes", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -597,6 +640,36 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private void guardartoken(String token) {
         DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         ref.child("token").setValue(token);
+    }
+
+    private Temporizador tiempoServicio = new Temporizador(0,5,0);
+    private int conteoTiempo = 0;
+    private void conteoTiempoServicio(){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(tiempoServicio.getSegundosTotal() > 0 && !tiempoServicio.getDetenido()){
+                    if(conteoTiempo >= 60){
+                        saveTiempoDB();
+                        conteoTiempo = 0;
+                    }
+                    conteoTiempo ++;
+                    tiempoServicio.conteoRegresivo();
+                    conteoTiempoServicio();
+                } else {
+                    saveTiempoDB();
+                    conteoTiempo = 0;
+                }
+            }
+        }, 1000);
+    }
+
+    private void saveTiempoDB(){
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put("tiempoRstanteServicio", tiempoServicio.getSegundosTotal() + "");
+        enableReference.updateChildren(usuarioInfo);
     }
 
     private Temporizador temporizador = new Temporizador(0,4,0);
@@ -617,61 +690,99 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Boolean romper = true;
     private void finalizarEspera() {
         if(!romper){
-            finRide();
+            endRide();
             romper = true;
             Toast.makeText(this,"No hay mecánicos cerca",Toast.LENGTH_LONG).show();
         }
     }
 
-    final static float ZOOM_CAMARA = (float) 15.5;
-    private void finRide() {
-        requestBol = false;
-        isOnService = false;
-        cardViewInicial.setVisibility(View.VISIBLE);
-        cardViewBusqueda.setVisibility(View.GONE);
-        mDesplegar.setVisibility(View.VISIBLE);
-        rippleBackground.setVisibility(View.VISIBLE);
-        constraintLayout.setVisibility(View.VISIBLE);
-        temporizador.reIniciarConteo();
-        service.removeLocationUpdates();
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), ZOOM_CAMARA));
-        try {
-            geoQuery.removeAllListeners();
-        } catch (Exception e){
+       private void showPopupCalificacion() {
 
+        btnEnviarRate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateDib = ratingBarDib.getRating();
+                saveRating();
+                myDialogRate.dismiss();
+            }
+        });
+
+        ratingBarDib.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+
+                if (rating >= 0 && rating <3 ){
+
+                textRtaeMecanico.setText("Malo");
+                }
+                else if (rating >= 3 && rating <4.5 ){
+
+                    textRtaeMecanico.setText("Bueno");
+                }
+                else {
+                    textRtaeMecanico.setText("Excelente");
+                }
+
+            }
+        });
+        myDialogRate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialogRate.show();
+
+    }
+
+    private void showPopupMecanicoCancel() {
+
+        btnoOkCanelService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                myDialogCancel.dismiss();
+            }
+        });
+
+        myDialogCancel.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialogCancel.show();
+    }
+
+    private void showPopupConfirCancel() {
+
+        if(distance < 30 || tiempoServicio.getSegundosTotal() == 0){
+            descuentaCredito.setVisibility(View.VISIBLE);
+        } else {
+            descuentaCredito.setVisibility(View.GONE);
         }
 
-        if (driverFoundID != null){
-            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
-            driverRef.removeValue();
-            driverFoundID = null;
+        btnNoCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        }
-        driverFound = false;
-        radius = 1;
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                myDialogConfirCancel.dismiss();
+            }
+        });
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-        GeoFire geoFire = new GeoFire(ref);
-        geoFire.removeLocation(userId);
+        btnConfCancelServ.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        if(pickupMarker != null){
-            pickupMarker.remove();
-            pickupMarker = null;
-        }
-        if (mDriverMarker != null){
-            mDriverMarker.remove();
-            mDriverMarker = null;
-        }
-        mRequest.setText("Pedir Ayuda");
+                if (requestBol){
+                    try {
+                        popupController("cancelUser");
+                        myDialogConfirCancel.dismiss();
+                        romper = true;
+                        Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        romper = true;
+                        popupController("cancelUser");
+                        CustomerMapActivity.super.onRestart();
+                        Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
+                    }
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+            }
+        });
 
-        mDriverInfo.setVisibility(android.view.View.GONE);
-        mDriverName.setText("");
-        mDriverPhone.setText("");
-        mDriverCar.setText("Destination: --");
-        mDriverProfileImage.setImageResource(R.mipmap.ic_default_user);
-        erasePolylines();
-        servicioTermina();
+        myDialogConfirCancel.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialogConfirCancel.show();
     }
 
     @Override
@@ -694,9 +805,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     GeoQuery geoQuery;
     private void getClosestDriver(){
-        DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+        DatabaseReference driverLocation = null;
+        if (requestService.equals("Taller")){
+            driverLocation = FirebaseDatabase.getInstance().getReference().child("TallerDisponible");
+            System.out.println("TallerDisponible");
+        } else /*if (requestService.equals("Mecanico")) // en caso de agregar mas tipos de servicio se puede desbloquear este condicional */{
+            driverLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+            System.out.println("driversAvailable");
+        }
 
-        GeoFire geoFire = new GeoFire(driverLocation);
+            GeoFire geoFire = new GeoFire(driverLocation);
         geoQuery = geoFire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
         geoQuery.removeAllListeners();
 
@@ -807,6 +925,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             getDriverLocation();
                             getDriverInfo();
                             getHasRideEnded();
+                            tiempoServicio = new Temporizador(0,5,0);
+                            conteoTiempoServicio();
+                            saveTiempoDB();
                             if(requestService.equals("Taller")) {
                                 service.requestLocationUpdates();
                             }
@@ -814,6 +935,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             mRequest.setText("Buscando la Ubicacion de su Mecanico....");
                             enServicio();
                             myDialog.dismiss();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(map.get("LastRide")!=null){
+                                        lastRideCode = map.get("LastRide").toString();
+                                    }
+                                }
+                            },3000);
                         } else if (A.equals("No")) {
                             driverFound = false;
                             requestBol = true;
@@ -841,7 +970,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
                             pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                             if (pickupMarker == null) {
-                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
                             }
                             mRequest.setText("Buscando Mecanico....");
 
@@ -921,8 +1050,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Marker mDriverMarker;
     private DatabaseReference driverLocationRef;
     private ValueEventListener driverLocationRefListener;
+    float distance;
     private void getDriverLocation(){
-        driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
+        if(requestService.equals("Mecanico")){
+            driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
+        } else if(requestService.equals("Taller")) {
+            driverLocationRef = FirebaseDatabase.getInstance().getReference().child("TallerDisponible").child(driverFoundID).child("l");
+        }
         driverLocationRefListener = driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -951,27 +1085,48 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     loc2.setLatitude(driverLatLng.latitude);
                     loc2.setLongitude(driverLatLng.longitude);
 
-                    float distance = loc1.distanceTo(loc2);
+                    distance = loc1.distanceTo(loc2);
 
-                    if (distance<100){
-                        mRequest.setText("Su Mecanico esta Aquí");
-                    }else{
-
-                        mRequest.setText("Mecanico Encontrado: " + String.valueOf((distance)/1000)+" Kms");
-
+                    if (distance >= 1000){
+                        BigDecimal distanceShort = new BigDecimal((distance)/1000).setScale(1, RoundingMode.HALF_UP);
+                        mDriverDistance.setText(String.valueOf(distanceShort)+" Km");
+                        //mRequest.setText("Su Mecanico esta Aquí");
+                    } else if (distance < 1000 && distance >= 50){
+                        BigDecimal distanceShort = new BigDecimal(distance).setScale(1, RoundingMode.HALF_UP);
+                        mDriverDistance.setText(String.valueOf((distanceShort))+" m");
+                    } else {
+                        mDriverDistance.setText("Aquí");
                     }
 
+                    if(distance < 15){
+                        mRequestt.setVisibility(View.GONE);
+                    } else {
+                        mRequestt.setVisibility(View.VISIBLE);
+                    }
 
+                    float speed = (float) 0.0;
+                    boolean hasSpeed = false;
                     if(requestService.equals("Taller")){
+                        speed = loc1.getSpeed();
+                        hasSpeed = loc1.hasSpeed();
                         getRouteToMarker(new LatLng(DriverlocationLat, DriverlocationLng),
                                 new  LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
                     } else {
+                        speed = loc2.getSpeed();
+                        hasSpeed = loc2.hasSpeed();
                         getRouteToMarker( new  LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()),
                                 new LatLng(DriverlocationLat, DriverlocationLng));
                     }
+
+                    if(!hasSpeed){
+                        speed = (float) 4.0;
+                    }
+                    int time = (int) ((distance/speed)/60);
+                    mDriverTime.setText(time + " min");
+
                     if (mDriverMarker == null) {
                         mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Su Mecanico")
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mecanico)));
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pointmecanico)));
                     }
                 }
 
@@ -1000,29 +1155,41 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
                     if(dataSnapshot.child("name")!=null){
-                        mDriverName.setText("Mecanico: " + dataSnapshot.child("name").getValue().toString());
+                        String nombre = dataSnapshot.child("name").getValue().toString();
+                        String[] nombSeparado = nombre.split(" ");
+                        if (nombSeparado.length>=3){
+                            nombre = nombSeparado[0] + " " + nombSeparado[2];
+                        }
+                        mDriverName.setText(nombre);
+                        mDriverRateName.setText("Califica a " + nombre);
+
                          }
                     if(dataSnapshot.child("phone")!=null){
-                        mDriverPhone.setText("Telefono: " + dataSnapshot.child("phone").getValue().toString());
+                        mDriverPhone.setText(dataSnapshot.child("phone").getValue().toString());
                     }
                     if(dataSnapshot.child("car")!=null){
-                        mDriverCar.setText("Taller: " + dataSnapshot.child("car").getValue().toString());
+                        mDriverCar.setText(dataSnapshot.child("car").getValue().toString());
                     }
                     if(dataSnapshot.child("profileImageUrl").getValue()!=null){
+                        com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mecanicoProfileImage);
                         com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);
                     }
 
-                    int ratingSum = 0;
-                    float ratingsTotal = 0;
-                    float ratingsAvg = 0;
-                    for (DataSnapshot child : dataSnapshot.child("rating").getChildren()){
-                        ratingSum = ratingSum + Integer.valueOf(child.getValue().toString());
-                        ratingsTotal++;
-                    }
-                    if(ratingsTotal!= 0){
-                        ratingsAvg = ratingSum/ratingsTotal;
-                        mRatingBar.setRating(ratingsAvg);
-                    }
+                    if (dataSnapshot.child("rating").getValue() != null){
+                        float ratingSum = 0;
+                        float ratingsTotal = 0;
+                        float ratingsAvg = 0;
+                        for (DataSnapshot child : dataSnapshot.child("rating").getChildren()){
+                            ratingSum = ratingSum + Float.valueOf(child.getValue().toString());
+                            ratingsTotal++;
+                        }
+                        if(ratingsTotal!= 0){
+                            ratingsAvg = ratingSum/ratingsTotal;
+                            BigDecimal rateAverage = new BigDecimal(ratingsAvg).setScale(2, RoundingMode.HALF_UP);
+                            mRatingBar.setText(rateAverage + "");
+                        }
+                    } else { mRatingBar.setText("5.0"); }
+
                 }
             }
             @Override
@@ -1041,11 +1208,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 if(dataSnapshot.exists()){
 
                 }else{
-                    try {
-                        endRide();
-                    } catch (Exception e) {
-                        finRide();
-                    }
+                    popupController("cancelMecanico");
                 }
             }
 
@@ -1064,6 +1227,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         rippleBackground.setVisibility(View.VISIBLE);
         constraintLayout.setVisibility(View.VISIBLE);
         temporizador.reIniciarConteo();
+        tiempoServicio.setDetenido(true);
         service.removeLocationUpdates();
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), ZOOM_CAMARA));
         try {
@@ -1071,13 +1235,17 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         } catch (Exception e){
 
         }
-        driverLocationRef.removeEventListener(driverLocationRefListener);
-        driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
+        if(driverLocationRef != null){
+            driverLocationRef.removeEventListener(driverLocationRefListener);
+        }
+        if(driveHasEndedRef != null){
+            driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
+        }
 
         if (driverFoundID != null){
             DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
             driverRef.removeValue();
-            driverFoundID = null;
+            //driverFoundID = null;
 
         }
         driverFound = false;
@@ -1105,6 +1273,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverProfileImage.setImageResource(R.mipmap.ic_default_user);
         erasePolylines();
         servicioTermina();
+
     }
 
     /*-------------------------------------------- Map specific functions -----
@@ -1140,6 +1309,38 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if(tallerMarker2 != null){
                         tallerMarker2.remove();
                         tallerMarker2 = null;
+                    }
+                    if(tallerMarker3 != null){
+                        tallerMarker3.remove();
+                        tallerMarker3 = null;
+                    }
+                    if(tallerMarker4 != null){
+                        tallerMarker4.remove();
+                        tallerMarker4 = null;
+                    }
+                    if(tallerMarker5 != null){
+                        tallerMarker5.remove();
+                        tallerMarker5 = null;
+                    }
+                    if(tallerMarker6 != null){
+                        tallerMarker6.remove();
+                        tallerMarker6 = null;
+                    }
+                    if(tallerMarker7 != null){
+                        tallerMarker7.remove();
+                        tallerMarker7 = null;
+                    }
+                    if(tallerMarker8 != null){
+                        tallerMarker8.remove();
+                        tallerMarker8 = null;
+                    }
+                    if(tallerMarker9 != null){
+                        tallerMarker9.remove();
+                        tallerMarker9 = null;
+                    }
+                    if(tallerMarker10 != null){
+                        tallerMarker10.remove();
+                        tallerMarker10 = null;
                     }
                 }
                 final Handler handler =new Handler();
@@ -1193,6 +1394,22 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     id = tallerKey1;
                 } else if (tallerMarker2 != null && tallerMarker2.getId().equals(marker.getId())) {
                     id = tallerKey2;
+                } else if (tallerMarker3 != null && tallerMarker3.getId().equals(marker.getId())) {
+                    id = tallerKey3;
+                } else if (tallerMarker4 != null && tallerMarker4.getId().equals(marker.getId())) {
+                    id = tallerKey4;
+                } else if (tallerMarker5 != null && tallerMarker5.getId().equals(marker.getId())) {
+                    id = tallerKey5;
+                } else if (tallerMarker6 != null && tallerMarker6.getId().equals(marker.getId())) {
+                    id = tallerKey6;
+                } else if (tallerMarker7 != null && tallerMarker7.getId().equals(marker.getId())) {
+                    id = tallerKey7;
+                } else if (tallerMarker8 != null && tallerMarker8.getId().equals(marker.getId())) {
+                    id = tallerKey8;
+                } else if (tallerMarker9 != null && tallerMarker9.getId().equals(marker.getId())) {
+                    id = tallerKey9;
+                } else if (tallerMarker10 != null && tallerMarker10.getId().equals(marker.getId())) {
+                    id = tallerKey10;
                 }
                 if (marker.getTitle().equals("Taller Mecánico")) {
                     ShowPopupTaller(id);
@@ -1220,6 +1437,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if(map.get("profileImageUrl")!=null){
                         com.bumptech.glide.Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mImagenTaller);
                     }
+                    if (snapshot.child("rating").getValue() != null){
+                        float ratingSum = 0;
+                        float ratingsTotal = 0;
+                        float ratingsAvg = 0;
+                        for (DataSnapshot child : snapshot.child("rating").getChildren()){
+                            ratingSum = ratingSum + Float.valueOf(child.getValue().toString());
+                            ratingsTotal++;
+                        }
+                        if(ratingsTotal!= 0){
+                            ratingsAvg = ratingSum/ratingsTotal;
+                            BigDecimal rateAverage = new BigDecimal(ratingsAvg).setScale(2, RoundingMode.HALF_UP);
+                            rateTaller.setText(rateAverage + "");
+                        }
+                    } else { rateTaller.setText("5.0"); }
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -1338,7 +1570,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                 LatLng driverLocation = new LatLng(location.latitude, location.longitude);
                 if(mDriverMarker == null){
-                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.drawable.mecanico)));
+                    mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.drawable.pointmecanico)));
                 }
                 mDriverMarker.setTag(key);
 
@@ -1378,11 +1610,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     boolean getTallerStarted = false;
-    private Marker tallerMarker1, tallerMarker2;
-    private String tallerKey1, tallerKey2;
+    private Marker tallerMarker1, tallerMarker2, tallerMarker3, tallerMarker4, tallerMarker5, tallerMarker6, tallerMarker7, tallerMarker8, tallerMarker9, tallerMarker10;
+    private String tallerKey1, tallerKey2, tallerKey3, tallerKey4, tallerKey5, tallerKey6, tallerKey7, tallerKey8, tallerKey9, tallerKey10;
     GeoQuery geoRequest;
     private void getTallerAround(){
-        DatabaseReference TalleresLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+        DatabaseReference TalleresLocation = FirebaseDatabase.getInstance().getReference().child("TallerDisponible");
         GeoFire geoFire = new GeoFire(TalleresLocation);
         float expo = (float) (17.2247 - 0.6867*mMap.getCameraPosition().zoom);
         float radio = (float) Math.exp(expo)/1000;
@@ -1393,7 +1625,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 if (key != null && camaraEnMovimiento) {
-                    DatabaseReference Tallersitos = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child(key).child("l");
+                    DatabaseReference Tallersitos = FirebaseDatabase.getInstance().getReference().child("TallerDisponible").child(key).child("l");
                     Tallersitos.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1412,14 +1644,37 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                 tallerLatLng = new LatLng(locationLat,locationLng);
                                 if(tallerMarker1 == null){
-                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker1 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey1 = key;
                                 } else if(tallerMarker2 == null){
-                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.taller1)));
+                                    tallerMarker2 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
                                     tallerKey2 = key;
+                                } else if(tallerMarker3 == null){
+                                    tallerMarker3 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
+                                    tallerKey3 = key;
+                                } else if(tallerMarker4 == null){
+                                    tallerMarker4 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
+                                    tallerKey4 = key;
+                                } else if(tallerMarker5 == null){
+                                    tallerMarker5 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
+                                    tallerKey5 = key;
+                                } else if(tallerMarker6 == null){
+                                    tallerMarker6 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
+                                    tallerKey6 = key;
+                                } else if(tallerMarker7 == null){
+                                    tallerMarker7 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
+                                    tallerKey7 = key;
+                                } else if(tallerMarker8 == null){
+                                    tallerMarker8 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
+                                    tallerKey8 = key;
+                                } else if(tallerMarker9 == null){
+                                    tallerMarker9 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
+                                    tallerKey9 = key;
+                                } else if(tallerMarker10 == null){
+                                    tallerMarker10 = mMap.addMarker(new MarkerOptions().position(tallerLatLng).title("Taller Mecánico").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaller20)));
+                                    tallerKey10 = key;
                                 }
                                 mMap.getUiSettings().setMapToolbarEnabled(true);
-                                mMap.setPadding(0, 0, 0, 250);
 
                             }
                         }
@@ -1579,8 +1834,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void enServicio() {
-        String conductorId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorId);
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         Map usuarioInfo = new HashMap();
         usuarioInfo.put("EnServicio", "Si");
         usuarioInfo.put("MecanicoServicio", driverFoundID.toString());
@@ -1590,8 +1844,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Boolean servicioPendiente = false;
     private void servicioTermina() {
         isOnService = false;
-        String conductorId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorId);
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         Map usuarioInfo = new HashMap();
         usuarioInfo.put("EnServicio", "No");
         usuarioInfo.put("MecanicoServicio", "");
@@ -1600,8 +1853,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void isOnService() {
-        String conductorId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorId);
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         enableReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1612,8 +1864,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         String B = map.get("MecanicoServicio").toString();
                         String C = map.get("Descripcion").toString();
                         String D = map.get("TipoServicio").toString();
+                        String E = "300";
+                        if(map.get("tiempoRstanteServicio") != null){
+                            E = map.get("tiempoRstanteServicio").toString();
+                        }
                         if(A != null && B != null  && C != null){
                             DatabaseReference driverReference = FirebaseDatabase.getInstance().getReference().child("driversWorking");
+                            String finalE = E;
                             driverReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -1627,6 +1884,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 requestBol = true;
                                                 isOnService = true;
                                                 requestService = D;
+                                                int seg = Integer.parseInt(finalE);
+                                                tiempoServicio = new Temporizador(0,0, seg);
+                                                conteoTiempoServicio();
                                                 if(D.equals("Taller")) {
                                                     mSegmentedButtonGroup.setPosition(1, true);
                                                     service.requestLocationUpdates();
@@ -1640,10 +1900,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 handler.postDelayed(new Runnable(){
                                                     @Override
                                                     public void run() {
-                                                        pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                                                        if (pickupMarker == null) {
-                                                            pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.averiado)));
+                                                        if (mLastLocation!= null) {
+
+                                                            pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+
+                                                            if (pickupMarker == null) {
+
+                                                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
+                                                            }
                                                         }
+
                                                         getDriverLocation();
                                                     }
                                                 }, 1000);
@@ -1654,6 +1920,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 constraintLayout.setVisibility(View.GONE);
                                                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                                                 servicioPendiente = true;
+                                                new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        if(map.get("LastRide")!=null){
+                                                            lastRideCode = map.get("LastRide").toString();
+                                                        }
+                                                    }
+                                                },3000);
                                             } else {
                                                 isOnService = false;
                                                 Map usuarioInfo = new HashMap();
@@ -1679,7 +1953,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         usuarioInfo.put("MecanicoServicio", "");
                         usuarioInfo.put("TipoServicio", "");
                         enableReference.updateChildren(usuarioInfo);
-                        finRide();
+                        endRide();
                     }
                 }
             }
@@ -1691,7 +1965,29 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         });
     }
 
+    private int dineroDisponible = 0;
+    private int CostoPorCredito = 50000;
+
     private void getUserInfo(){
+        DatabaseReference valorCreditoReference =  FirebaseDatabase.getInstance().getReference().child("CostoPorCredito");
+        valorCreditoReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+                    if (map.get("Usuario") != null){
+                        CostoPorCredito = Integer.parseInt(map.get("Usuario").toString());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         mDriverDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1703,6 +1999,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             com.bumptech.glide.Glide.with(getApplication()).load(map.get("profileImageUrl").toString())
                                     .into(mImagenPerfil);
 
+                        }
+
+                        if (map.get("dineroDisponible") != null){
+                            dineroDisponible = Integer.parseInt(map.get("dineroDisponible").toString());
                         }
                         final Handler handler =new Handler();
                         handler.postDelayed(new Runnable(){
@@ -1786,6 +2086,52 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     .toString();
             //Toast.makeText(service, datoshechos, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void saveRating() {
+        if(lastRideCode != null && driverFoundID != null){
+            DatabaseReference mecanico = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("rating");
+            Map usuarioInfo = new HashMap();
+            usuarioInfo.put(lastRideCode, rateDib);
+            mecanico.updateChildren(usuarioInfo);
+            driverFoundID = null;
+        }
+    }
+
+    private void popupController(String provided) {
+
+        if (provided.equals("cancelUser")){
+
+            if ((distance < 30 || tiempoServicio.getSegundosTotal() == 0) && isOnService){
+                showPopupCalificacion();
+                descontarCredito();
+            }
+            endRide();
+
+        }
+        else if (provided.equals("cancelMecanico")){
+
+            if (distance < 30 || tiempoServicio.getSegundosTotal() == 0){
+                showPopupCalificacion();
+            } else {
+                if(driverFoundID != null){
+                    showPopupMecanicoCancel();
+                }
+            }
+            if (distance < 30 && tiempoServicio.getSegundosTotal() == 0){
+                descontarCredito();
+            }
+            endRide();
+
+        }
+    }
+
+    private void descontarCredito(){
+        dineroDisponible -= CostoPorCredito;
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put("dineroDisponible", dineroDisponible + "");
+        enableReference.updateChildren(usuarioInfo);
     }
 }
 

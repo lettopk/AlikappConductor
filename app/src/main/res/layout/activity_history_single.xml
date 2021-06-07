@@ -7,14 +7,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.Alikapp.alikappconductor.HistorySingleActivity"
-    android:background="@color/AlikappGris"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/AlikappGris">
+        android:orientation="vertical">
 
         <fragment
             android:layout_width="match_parent"
@@ -32,7 +30,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/abeezee"
                 android:textStyle="bold"
-                android:textColor="@color/AlikappGris"
                 android:text=" Servicio:"
                 android:layout_margin="20sp"
                 android:id="@+id/rideLocation"/>
@@ -41,7 +38,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/abeezee"
                 android:textStyle="bold"
-                android:textColor="@color/AlikappGris"
                 android:text="distance"
                 android:layout_margin="20sp"
                 android:id="@+id/rideDistance"/>
@@ -50,7 +46,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/abeezee"
                 android:textStyle="bold"
-                android:textColor="@color/AlikappGris"
                 android:text=" Fecha:"
                 android:layout_margin="20sp"
                 android:id="@+id/rideDate"/>
@@ -62,7 +57,7 @@
             android:orientation="horizontal"
             android:layout_margin="20dp"
             android:background="@drawable/ventanas_info">
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:id="@+id/userImage"
@@ -79,7 +74,6 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/abeezee"
                     android:textStyle="bold"
-                    android:textColor="@color/AlikappGris"
                     android:text="Nombre:"
                     android:layout_marginBottom="20sp"
                     android:id="@+id/userName"/>
@@ -88,7 +82,6 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/abeezee"
                     android:textStyle="bold"
-                    android:textColor="@color/AlikappGris"
                     android:text="Telefono:"
                     android:layout_marginBottom="20sp"
                     android:id="@+id/userPhone"/>

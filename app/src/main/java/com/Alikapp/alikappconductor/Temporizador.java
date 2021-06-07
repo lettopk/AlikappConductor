@@ -9,6 +9,14 @@ public class Temporizador {
     private int segundosRestantes;
     private int segundosTotal;
 
+    public Boolean getDetenido() {
+        return isDetenido;
+    }
+
+    public void setDetenido(Boolean detenido) {
+        isDetenido = detenido;
+    }
+
     private Boolean isDetenido = false;
 
     /**

@@ -19,32 +19,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:visibility="gone"
-        app:cardBackgroundColor="#464646"
         app:cardCornerRadius="20dp">
-
-
-        <ImageView
-            android:id="@+id/cerrar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="350dp"
-            android:layout_marginTop="15dp"
-            android:elevation="5dp"
-            android:src="@drawable/ic_baseline_close_24" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="20dp"
-            android:text="¿Qué Ayuda Necesitas?"
-            android:textAlignment="center"
-            android:textColor="@color/AlikappGris"
-            android:textSize="25dp"
-            android:fontFamily="@font/abeezee"
-            android:textStyle="bold"
-            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,9 +29,40 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="25dp"
+                android:background="@color/colorPrimary">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Solicita Ayuda"
+                    android:layout_margin="15dp"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    />
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="¿Qué Ayuda Necesitas?"
+                    android:textStyle="bold"
+                    android:textSize="18dp"/>
 
                 <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
                     android:id="@+id/buttonGroup"
@@ -65,27 +71,25 @@
                     android:layout_alignParentTop="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="4dp"
-                    android:background="@color/AlikappGris"
-                    android:elevation="2dp"
-                    app:borderColor="@color/purple_200"
+                    app:borderColor="@color/colorPrimaryDark"
                     app:borderWidth="1dp"
                     app:divider="@color/purple_500"
-                    app:dividerPadding="10dp"
                     app:dividerWidth="1dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:position="0"
-                    app:radius="30dp"
+                    app:radius="10dp"
                     app:ripple="true"
+                    android:outlineAmbientShadowColor="@color/white"
                     app:rippleColor="@color/purple_700"
                     app:selectedBackground="@color/teal_200"
-                    android:padding="15dp">
 
+                   >
 
                     <com.addisonelliott.segmentedbutton.SegmentedButton
                         android:layout_width="0dp"
@@ -94,9 +98,10 @@
                         android:fontFamily="sans-serif"
                         android:forceDarkAllowed="false"
                         android:padding="10dp"
-                        app:drawable="@drawable/ic_mecanico"
+                        app:drawable="@drawable/mecanico25px"
+                        app:drawableTint="#656565"
                         app:drawableGravity="top"
-                        app:selectedTextColor="@color/AlikappGris"
+                        app:selectedTextColor="@color/white"
                         app:text="Mecanico"
                         app:textColor="@color/black"
                         app:textSize="18dp"
@@ -107,7 +112,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        app:drawable="@drawable/ic_taller"
+                        app:drawableTint="#656565"
+                        app:drawable="@drawable/taller35px"
                         app:drawableGravity="top"
                         app:selectedTextColor="@color/white"
                         app:text="Taller"
@@ -130,34 +136,28 @@
                         app:textColor="@color/black" />
                 </com.addisonelliott.segmentedbutton.SegmentedButtonGroup>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginRight="20dp"
-                    android:text="Describe la situacion"
-                    android:textAlignment="center"
-                    android:textColor="@color/AlikappGris"
-                    android:textSize="25dp"
-                    android:fontFamily="@font/abeezee"
-                    android:textStyle="bold" />
-
                 <LinearLayout
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/AlikappGris"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="10dp">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="Describe la situacion"
+                        android:textStyle="bold"
+                        android:textSize="18dp" />
 
                     <TextView
                         android:id="@+id/longDescrip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="250"
-                        android:textColor="@color/AlikappGris"
+                        android:layout_marginBottom="5dp"
                         android:paddingStart="20dp"/>
 
                     <EditText
@@ -165,8 +165,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/edittext_descripcion"
-                        android:textColor="@color/AlikappGris"
                         android:hint="Describe la situación, maximo 250 Caracteres"
                         android:maxLength="250"
                         android:textColorHint="#909090"
@@ -174,39 +172,42 @@
 
                 </LinearLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    >
 
-                    <com.skyfishjy.library.RippleBackground
-                        android:id="@+id/help"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        map:rb_color="@color/teal_200"
-                        map:rb_duration="5000"
-                        map:rb_radius="20dp"
-                        map:rb_rippleAmount="6"
-                        map:rb_scale="10">
-
-                        <Button
-                            android:id="@+id/request"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:background="@drawable/boton_confirmacion"
-                            android:backgroundTint="@color/AlikappBlue"
-                            android:outlineSpotShadowColor="@color/AlikappRed"
-                            android:text="E"
-                            android:textColor="@color/AlikappGris"
-                            android:visibility="visible" />
-                    </com.skyfishjy.library.RippleBackground>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                >
+
+                <com.skyfishjy.library.RippleBackground
+                    android:id="@+id/help"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    map:rb_color="@color/AlikappGris"
+                    map:rb_duration="5000"
+                    map:rb_radius="20dp"
+                    map:rb_rippleAmount="6"
+                    map:rb_scale="10">
+
+                    <Button
+                        android:id="@+id/request"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:padding="10dp"
+                        android:background="@drawable/btn_recargar"
+                        android:text="E"
+                        android:layout_margin="15dp"
+                        android:textColor="@color/AlikappGris"
+                        android:visibility="visible" />
+                </com.skyfishjy.library.RippleBackground>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 
@@ -220,7 +221,6 @@
         android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        app:cardBackgroundColor="#464646"
         app:cardCornerRadius="20dp"
         android:visibility="visible">
 
@@ -238,33 +238,31 @@
                 map:rb_duration="5000"
                 map:rb_radius="20dp"
                 map:rb_rippleAmount="1"
-                map:rb_scale="10">>
+                map:rb_scale="10">
 
                 <ImageView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/averiado"
-                    android:padding="50dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="75dp"
+                    android:layout_margin="50dp"
+                    android:src="@drawable/pointvarado4"
                     android:layout_centerInParent="true"
-                    />
+                    app:tint="#404040" />
             </com.skyfishjy.library.RippleBackground>
 
 
             <TextView
+                android:id="@+id/TipoServicioBuscar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="20dp"
+                android:gravity="center"
                 android:text="BUSCANDO MECÁNICO..."
-                android:textSize="23sp"
-                android:fontFamily="@font/abeezee"
-                android:textStyle="bold"
-                android:textColor="@color/AlikappGris"
-                android:layout_gravity="center"
-                android:gravity="center"/>
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -275,11 +273,8 @@
                     android:id="@+id/cancelarPedido"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/cancelar_servicio"
+                    android:background="@drawable/btn_auxiliar_recargas"
                     android:text="CANCELAR"
-                    android:textColor="@color/AlikappGris"
-                    android:fontFamily="@font/abeezee"
-                    android:textStyle="bold"
                     android:textSize="18sp"/>
 
             </LinearLayout>
@@ -296,7 +291,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        app:cardBackgroundColor="#464646"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="20dp"
         android:visibility="gone">
 
@@ -311,24 +306,26 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="20dp"
-                android:text="Te encuentras por fuera de Bogotá mi miciela"
-                android:textSize="23sp"
-                android:fontFamily="@font/abeezee"
+                android:text="Te encuentras por fuera de Bogotá"
+                android:textSize="18dp"
                 android:textStyle="bold"
-                android:textColor="@color/AlikappGris"
                 android:layout_gravity="center"
                 android:gravity="center"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_perfil"
+                android:layout_margin="20dp"/>
+
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="20dp"
-                android:text="XD"
-                android:textSize="23sp"
-                android:fontFamily="@font/abeezee"
+                android:layout_marginBottom="20dp"
+                android:text="¡Pronto estaremos en mas lugares!"
+                android:textSize="15dp"
                 android:textStyle="bold"
-                android:textColor="@color/AlikappGris"
                 android:layout_gravity="center"
                 android:gravity="center"/>
         </LinearLayout>

@@ -27,7 +27,7 @@
                 app:popupTheme="@style/Theme.Alikapp.PopupOverlay" />
 
         </com.google.android.material.appbar.AppBarLayout>
-
+z
         <include
             android:id="@+id/include"
             layout="@layout/content_main" />
@@ -44,18 +44,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_margin="@dimen/fab_margin"
-                    app:backgroundTint="#204051"
                     android:src="@drawable/ic_btnhamburguesa"
-                    app:fabCustomSize="40dp"
-                    app:maxImageSize="20dp"
+                    android:layout_gravity="center"
+                    app:backgroundTint="#204051"
+                    app:fabCustomSize="50dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:maxImageSize="20dp" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -68,122 +70,24 @@
 
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="com.labseon.alikapp.Activity_mapa">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
 
                 <androidx.core.widget.NestedScrollView
                     android:id="@+id/bottom_sheet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#204051"
-                    android:backgroundTint="#464646"
+                    android:background="@drawable/nested_scroll_background"
                     map:behavior_hideable="true"
+                    android:layout_margin="10dp"
                     map:behavior_peekHeight="100dp"
                     map:layout_behavior="@string/bottom_sheet_behavior">
 
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/driverInfo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:orientation="vertical"
-                        android:paddingLeft="20dp"
-                        android:paddingEnd="20dp">
-
-                        <ImageView
-                            android:id="@+id/driverProfileImage"
-                            android:layout_width="100sp"
-                            android:layout_height="100sp"
-                            android:background="@drawable/boton_confirmacion"
-                            android:padding="20sp"
-                            android:src="@mipmap/ic_default_user"
-                            tools:ignore="MissingConstraints" />
-
-
-                        <Button
-                            android:id="@+id/mChat"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/boton_ingreso"
-                            android:text="Chat"
-                            android:layout_marginEnd="20dp"
-                            app:layout_constraintEnd_toEndOf="@+id/driverProfileImage"
-                            app:layout_constraintStart_toStartOf="@+id/driverProfileImage"
-                            app:layout_constraintTop_toBottomOf="@+id/driverProfileImage" />
-
-                        <TextView
-                            android:id="@+id/driverName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="20sp"
-                            android:paddingBottom="10sp"
-                            android:text="nombre"
-                            android:fontFamily="@font/abeezee"
-                            android:textStyle="bold"
-                            android:textSize="15sp"
-                            android:textColor="@color/AlikappGris"
-                            app:layout_constraintBottom_toTopOf="@+id/driverPhone"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/driverProfileImage" />
-
-                        <TextView
-                            android:id="@+id/driverPhone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="20sp"
-                            android:paddingBottom="10sp"
-                            android:text="telefono"
-                            android:fontFamily="@font/abeezee"
-                            android:textStyle="bold"
-                            android:textColor="@color/AlikappGris"
-                            android:textSize="15sp"
-                            app:layout_constraintBottom_toTopOf="@+id/driverCar"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/driverProfileImage" />
-
-                        <TextView
-                            android:id="@+id/driverCar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="20sp"
-                            android:paddingBottom="10sp"
-                            android:text="carro"
-                            android:fontFamily="@font/abeezee"
-                            android:textStyle="bold"
-                            android:textColor="@color/AlikappGris"
-                            android:textSize="15sp"
-                            app:layout_constraintBottom_toTopOf="@+id/request"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/driverProfileImage" />
-
-
-                        <RatingBar
-                            android:id="@+id/ratingBar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:numStars="5"
-                            android:visibility="gone"
-                            android:stepSize="0.1"
-                            app:layout_constraintBottom_toTopOf="@+id/driverName"
-                            app:layout_constraintStart_toEndOf="@+id/driverProfileImage" />
-
-                        <Button
-                            android:id="@+id/request"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginTop="20dp"
-                            android:background="@drawable/boton_emergencia"
-                            android:text="Finalizar Servicio"
-                            android:textColor="#e4e3e3"
-                            app:layout_constraintBottom_toBottomOf="parent" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <include layout="@layout/xxx"/>
 
 
                 </androidx.core.widget.NestedScrollView>
+
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -225,6 +129,7 @@
 
 
 
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -242,9 +147,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
+                android:visibility="visible"
                 app:cardBackgroundColor="#303030"
                 app:cardCornerRadius="20dp"
-
+                android:layout_margin="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -259,7 +165,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:padding="20dp"
+                        android:layout_marginTop="50dp"
                         app:indicatorColor="@color/AlikappGris"
                         app:indicatorName="TriangleSkewSpinIndicator" />
 
@@ -269,9 +175,10 @@
                         android:fontFamily="@font/abeezee"
                         android:gravity="center"
                         android:padding="20dp"
-                        android:text="CARGANDO..."
+                        android:layout_marginBottom="10dp"
+                        android:text="Cargando..."
                         android:textColor="@color/AlikappGris"
-                        android:textSize="30sp"
+                        android:textSize="25dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -283,6 +190,7 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

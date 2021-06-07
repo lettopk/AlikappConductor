@@ -24,11 +24,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".LegalActivity"></activity>
-
+        <activity android:name=".DetailTransactionActivity"></activity>
+        <activity android:name=".HistoryTransactionActivity" />
+        <activity android:name=".LayoutWebview" />
+        <activity android:name=".LegalActivity" />
 
         <meta-data
             android:name="com.google.android.actions"
@@ -78,14 +79,24 @@
         </activity>
         <activity
             android:name=".CustomerMapActivity"
-            android:screenOrientation="locked" />
-        <activity android:name=".CostumerRegistroActivity" />
-        <activity android:name=".CustomerSettingsActivity" />
-        <activity android:name=".HistoryActivity" />
-        <activity android:name=".HistorySingleActivity" />
-        <activity android:name=".ActivityBilletera" />
-        <activity android:name=".popupRecarga"/>
+            android:screenOrientation="locked"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+        <activity android:name=".CostumerRegistroActivity"
+            android:screenOrientation="locked"
+            />
+        <activity android:name=".CustomerSettingsActivity"
+            android:screenOrientation="locked"
+            />
 
+        <activity android:name=".HistoryActivity"
+            android:screenOrientation="locked"/>
+        <activity android:name=".HistorySingleActivity"
+            android:screenOrientation="locked"/>
+        <activity
+            android:name=".ActivityBilletera"
+            android:screenOrientation="locked"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity android:name=".popupRecarga" />
 
         <service
             android:name=".notifyFirebase"
