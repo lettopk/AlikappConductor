@@ -172,6 +172,8 @@ public class popupRecarga extends AppCompatActivity {
                 .build();
         service = retrofit.create(WompiapiService.class);
 
+        getMontoMinimoRecarga();
+
         myDialog = new Dialog(this);
         myDialog.setContentView(R.layout.layout_popup_submit_card_view);
 
@@ -360,7 +362,7 @@ public class popupRecarga extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     amount = Double.parseDouble(mCantidad.getText().toString());
-                    if(amount < 20000) {
+                    if(amount < montoMinimoRecarga) {
                         isEnabledValue = false;
                         mCantidad.setTextColor(Color.parseColor("#c22828"));
                     } else {
@@ -1497,6 +1499,28 @@ public class popupRecarga extends AppCompatActivity {
         }
 
         return v1;
+    }
+
+    private int montoMinimoRecarga = 20000;
+    private void getMontoMinimoRecarga(){
+        DatabaseReference montoMin = FirebaseDatabase.getInstance().getReference().child("MontoMinimoRecarga");
+        montoMin.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && snapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+                    if(map.get("Conductor") != null){
+                        String A = map.get("Conductor").toString();
+                        montoMinimoRecarga = Integer.parseInt(A);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 }
