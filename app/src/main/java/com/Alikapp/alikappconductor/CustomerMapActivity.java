@@ -645,7 +645,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Temporizador tiempoServicio = new Temporizador(0,5,0);
     private int conteoTiempo = 0;
     private void conteoTiempoServicio(){
-        System.out.println( "tiempo: " + tiempoServicio.getSegundosTotal());
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -806,9 +805,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     GeoQuery geoQuery;
     private void getClosestDriver(){
-        DatabaseReference driverLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+        DatabaseReference driverLocation = null;
+        if (requestService.equals("Taller")){
+            driverLocation = FirebaseDatabase.getInstance().getReference().child("TallerDisponible");
+            System.out.println("TallerDisponible");
+        } else /*if (requestService.equals("Mecanico")) // en caso de agregar mas tipos de servicio se puede desbloquear este condicional */{
+            driverLocation = FirebaseDatabase.getInstance().getReference().child("driversAvailable");
+            System.out.println("driversAvailable");
+        }
 
-        GeoFire geoFire = new GeoFire(driverLocation);
+            GeoFire geoFire = new GeoFire(driverLocation);
         geoQuery = geoFire.queryAtLocation(new GeoLocation(pickupLocation.latitude, pickupLocation.longitude), radius);
         geoQuery.removeAllListeners();
 
@@ -934,7 +940,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 public void run() {
                                     if(map.get("LastRide")!=null){
                                         lastRideCode = map.get("LastRide").toString();
-                                        System.out.println("lastRide: " + lastRideCode);
                                     }
                                 }
                             },3000);
@@ -1081,7 +1086,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     loc2.setLongitude(driverLatLng.longitude);
 
                     distance = loc1.distanceTo(loc2);
-                    System.out.println("ditanciaa: " + distance);
 
                     if (distance >= 1000){
                         BigDecimal distanceShort = new BigDecimal((distance)/1000).setScale(1, RoundingMode.HALF_UP);
@@ -1921,7 +1925,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                     public void run() {
                                                         if(map.get("LastRide")!=null){
                                                             lastRideCode = map.get("LastRide").toString();
-                                                            System.out.println("lastRide: " + lastRideCode);
                                                         }
                                                     }
                                                 },3000);
