@@ -58,7 +58,7 @@ import static com.Alikapp.alikappconductor.CustomerMapActivity.conductorUID;
 public class CustomerSettingsActivity extends AppCompatActivity {
 
     private EditText mNameField, mPhoneField, mCedulaCiudadania,mNumPlaca, mvehiculo, mEmail;
-    private TextView mNombre1;
+    private TextView mNombre1, pasadoJudicialURL;
 
     private Button mBack, mConfirm;
 
@@ -115,6 +115,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         mvehiculo =(EditText) findViewById(R.id.vehiculo);
         mEmail = (EditText) findViewById(R.id.email);
         mNombre1 = findViewById(R.id.name1);
+        pasadoJudicialURL = findViewById(R.id.pasadoJudicialURL);
 
         mProfileImage = (CircleImageView) findViewById(R.id.profileImage);
         mCedulaImage = findViewById(R.id.cedulaImage);
@@ -174,6 +175,16 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                 startActivityForResult(intent, 3);
             }
         });
+
+        pasadoJudicialURL.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse("https://antecedentes.policia.gov.co:7005/WebJudicial/index.xhtml"));
+                startActivity(intent);
+                return false;
+            }
+        });
+
         mTarjetaPropiedad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
