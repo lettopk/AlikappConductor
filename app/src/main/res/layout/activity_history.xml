@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:text="Historial de servicios"
+            android:text="Historial de Servicios"
             android:textColor="@color/white"
             android:textSize="18dp"
             android:padding="20dp"

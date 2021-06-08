@@ -38,7 +38,6 @@
                     app:layout_constraintBottom_toBottomOf="@+id/linearLayout4"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:layout_editor_absoluteX="10dp" />
-                />
 
             </LinearLayout>
 
@@ -68,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:hint="Correo Electronico"
+                    android:hint="Correo Electrónico"
                     android:inputType="textEmailAddress"
                     android:id="@+id/emailBancolo"/>
 
@@ -92,14 +91,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
                     android:gravity="left"
-                    android:text="Numero Celular:"
+                    android:text="Número Celular:"
                     />
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:hint="Numero Celular"
+                    android:hint="Número Celular"
                     android:inputType="number"
                     android:id="@+id/numeroCelularBancolo"/>
 
@@ -116,7 +115,7 @@
                     android:layout_width="135dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_recargar"
-                    android:text="PAsar al PAgo"
+                    android:text="Pasar al PAgo"
                     android:textColor="@color/white"
                     android:layout_marginRight="10sp"
                     android:id="@+id/btnConfirBC"/>

@@ -84,7 +84,7 @@
                 android:drawableStart="@drawable/ic_password5"
                 android:drawableTint="#353535"
                 android:fontFamily="sans-serif"
-                android:hint=" Valide contraseña"
+                android:hint=" Validar Contraseña"
                 android:inputType="textPassword"
                 android:textColorHint="@color/AlikappBlue"
                 android:textSize="18sp"

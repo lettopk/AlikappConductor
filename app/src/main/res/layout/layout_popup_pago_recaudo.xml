@@ -40,7 +40,6 @@
                     app:layout_constraintBottom_toBottomOf="@+id/linearLayout4"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:layout_editor_absoluteX="10dp" />
-                />
 
             </LinearLayout>
 
@@ -73,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="18dp"
-                    android:text="Dirigete a cualquier corresponsal o sede Bancolombia para realizar tu pago con la siguiente referencia:"
+                    android:text="Dirígete a cualquier corresponsal o sede Bancolombia para realizar tu pago con la siguiente referencia:"
                     android:id="@+id/textReferenciaBanc"/>
 
                 <TextView
@@ -101,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
                     android:gravity="center"
-                    android:text="Numero Convenio"
+                    android:text="Número Convenio"
                     />
 
                 <TextView
@@ -110,7 +109,7 @@
                     android:layout_marginTop="2dp"
                     android:gravity="center"
                     android:textSize="22dp"
-                    android:text="Numero Convenio"
+                    android:text="Número Convenio"
                     android:id="@+id/numConBanco"/>
 
                 <TextView
@@ -118,14 +117,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
                     android:gravity="center"
-                    android:text="Numero Referencia"
+                    android:text="Número Referencia"
                     />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Numero Referencia"
+                    android:text="Número Referencia"
                     android:textSize="22dp"
                     android:gravity="center"
                     android:inputType="number"

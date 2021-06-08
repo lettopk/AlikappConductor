@@ -42,7 +42,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/TerminosCondiciones"
-                    android:text="Leer los Terminos y condiciones"
+                    android:text="Leer los Términos y condiciones"
                     android:layout_marginStart="10dp"
                     android:padding="20dp"/>
                 <Button
@@ -54,7 +54,7 @@
                     android:layout_marginEnd="10dp"
                     android:background="@drawable/btn_ripple"
                     android:textColor="@drawable/txt_log_button"
-                    android:text="Cerrar Secion"/>
+                    android:text="Cerrar Sesión"/>
 
             </LinearLayout>
         </com.google.android.material.navigation.NavigationView>

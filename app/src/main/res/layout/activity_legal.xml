@@ -20,7 +20,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CARGANDO TERMINOS Y CONDICIONES"
+                android:text="CARGANDO TÉRMINOS Y CONDICIONES"
                 android:textSize="30dp"
                 android:gravity="center"
                 android:paddingBottom="20dp"/>

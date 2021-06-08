@@ -148,7 +148,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="Describe la situacion"
+                        android:text="Describe la situación"
                         android:textStyle="bold"
                         android:textSize="18dp" />
 
@@ -165,7 +165,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Describe la situación, maximo 250 Caracteres"
+                        android:hint="Describe la situación, máximo 250 caracteres"
                         android:maxLength="250"
                         android:textColorHint="#909090"
                         android:paddingStart="30dp"/>
@@ -323,7 +323,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:text="¡Pronto estaremos en mas lugares!"
+                android:text="¡Pronto estaremos en más lugares!"
                 android:textSize="15dp"
                 android:textStyle="bold"
                 android:layout_gravity="center"

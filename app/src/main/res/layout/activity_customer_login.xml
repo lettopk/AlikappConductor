@@ -72,7 +72,7 @@
                 android:background="@drawable/boton_login"
                 android:gravity="center"
                 android:layout_marginTop="20dp"
-                android:text="Iniciar Secion"
+                android:text="Iniciar Sesión"
                 android:textColor="@android:color/white"
                 app:defaultColor="#204051"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="18dp"
-                android:text="Agrega tu tarjeta de credito"
+                android:text="Agrega Tu Tarjeta de Crédito"
                 android:textColor="@color/white"
                 android:textSize="15dp" />
 
@@ -93,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text=" Numero de Cuotas:"
+                android:text=" Número de Cuotas:"
                 android:textSize="15dp" />
 
                 <EditText
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_marginLeft="20dp"
-                    android:hint="Numero de cuotas"
+                    android:hint="Número de cuotas"
                     android:inputType="number"
                     android:maxLength="2"
                     android:padding="5dp"
@@ -157,14 +157,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:text=" Numero Tarjeta:"
+                            android:text=" Número Tarjeta:"
                             android:textSize="15dp" />
 
                         <EditText
                             android:id="@+id/numTc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Numero de tarjeta creito"
+                            android:hint="Número de tarjeta crédito"
                             android:inputType="number"
                             android:maxLength="16"
                             android:padding="5dp" />
@@ -210,7 +210,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="10dp"
-                            android:text=" Fecha de Expiracion:"
+                            android:text=" Fecha de Expiración:"
                             android:textSize="15dp" />
 
                         <EditText

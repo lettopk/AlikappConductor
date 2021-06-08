@@ -33,15 +33,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="Pago NEQUI"
+                    android:text="Pago PSE"
                     android:textColor="@color/white"
                     android:textSize="18dp"
                     android:padding="10dp"
                     app:layout_constraintBottom_toBottomOf="@+id/linearLayout4"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:layout_editor_absoluteX="10dp" />
-                />
-
             </LinearLayout>
 
 
@@ -81,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:hint="Correo Electronico"
+                    android:hint="Correo Electrónico"
                     android:id="@+id/emailPSE"
                     android:inputType="textEmailAddress"/>
 
@@ -146,7 +144,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:gravity="left"
-                    android:text="Numero de Documento:"
+                    android:text="Número de Documento:"
                     />
 
 
@@ -154,7 +152,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:hint="Numero Documento"
+                    android:hint="Número Documento"
                     android:id="@+id/nunDocumentoPSE"
                     android:inputType="number"/>
 

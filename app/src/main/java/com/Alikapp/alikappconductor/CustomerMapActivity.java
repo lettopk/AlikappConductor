@@ -323,7 +323,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     public void onComplete(@NonNull Task<String> task) {
                         if (!task.isSuccessful()) {
 
-                            Toast.makeText(CustomerMapActivity.this,"no se pudo llamar el token",Toast.LENGTH_LONG).show();
+                            Toast.makeText(CustomerMapActivity.this,"No se pudo llamar el token",Toast.LENGTH_LONG).show();
                             return;
                         }
 

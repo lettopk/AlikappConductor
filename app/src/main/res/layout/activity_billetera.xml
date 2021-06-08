@@ -62,9 +62,9 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="19dp"
             android:gravity="center"
-            android:text="Creditos disponibles:"
+            android:text="Créditos disponibles:"
             android:textSize="25dp" />
 
         <TextView
