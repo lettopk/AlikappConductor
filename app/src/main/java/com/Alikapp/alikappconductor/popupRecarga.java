@@ -417,6 +417,7 @@ public class popupRecarga extends AppCompatActivity {
             public boolean onLongClick(View v) {
                 Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(urlWompiTerminos));
                 startActivity(intent);
+                checkBox.setTextColor(Integer.parseInt("#FF6200EE"));
                 return false;
             }
         });

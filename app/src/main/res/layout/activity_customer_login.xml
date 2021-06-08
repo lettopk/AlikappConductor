@@ -137,7 +137,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/abeezee"
             android:gravity="center"
-            android:text=" Urgencias Mecanicas"
+            android:text=" Urgencias Mecánicas"
             android:textColor="@color/AlikappBlue"
             android:textSize="18sp"
             android:layout_marginStart="-20dp"

@@ -606,7 +606,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
                             }
 
-                            mRequest.setText("Buscando Mecanico");
+                            mRequest.setText("Buscando Mecánico");
 
                             getClosestDriver();
                             temporizador.continuarConteo();
@@ -932,7 +932,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 service.requestLocationUpdates();
                             }
                             driver_ID = driverFoundID;
-                            mRequest.setText("Buscando la Ubicacion de su Mecanico....");
+                            mRequest.setText("Buscando la Ubicacion de su Mecánico....");
                             enServicio();
                             myDialog.dismiss();
                             new Handler().postDelayed(new Runnable() {
@@ -972,7 +972,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             if (pickupMarker == null) {
                                 pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
                             }
-                            mRequest.setText("Buscando Mecanico....");
+                            mRequest.setText("Buscando Mecánico....");
 
                             getClosestDriver();
                         } else {
@@ -1895,7 +1895,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                     mSegmentedButtonGroup.setPosition(0,true);
                                                    // mRadioGroup.check(R.id.Mecanico);
                                                 }
-                                                mRequest.setText("Buscando la Ubicacion de su Mecanico....");
+                                                mRequest.setText("Buscando la Ubicacion de su Mecénico....");
                                                 final Handler handler =new Handler();
                                                 handler.postDelayed(new Runnable(){
                                                     @Override
