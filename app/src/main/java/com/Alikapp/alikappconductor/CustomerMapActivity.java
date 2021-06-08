@@ -1717,7 +1717,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         handler.postDelayed(new Runnable(){
             @Override
             public void run() {
-                if (puntoA != null && puntoB != null && mLastLocation != null && requestBol) {
+                if (puntoA != null && puntoB != null && mLastLocation != null && requestBol && polylines.size() == 0) {
                     Routing routing = new Routing.Builder()
                             .key("AIzaSyC5qe0PdRWO9qvCo4rNuyNrXyf8K06SbbI")
                             .travelMode(AbstractRouting.TravelMode.DRIVING)
@@ -1830,6 +1830,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 line.remove();
             }
             polylines.clear();
+            polylines = new ArrayList<>();
         }
     }
 
