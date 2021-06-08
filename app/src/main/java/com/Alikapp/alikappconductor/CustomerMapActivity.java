@@ -1163,7 +1163,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mDriverName.setText(nombre);
                         mDriverRateName.setText("Califica a " + nombre);
 
-                         }
+                    }
                     if(dataSnapshot.child("phone")!=null){
                         mDriverPhone.setText(dataSnapshot.child("phone").getValue().toString());
                     }
