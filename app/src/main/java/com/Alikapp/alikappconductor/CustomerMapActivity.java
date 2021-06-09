@@ -1055,7 +1055,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         if(requestService.equals("Mecanico")){
             driverLocationRef = FirebaseDatabase.getInstance().getReference().child("driversWorking").child(driverFoundID).child("l");
         } else if(requestService.equals("Taller")) {
-            driverLocationRef = FirebaseDatabase.getInstance().getReference().child("TallerDisponible").child(driverFoundID).child("l");
+            driverLocationRef = FirebaseDatabase.getInstance().getReference().child("TallerTrabajando").child(driverFoundID).child("l");
         }
         driverLocationRefListener = driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
