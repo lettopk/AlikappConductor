@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:hint="Escibe un mensaje"
             android:textColor="@color/white"
-            android:textColorHint="white"
+            android:textColorHint="@color/white"
             android:layout_weight="1"/>
 
         <Button
