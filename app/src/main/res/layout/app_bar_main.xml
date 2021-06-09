@@ -27,7 +27,7 @@
                 app:popupTheme="@style/Theme.Alikapp.PopupOverlay" />
 
         </com.google.android.material.appbar.AppBarLayout>
-z
+
         <include
             android:id="@+id/include"
             layout="@layout/content_main" />
@@ -52,7 +52,7 @@ z
                     android:layout_margin="@dimen/fab_margin"
                     android:src="@drawable/ic_btnhamburguesa"
                     android:layout_gravity="center"
-                    app:backgroundTint="#204051"
+                    app:backgroundTint="#84a9ac"
                     app:fabCustomSize="50dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
