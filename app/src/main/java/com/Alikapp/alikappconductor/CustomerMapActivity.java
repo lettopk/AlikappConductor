@@ -1078,8 +1078,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mDriverMarker = null;
                     }
                     Location loc1 = new Location("");
-                    loc1.setLatitude(pickupLocation.latitude);
-                    loc1.setLongitude(pickupLocation.longitude);
+                    if(pickupLocation != null){
+                        loc1.setLatitude(pickupLocation.latitude);
+                        loc1.setLongitude(pickupLocation.longitude);
+                    }
 
                     Location loc2 = new Location("");
                     loc2.setLatitude(driverLatLng.latitude);
