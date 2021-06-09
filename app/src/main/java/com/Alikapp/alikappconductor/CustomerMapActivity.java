@@ -1060,7 +1060,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         driverLocationRefListener = driverLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists() && requestBol){
+                if(dataSnapshot.exists() && requestBol && mLastLocation != null){
                     java.util.List<Object> map = (java.util.List<Object>) dataSnapshot.getValue();
                     double locationLat = 0;
                     double locationLng = 0;
