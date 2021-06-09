@@ -323,7 +323,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     public void onComplete(@NonNull Task<String> task) {
                         if (!task.isSuccessful()) {
 
-                            Toast.makeText(CustomerMapActivity.this,"no se pudo llamar el token",Toast.LENGTH_LONG).show();
+                            Toast.makeText(CustomerMapActivity.this,"No se pudo llamar el token",Toast.LENGTH_LONG).show();
                             return;
                         }
 
@@ -606,7 +606,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
                             }
 
-                            mRequest.setText("Buscando Mecanico");
+                            mRequest.setText("Buscando Mecánico");
 
                             getClosestDriver();
                             temporizador.continuarConteo();
@@ -932,7 +932,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 service.requestLocationUpdates();
                             }
                             driver_ID = driverFoundID;
-                            mRequest.setText("Buscando la Ubicacion de su Mecanico....");
+                            mRequest.setText("Buscando la Ubicacion de su Mecánico....");
                             enServicio();
                             myDialog.dismiss();
                             new Handler().postDelayed(new Runnable() {
@@ -972,7 +972,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             if (pickupMarker == null) {
                                 pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
                             }
-                            mRequest.setText("Buscando Mecanico....");
+                            mRequest.setText("Buscando Mecánico....");
 
                             getClosestDriver();
                         } else {
@@ -1078,8 +1078,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mDriverMarker = null;
                     }
                     Location loc1 = new Location("");
-                    loc1.setLatitude(pickupLocation.latitude);
-                    loc1.setLongitude(pickupLocation.longitude);
+                    if(pickupLocation != null){
+                        loc1.setLatitude(pickupLocation.latitude);
+                        loc1.setLongitude(pickupLocation.longitude);
+                    }
 
                     Location loc2 = new Location("");
                     loc2.setLatitude(driverLatLng.latitude);
@@ -1163,7 +1165,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mDriverName.setText(nombre);
                         mDriverRateName.setText("Califica a " + nombre);
 
-                         }
+                    }
                     if(dataSnapshot.child("phone")!=null){
                         mDriverPhone.setText(dataSnapshot.child("phone").getValue().toString());
                     }
@@ -1717,7 +1719,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         handler.postDelayed(new Runnable(){
             @Override
             public void run() {
-                if (puntoA != null && puntoB != null && mLastLocation != null && requestBol) {
+                if (puntoA != null && puntoB != null && mLastLocation != null && requestBol && polylines.size() == 0) {
                     Routing routing = new Routing.Builder()
                             .key("AIzaSyC5qe0PdRWO9qvCo4rNuyNrXyf8K06SbbI")
                             .travelMode(AbstractRouting.TravelMode.DRIVING)
@@ -1830,6 +1832,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 line.remove();
             }
             polylines.clear();
+            polylines = new ArrayList<>();
         }
     }
 
@@ -1895,7 +1898,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                     mSegmentedButtonGroup.setPosition(0,true);
                                                    // mRadioGroup.check(R.id.Mecanico);
                                                 }
-                                                mRequest.setText("Buscando la Ubicacion de su Mecanico....");
+                                                mRequest.setText("Buscando la Ubicacion de su Mecénico....");
                                                 final Handler handler =new Handler();
                                                 handler.postDelayed(new Runnable(){
                                                     @Override

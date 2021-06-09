@@ -19,7 +19,7 @@
         android:layout_height="105dp"
         android:contentDescription="@string/nav_header_desc"
         android:paddingTop="1dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="10dp"
         android:src="@mipmap/logo_alikapp" />
 
     <TextView

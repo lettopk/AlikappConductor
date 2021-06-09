@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:gravity="center"
-                android:text="¿Desea Cancelar el servicio?"
+                android:text="¿Deseas Cancelar el Servicio?"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/btn_recargar"
-                android:text="SI"
+                android:text="SÍ"
                 android:textColor="@color/white" />
 
             <Button

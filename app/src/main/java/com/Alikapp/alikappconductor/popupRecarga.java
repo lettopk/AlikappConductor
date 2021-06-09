@@ -172,6 +172,8 @@ public class popupRecarga extends AppCompatActivity {
                 .build();
         service = retrofit.create(WompiapiService.class);
 
+        getMontoMinimoRecarga();
+
         myDialog = new Dialog(this);
         myDialog.setContentView(R.layout.layout_popup_submit_card_view);
 
@@ -243,7 +245,7 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(NUMERO_TARJETA != null ){
-                    Toast.makeText(popupRecarga.this, "Manet pulsado para eliminar los dátos de la tarjeta", Toast.LENGTH_LONG).show();
+                    Toast.makeText(popupRecarga.this, "Mantén pulsado para eliminar los dátos de la tarjeta", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -269,7 +271,7 @@ public class popupRecarga extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(NUMERO_TARJETA != null){
-                    Toast.makeText(popupRecarga.this, "Manten pulsado para eliminar los dátos de la tarjeta", Toast.LENGTH_LONG).show();
+                    Toast.makeText(popupRecarga.this, "Mantén pulsado para eliminar los dátos de la tarjeta", Toast.LENGTH_LONG).show();
                 }            }
         });
 
@@ -360,7 +362,7 @@ public class popupRecarga extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     amount = Double.parseDouble(mCantidad.getText().toString());
-                    if(amount < 20000) {
+                    if(amount < montoMinimoRecarga) {
                         isEnabledValue = false;
                         mCantidad.setTextColor(Color.parseColor("#c22828"));
                     } else {
@@ -397,7 +399,7 @@ public class popupRecarga extends AppCompatActivity {
                 }
 
                 else if (!isEnabledValue) {
-                    Toast.makeText(popupRecarga.this, "Transacción inválida, el monto debe ser igual o superior a $20.000", Toast.LENGTH_LONG).show();
+                    Toast.makeText(popupRecarga.this, "Transacción inválida, el monto debe ser igual o superior a $" + setearDineroPantalla(montoMinimoRecarga + ""), Toast.LENGTH_LONG).show();
                 }
 
                 else {
@@ -415,6 +417,7 @@ public class popupRecarga extends AppCompatActivity {
             public boolean onLongClick(View v) {
                 Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(urlWompiTerminos));
                 startActivity(intent);
+                checkBox.setTextColor(Integer.parseInt("#FF6200EE"));
                 return false;
             }
         });
@@ -424,7 +427,7 @@ public class popupRecarga extends AppCompatActivity {
                 if(checkBox.isChecked()){
                     obtenerParametros();
                     checkBox.setEnabled(false);
-                    Toast.makeText(popupRecarga.this, "Manten pulsado para leer terminos y condiciones", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(popupRecarga.this, "Mantén pulsado para leer terminos y condiciones", Toast.LENGTH_SHORT).show();
                 } else {
                     isEnabled = false;
                 }
@@ -859,7 +862,7 @@ public class popupRecarga extends AppCompatActivity {
                 }
                 else {
 
-                    Toast.makeText(popupRecarga.this, "Numero de cuotas inválido, edbe ser menor a 36", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(popupRecarga.this, "Numero de cuotas inválido, debe ser menor a 36", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -1011,7 +1014,7 @@ public class popupRecarga extends AppCompatActivity {
                         }
                     }
                 } else {
-                    Toast.makeText(popupRecarga.this, "Debes diligencir todos los campos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(popupRecarga.this, "Debes diligenciar todos los campos", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1044,7 +1047,7 @@ public class popupRecarga extends AppCompatActivity {
                 } else {
                     if(checkBox.isChecked()){
                         checkBox.setChecked(false);
-                        Toast.makeText(popupRecarga.this, "Intentete nuevamente", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(popupRecarga.this, "Intente nuevamente", Toast.LENGTH_SHORT).show();
                     } else {
                         obtenerParametros();
                     }
@@ -1056,7 +1059,7 @@ public class popupRecarga extends AppCompatActivity {
             public void onFailure(Call<WompiData> call, Throwable t) {
                 if(checkBox.isChecked()){
                     checkBox.setChecked(false);
-                    Toast.makeText(popupRecarga.this, "Intentete nuevamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(popupRecarga.this, "Intente nuevamente", Toast.LENGTH_SHORT).show();
                 } else {
                     obtenerParametros();
                 }
@@ -1216,7 +1219,7 @@ public class popupRecarga extends AppCompatActivity {
                                 numConBanco.setText(metodoResponse.getBusiness_agreement_code());
                                 numRefBanco.setText(metodoResponse.getPayment_intention_identifier());
                                 montoReferenciaBancaria.setText(setearDineroPantalla((int) amount + ""));
-                                textReferenciaBnc.setText("Dirigete a cualquier corresponsal o sede Bancolombia para " +
+                                textReferenciaBnc.setText("Dirígete a cualquier corresponsal o sede Bancolombia para " +
                                         "realizar tu pago con la siguiente referencia:");
                                 pagoEnEfectivo = false;
                                 showPopupPagoRefBanco();
@@ -1268,7 +1271,7 @@ public class popupRecarga extends AppCompatActivity {
                             double valorActual = Double.parseDouble(cantDineroDisponible);
                             valorActual += amount;
                             cantDineroDisponible = (int) valorActual + "";
-                            mensajeProcesado.setText("Transaccion Exitosa");
+                            mensajeProcesado.setText("Transacción Exitosa");
                             procesadoExito.setImageResource(R.drawable.ic_check);
                             pagoExitoso(informationyeye.getPayment_method_type());
                         }
@@ -1497,6 +1500,28 @@ public class popupRecarga extends AppCompatActivity {
         }
 
         return v1;
+    }
+
+    private int montoMinimoRecarga = 20000;
+    private void getMontoMinimoRecarga(){
+        DatabaseReference montoMin = FirebaseDatabase.getInstance().getReference().child("MontoMinimoRecarga");
+        montoMin.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && snapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+                    if(map.get("Conductor") != null){
+                        String A = map.get("Conductor").toString();
+                        montoMinimoRecarga = Integer.parseInt(A);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 }

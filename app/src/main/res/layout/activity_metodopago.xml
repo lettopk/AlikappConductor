@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
-            android:text="Metodo de Pago"
+            android:text="Método de Pago"
             android:textColor="@color/AlikappGris"
             android:textSize="20dp"
             android:textStyle="bold"

@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -57,6 +58,7 @@ import static com.Alikapp.alikappconductor.CustomerMapActivity.conductorUID;
 public class CustomerSettingsActivity extends AppCompatActivity {
 
     private EditText mNameField, mPhoneField, mCedulaCiudadania,mNumPlaca, mvehiculo, mEmail;
+    private TextView mNombre1, pasadoJudicialURL;
 
     private Button mBack, mConfirm;
 
@@ -112,6 +114,8 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         mNumPlaca = (EditText) findViewById(R.id.numeroPlaca);
         mvehiculo =(EditText) findViewById(R.id.vehiculo);
         mEmail = (EditText) findViewById(R.id.email);
+        mNombre1 = findViewById(R.id.name1);
+        pasadoJudicialURL = findViewById(R.id.pasadoJudicialURL);
 
         mProfileImage = (CircleImageView) findViewById(R.id.profileImage);
         mCedulaImage = findViewById(R.id.cedulaImage);
@@ -171,6 +175,16 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                 startActivityForResult(intent, 3);
             }
         });
+
+        pasadoJudicialURL.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse("https://antecedentes.policia.gov.co:7005/WebJudicial/index.xhtml"));
+                startActivity(intent);
+                return false;
+            }
+        });
+
         mTarjetaPropiedad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -506,6 +520,12 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                     if(map.get("name")!=null){
                         mName = map.get("name").toString();
                         mNameField.setText(mName);
+                        String nombre = mName;
+                        String[] nombSeparado = nombre.split(" ");
+                        if (nombSeparado.length>=3){
+                            nombre = nombSeparado[0] + " " + nombSeparado[2];
+                        }
+                        mNombre1.setText(nombre);
                     }
                     if(map.get("phone")!=null){
                         mPhone = map.get("phone").toString();
