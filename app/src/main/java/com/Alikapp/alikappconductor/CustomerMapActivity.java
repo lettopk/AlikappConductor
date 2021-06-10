@@ -666,10 +666,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void saveTiempoDB(){
-        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        if(driverFoundID != null){
+            DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
+            Map mecanicoInfo = new HashMap();
+            mecanicoInfo.put("tiempoRstanteServicio", tiempoServicio.getSegundosTotal() + "");
+            enableReference.updateChildren(mecanicoInfo);
+        }
+        DatabaseReference enableReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         Map usuarioInfo = new HashMap();
         usuarioInfo.put("tiempoRstanteServicio", tiempoServicio.getSegundosTotal() + "");
-        enableReference.updateChildren(usuarioInfo);
+        enableReferenceUser.updateChildren(usuarioInfo);
     }
 
     private Temporizador temporizador = new Temporizador(0,4,0);
@@ -837,7 +843,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     driverFoundID = dataSnapshot.getKey();
 
                                     DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
-                                    String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    String customerId = conductorUID;
                                     HashMap<String, Object> map = new HashMap<String, Object>();
                                     map.put("customerRideId", customerId);
                                     map.put("destination", destination);
@@ -858,7 +864,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                     info1 ="pedirservicio";
 
                                                     if(token1 != null){
-                                                        notificacionServicio();
+                                                        notificacionServicio(token1);
                                                     }
                                                 }
                                             }
@@ -999,12 +1005,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             e.printStackTrace();
         }
     }
-    private void notificacionServicio() {
+    private void notificacionServicio(String tokensino) {
 
         RequestQueue myrequest = Volley.newRequestQueue(getApplicationContext());
         JSONObject json = new JSONObject();
         try {
-            String token = token1;
+            String token = tokensino;
             json.put("to",token);
             JSONObject notificacion = new JSONObject();
             notificacion.put("titulo",titulo1);
@@ -1715,25 +1721,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
     private void getRouteToMarker(LatLng puntoA, LatLng puntoB) {
-        final Handler handler =new Handler();
-        handler.postDelayed(new Runnable(){
-            @Override
-            public void run() {
-                boolean nombreCondicion = polylines != null && polylines.size() == 0;
-                if (puntoA != null && puntoB != null && mLastLocation != null && requestBol && nombreCondicion) {
-                    Routing routing = new Routing.Builder()
-                            .key("AIzaSyC5qe0PdRWO9qvCo4rNuyNrXyf8K06SbbI")
-                            .travelMode(AbstractRouting.TravelMode.DRIVING)
-                            .withListener(CustomerMapActivity.this)
-                            .alternativeRoutes(false)
-                            .waypoints(puntoB, puntoA)
-                            .build();
-                    routing.execute();
-                    moverCamara(puntoA, puntoB);
-                }
-            }
-        }, 1000);
-
+        boolean result = polylines.size() == 0;
+        if (puntoA != null && puntoB != null && mLastLocation != null && requestBol && result) {
+            Routing routing = new Routing.Builder()
+                    .key("AIzaSyC5qe0PdRWO9qvCo4rNuyNrXyf8K06SbbI")
+                    .travelMode(AbstractRouting.TravelMode.DRIVING)
+                    .withListener(CustomerMapActivity.this)
+                    .alternativeRoutes(false)
+                    .waypoints(puntoB, puntoA)
+                    .build();
+            routing.execute();
+            moverCamara(puntoA, puntoB);
+        }
     }
 
     Boolean terminado = false;
@@ -1778,7 +1777,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private double DriverlocationLat = 0;
     private double DriverlocationLng = 0;
-    private List<Polyline> polylines;
+    private List<Polyline> polylines = new ArrayList<>();
     private static final int[] COLORS = new int[]{R.color.AlikappGris};
     @Override
     public void onRoutingFailure(RouteException e) {
@@ -1853,6 +1852,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         usuarioInfo.put("EnServicio", "No");
         usuarioInfo.put("MecanicoServicio", "");
         usuarioInfo.put("TipoServicio", "");
+        usuarioInfo.put("Calificar", false);
         enableReference.updateChildren(usuarioInfo);
     }
 
@@ -2005,6 +2005,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                         }
 
+                        if(map.get("Calificar")!=null){
+                            boolean result = (boolean) dataSnapshot.child("Calificar").getValue();
+                            if(result){
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        showPopupCalificacion();
+                                    }
+                                }, 4000);
+                            }
+                        }
+
                         if (map.get("dineroDisponible") != null){
                             dineroDisponible = Integer.parseInt(map.get("dineroDisponible").toString());
                         }
@@ -2098,6 +2110,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             Map usuarioInfo = new HashMap();
             usuarioInfo.put(lastRideCode, rateDib);
             mecanico.updateChildren(usuarioInfo);
+            calificado();
             driverFoundID = null;
         }
     }
@@ -2110,16 +2123,25 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 showPopupCalificacion();
                 descontarCredito();
             }
+            titulo1 ="Servicio Cancelado";
+            detalle1 = "El conductor ha cancelado el servicio";
+            info1 ="servicio";
+
+            if(token1 != null){
+                notificacionServicio(token1);
+            }
             endRide();
 
         }
         else if (provided.equals("cancelMecanico")){
 
-            if (distance < 30 || tiempoServicio.getSegundosTotal() == 0){
-                showPopupCalificacion();
-            } else {
-                if(driverFoundID != null){
-                    showPopupMecanicoCancel();
+            if(!CustomerMapActivity.this.isFinishing()) {
+                if (distance < 30 || tiempoServicio.getSegundosTotal() == 0) {
+                    showPopupCalificacion();
+                } else {
+                    if (driverFoundID != null) {
+                        showPopupMecanicoCancel();
+                    }
                 }
             }
             if (distance < 30 && tiempoServicio.getSegundosTotal() == 0){
@@ -2128,6 +2150,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             endRide();
 
         }
+    }
+
+    private void calificado() {
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put("Calificar", false);
+        enableReference.updateChildren(usuarioInfo);
     }
 
     private void descontarCredito(){

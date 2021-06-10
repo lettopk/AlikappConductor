@@ -164,7 +164,7 @@ public class onAppKilled extends Service {
         PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, CustomerMapActivity.class),0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .addAction(R.drawable.ic_launcher_background, "Launch", activityPendingIntent)
+                .addAction(R.drawable.ic_launcher_background, "Volver a la App", activityPendingIntent)
                 //.addAction(R.drawable.ic_launcher_foreground, "Remove", servicePendingIntent)
                 //.setContentText(text)
                 //.setContentTitle(Common.getLocationTitle(this))
