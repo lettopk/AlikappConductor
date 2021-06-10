@@ -42,9 +42,74 @@ public static String tokeng="";
                 }
                 if (info.equals("chat")){
                     mayorqueorochat(titulo, detalle);
-                }}
+                }
+                if(info.equals("finalizado")){
+                    notifyFinalizado(titulo, detalle);
+                }
+                if(info.equals("cancelado")){
+                    notifyCancelado(titulo, detalle);
+                }
+            }
 
         }
+    }
+
+    private void notifyCancelado(String titulo, String detalle) {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        final long[] pattern = {0, 100, 100, 100};
+        vibrator.vibrate(pattern, -1);
+        String id = "mensaje";
+        NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,id);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel nc = new NotificationChannel(id,"nuevo",NotificationManager.IMPORTANCE_HIGH);
+            nc.setShowBadge(true);
+            assert nm != null;
+            nm.createNotificationChannel(nc);
+        }
+        builder.setAutoCancel(true)
+                .setWhen(System.currentTimeMillis())
+                .setContentTitle(titulo)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentText(detalle)
+                .setContentIntent(clicknoti())
+                .setContentInfo("nuevo")
+                .setVibrate(new long[]{0, 1000, 500, 1000});
+
+        Random random =new Random();
+        int idnotify = random.nextInt(8000);
+
+        assert nm != null;
+        nm.notify(idnotify,builder.build());
+    }
+
+    private void notifyFinalizado(String titulo, String detalle) {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        final long[] pattern = {0, 100, 100, 100};
+        vibrator.vibrate(pattern, -1);
+        String id = "mensaje";
+        NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,id);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel nc = new NotificationChannel(id,"nuevo",NotificationManager.IMPORTANCE_HIGH);
+            nc.setShowBadge(true);
+            assert nm != null;
+            nm.createNotificationChannel(nc);
+        }
+        builder.setAutoCancel(true)
+                .setWhen(System.currentTimeMillis())
+                .setContentTitle(titulo)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentText(detalle)
+                .setContentIntent(clicknoti())
+                .setContentInfo("nuevo")
+                .setVibrate(new long[]{0, 1000, 500, 1000});
+
+        Random random =new Random();
+        int idnotify = random.nextInt(8000);
+
+        assert nm != null;
+        nm.notify(idnotify,builder.build());
     }
 
     private void mayorqueorochat(String titulo, String detalle) {
