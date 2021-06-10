@@ -306,7 +306,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mecanicoProfileImage = (CircleImageView) myDialogRate.findViewById(R.id.mecanicoProfileImage);
         textRtaeMecanico = (TextView) myDialogRate.findViewById(R.id.textRtaeMecanico);
 
-        myDialogCancel = new Dialog(this);
+        myDialogCancel = new Dialog(CustomerMapActivity.this);
         myDialogCancel.setContentView(R.layout.layout_popup_serv_cancelado);
         btnoOkCanelService = (Button) myDialogCancel.findViewById(R.id.btnoOkCanelService);
 
@@ -1719,7 +1719,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         handler.postDelayed(new Runnable(){
             @Override
             public void run() {
-                if (puntoA != null && puntoB != null && mLastLocation != null && requestBol && polylines.size() == 0) {
+                boolean nombreCondicion = polylines != null && polylines.size() == 0;
+                if (puntoA != null && puntoB != null && mLastLocation != null && requestBol && nombreCondicion) {
                     Routing routing = new Routing.Builder()
                             .key("AIzaSyC5qe0PdRWO9qvCo4rNuyNrXyf8K06SbbI")
                             .travelMode(AbstractRouting.TravelMode.DRIVING)
