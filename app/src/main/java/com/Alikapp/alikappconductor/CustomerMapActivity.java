@@ -2012,6 +2012,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     @Override
                                     public void run() {
                                         showPopupCalificacion();
+                                        descontarCredito();
                                     }
                                 }, 4000);
                             }
