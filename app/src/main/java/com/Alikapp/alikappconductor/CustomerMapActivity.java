@@ -252,14 +252,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         destinationLatLng = new LatLng(0.0,0.0);
 
-        myDialog = new Dialog(this);
-        myDialogTaller = new Dialog(this);
+        myDialog = new Dialog(CustomerMapActivity.this);
+        myDialogTaller = new Dialog(CustomerMapActivity.this);
 
-        myDialogRate =new Dialog(this);
+        myDialogRate =new Dialog(CustomerMapActivity.this);
         myDialogRate.setContentView(R.layout.layout_popup_calificacion);
         btnEnviarRate = myDialogRate.findViewById(R.id.btnEnviarRate);
 
-        myDialog.setContentView(R.layout.layout_popup);
+        myDialog .setContentView(R.layout.layout_popup);
         myDialogTaller.setContentView(R.layout.layout_popup_taller);
 
         mDriverInfo = (ConstraintLayout) findViewById(R.id.driverInfo);
@@ -519,6 +519,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mLongDescrip.setText(""+String.valueOf(maximum_character - mDescripcion.getText().length()));
+
                 if (mLongDescrip.getText().equals("250")) {
                     rippleBackgroundhelp.stopRippleAnimation();
                     rippleBackgroundhelp.startRippleAnimation();
@@ -569,71 +570,69 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         }
                         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     }else{
-                        if (!mLongDescrip.getText().equals("250")){
+                        try{
+                            if (!mLongDescrip.getText().equals("250")){
 
-                            int selectId = mSegmentedButtonGroup.getPosition();
-                            if (selectId == 0)
-                            {
-                                requestService = "Mecanico";
-                                mTipoServicioBuscar.setText("BUSCANDO MECÁNICO...");
+                                int selectId = mSegmentedButtonGroup.getPosition();
+                                if (selectId == 0)
+                                {
+                                    requestService = "Mecanico";
+                                    mTipoServicioBuscar.setText("BUSCANDO MECÁNICO...");
+                                }
+                                else
+                                if ( selectId == 1)
+                                {
+                                    requestService = "Taller";
+                                    mTipoServicioBuscar.setText("BUSCANDO TALLER...");
+                                }
+
+                                requestBol = true;
+
+                                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                                GeoFire geoFire = new GeoFire(ref);
+                                geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                                //poner un try catch con un mensaje de permitir hubicación en el dispositivo
+                                pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                                if (pickupMarker == null) {
+                                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
+                                }
+
+                                mRequest.setText("Buscando Mecánico");
+
+                                getClosestDriver();
+                                temporizador.continuarConteo();
+                                tiempoEspera();
+                                romper = false;
+
+                                //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+                                Map usuarioInfo = new HashMap();
+                                usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
+                                enableReference.updateChildren(usuarioInfo);
+
+                                final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
+                                cardViewInicial.setVisibility(View.GONE);
+                                cardViewBusqueda.setVisibility(View.VISIBLE);
+                                rippleBackgroundEspera.startRippleAnimation();
+                            } else {
+                                Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
                             }
-                            else
-                            if ( selectId == 1)
-                            {
-                                requestService = "Taller";
-                                mTipoServicioBuscar.setText("BUSCANDO TALLER...");
-                            }
-                        /*int selectId = mRadioGroup.getCheckedRadioButtonId();
-
-                        final RadioButton radioButton = (RadioButton) myDialog.findViewById(selectId);
-
-                        if (radioButton.getText() == null){
-                            return;
-                        }
-
-                        requestService = radioButton.getText().toString();*/
-
-                            requestBol = true;
-
-                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                            GeoFire geoFire = new GeoFire(ref);
-                            geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-                            //poner un try catch con un mensaje de permitir hubicación en el dispositivo
-                            pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                            if (pickupMarker == null) {
-                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
-                            }
-
-                            mRequest.setText("Buscando Mecánico");
-
-                            getClosestDriver();
-                            temporizador.continuarConteo();
-                            tiempoEspera();
-                            romper = false;
-
-                            //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                            DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
-                            Map usuarioInfo = new HashMap();
-                            usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
-                            enableReference.updateChildren(usuarioInfo);
-
-                            final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
-                            cardViewInicial.setVisibility(View.GONE);
-                            cardViewBusqueda.setVisibility(View.VISIBLE);
-                            rippleBackgroundEspera.startRippleAnimation();
-                        } else {
-                            Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
-                        }
+                        } catch (Exception e) {Toast.makeText(CustomerMapActivity.this,"Recuerda mantener tu localizacion activa ", Toast.LENGTH_LONG).show(); }
                     }
                 } else {
                     Toast.makeText(CustomerMapActivity.this, "No tienes créditos suficientes", Toast.LENGTH_LONG).show();
                 }
             }
         });
-        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        myDialog.show();
+
+            if (myDialog != null && !CustomerMapActivity.this.isFinishing()){
+                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                myDialog.show();
+            } else {
+            reiniciarActivity();
+        }
 
     }
 
@@ -731,8 +730,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             }
         });
-        myDialogRate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        myDialogRate.show();
+        if (myDialogRate != null && !CustomerMapActivity.this.isFinishing()){
+            myDialogRate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            myDialogRate.show();
+        } else {
+            reiniciarActivity();
+        }
 
     }
 
@@ -746,8 +749,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-        myDialogCancel.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        myDialogCancel.show();
+        if(myDialogCancel != null && !CustomerMapActivity.this.isFinishing()) {
+            myDialogCancel.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            myDialogCancel.show();
+        } else {
+            reiniciarActivity();
+        }
     }
 
     private void showPopupConfirCancel() {
@@ -787,8 +794,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-        myDialogConfirCancel.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        myDialogConfirCancel.show();
+        if (myDialogConfirCancel != null && !CustomerMapActivity.this.isFinishing()){
+            myDialogConfirCancel.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            myDialogConfirCancel.show();
+        } else {
+            reiniciarActivity();
+        }
     }
 
     @Override
@@ -1475,13 +1486,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             }
         });
-        myDialogTaller.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                myDialogTaller.show();
-            }
-        }, 1000);
+        if (myDialogTaller != null && !CustomerMapActivity.this.isFinishing()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    myDialogTaller.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    myDialogTaller.show();
+                }
+            }, 1000);
+        } else {
+            reiniciarActivity();
+        }
     }
 
     LocationCallback mLocationCallback = new LocationCallback(){
@@ -1732,22 +1748,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     .build();
             routing.execute();
             moverCamara(puntoA, puntoB);
-        }/* else if (puntoA != null) {
-            Routing routing = new Routing.Builder()
-                    .key("AIzaSyC5qe0PdRWO9qvCo4rNuyNrXyf8K06SbbI")
-                    .travelMode(AbstractRouting.TravelMode.DRIVING)
-                    .withListener(CustomerMapActivity.this)
-                    .alternativeRoutes(false)
-                    .waypoints(puntoA, puntoA)
-                    .build();
-            routing.execute();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getRouteToMarker(puntoA, puntoB);
-                }
-            }, 2000);
-        }*/
+        }
     }
 
     Boolean terminado = false;
@@ -1931,7 +1932,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                                         getDriverLocation();
                                                     }
-                                                }, 1000);
+                                                }, 2000);
                                                 getDriverInfo();
                                                 getHasRideEnded();
                                                 mDesplegar.setVisibility(View.GONE);
@@ -1986,6 +1987,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private int dineroDisponible = 0;
     private int CostoPorCredito = 50000;
+    private Boolean calificarBool = true;
 
     private void getUserInfo(){
         DatabaseReference valorCreditoReference =  FirebaseDatabase.getInstance().getReference().child("CostoPorCredito");
@@ -2020,12 +2022,22 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                         }
 
-                        if(map.get("Calificar")!=null){
+                        if(map.get("Calificar")!=null ){
                             boolean result = (boolean) dataSnapshot.child("Calificar").getValue();
-                            if(result){
+                            if(result && calificarBool){
+
+                            if(map.get("LastRide")!=null){
+                                lastRideCode = map.get("LastRide").toString();
+                            }
+                            if(map.get("MecanicoServicio")!=null){
+                                driverFoundID = map.get("MecanicoServicio").toString();
+                                getDriverInfo();
+                            }
+                                    calificarBool=false;
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
+                                        descontarCredito();
                                         showPopupCalificacion();
                                     }
                                 }, 4000);
@@ -2097,6 +2109,27 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     @Override
     protected void onStop() {
+        if (myDialog!=null){
+            myDialog.dismiss();
+            myDialog=null;
+        }
+        if (myDialogTaller!=null){
+            myDialogTaller.dismiss();
+            myDialogTaller=null;
+        }
+        if (myDialogRate!=null){
+            myDialogRate.dismiss();
+            myDialogRate=null;
+        }
+        if (myDialogCancel!=null){
+            myDialogCancel.dismiss();
+            myDialogCancel=null;
+        }
+        if (myDialogConfirCancel!=null){
+            myDialogConfirCancel.dismiss();
+            myDialogConfirCancel=null;
+        }
+
         if (mBound) {
             unbindService(mServiceConnection);
             mBound = false;
@@ -2136,7 +2169,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             if ((distance < 30 || tiempoServicio.getSegundosTotal() == 0) && isOnService){
                 showPopupCalificacion();
-                descontarCredito();
+                //descontarCredito();
             }
             titulo1 ="Servicio Cancelado";
             detalle1 = "El conductor ha cancelado el servicio";
@@ -2159,9 +2192,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
                 }
             }
-            if (distance < 30 && tiempoServicio.getSegundosTotal() == 0){
+            /*if (distance < 30 && tiempoServicio.getSegundosTotal() == 0){
                 descontarCredito();
-            }
+            }*/
             endRide();
 
         }
@@ -2180,6 +2213,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         Map usuarioInfo = new HashMap();
         usuarioInfo.put("dineroDisponible", dineroDisponible + "");
         enableReference.updateChildren(usuarioInfo);
+    }
+
+    private void reiniciarActivity() {
+        Intent intent = new Intent(CustomerMapActivity.this, CustomerMapActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
 
