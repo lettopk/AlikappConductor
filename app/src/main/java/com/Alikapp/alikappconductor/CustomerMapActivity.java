@@ -353,7 +353,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(android.view.View v) {
                 Intent intent = new Intent(CustomerMapActivity.this, Chat.class);
-                //intent.putExtra("nombrechat", mName);
                 CustomerMapActivity.this.startActivity(intent);
             }
         });
@@ -410,10 +409,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onStateChanged(@NonNull View BottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                        //mTextViewState.setText("collapsado");
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
-                        //mTextViewState.setText("Dragging...");
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         mDesplegar.setVisibility(View.GONE);
@@ -426,7 +423,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         constraintLayout.setVisibility(View.VISIBLE);
                         break;
                     case BottomSheetBehavior.STATE_SETTLING:
-                        //mTextViewState.setText("settling...");
                         break;
                     case BottomSheetBehavior.STATE_HALF_EXPANDED:
                         break;
@@ -486,7 +482,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        /*NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);*/
         NavigationUI.setupWithNavController(navigationView, navController);
 
         getTerminos();
@@ -606,7 +601,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 tiempoEspera();
                                 romper = false;
 
-                                //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                                 DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
                                 Map usuarioInfo = new HashMap();
                                 usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
@@ -1109,7 +1103,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if (distance >= 1000){
                         BigDecimal distanceShort = new BigDecimal((distance)/1000).setScale(1, RoundingMode.HALF_UP);
                         mDriverDistance.setText(String.valueOf(distanceShort)+" Km");
-                        //mRequest.setText("Su Mecanico esta Aquí");
                     } else if (distance < 1000 && distance >= 50){
                         BigDecimal distanceShort = new BigDecimal(distance).setScale(1, RoundingMode.HALF_UP);
                         mDriverDistance.setText(String.valueOf((distanceShort))+" m");
@@ -1264,8 +1257,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         if (driverFoundID != null){
             DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
             driverRef.removeValue();
-            //driverFoundID = null;
-
         }
         driverFound = false;
         radius = 1;
@@ -1516,8 +1507,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         cardViewOutSide.setVisibility(View.VISIBLE);
                         ShowPopup();
                     }
-                    //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    //mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
                     if(!getDriversAroundStarted)
                         getDriversAround();
                 }
@@ -1832,8 +1821,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             polyOptions.addAll(route.get(i).getPoints());
             Polyline polyline = mMap.addPolyline(polyOptions);
             polylines.add(polyline);
-
-            //Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1910,10 +1897,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 if(D.equals("Taller")) {
                                                     mSegmentedButtonGroup.setPosition(1, true);
                                                     service.requestLocationUpdates();
-                                                 //   mRadioGroup.check(R.id.Taller);
                                                 } else if (D.equals("Mecanico")) {
                                                     mSegmentedButtonGroup.setPosition(0,true);
-                                                   // mRadioGroup.check(R.id.Mecanico);
                                                 }
                                                 mRequest.setText("Buscando la Ubicacion de su Mecénico....");
                                                 final Handler handler =new Handler();
@@ -1998,6 +1983,33 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
                     if (map.get("Usuario") != null){
                         CostoPorCredito = Integer.parseInt(map.get("Usuario").toString());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference isInRequest =  FirebaseDatabase.getInstance().getReference().child("customerRequest");
+        isInRequest.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+                    if (map.get(conductorUID) != null){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                cardViewInicial.setVisibility(View.GONE);
+                                cardViewBusqueda.setVisibility(View.VISIBLE);
+                                final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
+                                rippleBackgroundEspera.startRippleAnimation();
+                            }
+                        }, 2000);
                     }
 
                 }
@@ -2111,23 +2123,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     protected void onStop() {
         if (myDialog!=null){
             myDialog.dismiss();
-            myDialog=null;
         }
         if (myDialogTaller!=null){
             myDialogTaller.dismiss();
-            myDialogTaller=null;
         }
         if (myDialogRate!=null){
             myDialogRate.dismiss();
-            myDialogRate=null;
         }
         if (myDialogCancel!=null){
             myDialogCancel.dismiss();
-            myDialogCancel=null;
         }
         if (myDialogConfirCancel!=null){
             myDialogConfirCancel.dismiss();
-            myDialogConfirCancel=null;
         }
 
         if (mBound) {
@@ -2148,7 +2155,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     .append("/")
                     .append(event.getLocation().getLongitude())
                     .toString();
-            //Toast.makeText(service, datoshechos, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -2169,7 +2175,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             if ((distance < 30 || tiempoServicio.getSegundosTotal() == 0) && isOnService){
                 showPopupCalificacion();
-                //descontarCredito();
             }
             titulo1 ="Servicio Cancelado";
             detalle1 = "El conductor ha cancelado el servicio";
