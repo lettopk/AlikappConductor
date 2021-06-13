@@ -2051,6 +2051,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     public void run() {
                                         descontarCredito();
                                         showPopupCalificacion();
+                                        descontarCredito();
                                     }
                                 }, 4000);
                             }
