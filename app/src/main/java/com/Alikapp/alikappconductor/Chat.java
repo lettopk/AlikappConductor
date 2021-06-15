@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -82,6 +83,11 @@ public class Chat extends AppCompatActivity {
     public static final String NODO_MENSAJES = "mensajes";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE}, 101);
+            }
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         fotoPerfil =(CircleImageView) findViewById(R.id.fotoPerfil);
@@ -117,8 +123,12 @@ public class Chat extends AppCompatActivity {
                 Intent i = new Intent(Intent.ACTION_CALL);
                 i.setData(Uri.parse("tel:"+telefonoLlamar));
                 if(ActivityCompat.checkSelfPermission(Chat.this,Manifest.permission.CALL_PHONE)
-                != PackageManager.PERMISSION_GRANTED)
+                != PackageManager.PERMISSION_GRANTED){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, 101);
+                    }
                     return;
+                }
                 startActivity(i);
             }
         });
