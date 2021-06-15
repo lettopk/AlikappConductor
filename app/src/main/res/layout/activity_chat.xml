@@ -6,15 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#303030"
-    android:orientation="vertical"
     android:padding="10dp"
+    android:orientation="vertical"
     tools:context=".Chat">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#204051">
+        android:background="@color/AlikappBluelive">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/fotoPerfil"
             android:layout_width="60dp"
@@ -24,16 +24,15 @@
 
         <TextView
             android:id="@+id/nombre"
-            android:layout_width="278dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:layout_marginStart="10dp"
             android:text="Conductor"
-            android:fontFamily="@font/abeezee"
             android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="#E4E3E3" />
+            android:textSize="13dp"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/btnLlamar"
@@ -52,14 +51,14 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:padding="5dp"
-        android:background="@color/AlikappGris">
+        android:background="@color/white">
     </androidx.recyclerview.widget.RecyclerView>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/AlikappBlue"
+        android:background="@color/AlikappBluelive"
         android:orientation="horizontal">
         <ImageButton
             android:id="@+id/btnEnviarFoto"
@@ -72,10 +71,10 @@
             android:id="@+id/txtMensaje"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/abeezee"
             android:hint="Escibe un mensaje"
-            android:textColor="#E4E3E3"
-            android:textColorHint="#E4E3E3"
+            android:textSize="15dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:layout_weight="1"/>
 
         <Button
@@ -83,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_menu_enviar_blanco"
-            android:minWidth="48dip"></Button>
+            android:minWidth="48dip"/>
 
     </LinearLayout>
 </LinearLayout>

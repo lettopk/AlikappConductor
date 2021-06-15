@@ -306,7 +306,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mecanicoProfileImage = (CircleImageView) myDialogRate.findViewById(R.id.mecanicoProfileImage);
         textRtaeMecanico = (TextView) myDialogRate.findViewById(R.id.textRtaeMecanico);
 
-        myDialogCancel = new Dialog(this);
+        myDialogCancel = new Dialog(CustomerMapActivity.this);
         myDialogCancel.setContentView(R.layout.layout_popup_serv_cancelado);
         btnoOkCanelService = (Button) myDialogCancel.findViewById(R.id.btnoOkCanelService);
 
@@ -625,6 +625,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 myDialog.show();
             } else {
+
             reiniciarActivity();
         }
 
@@ -2136,6 +2137,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         }
         if (myDialogConfirCancel!=null){
             myDialogConfirCancel.dismiss();
+
         }
 
         if (mBound) {

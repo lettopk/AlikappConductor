@@ -128,7 +128,7 @@ public static String tokeng="";
         builder.setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(titulo)
-                .setSmallIcon(R.mipmap.ic_car)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(detalle)
                 .setContentIntent(clickchat())
                 .setContentInfo("nuevo")
@@ -167,7 +167,7 @@ public static String tokeng="";
         builder.setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(titulo)
-                .setSmallIcon(R.mipmap.ic_car)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(detalle)
                 .setContentIntent(clicknoti())
                 .setContentInfo("nuevo");
