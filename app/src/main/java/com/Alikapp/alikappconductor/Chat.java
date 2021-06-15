@@ -126,31 +126,32 @@ public class Chat extends AppCompatActivity {
         btnEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//enviado de mensaje
-                databaseReference.push().setValue(new MensajeEnviar(txtMensaje.getText().toString(),nombreConductor.toString(),mperfilConducUrl,"1", ServerValue.TIMESTAMP));
-                txtMensaje.setText("");
+                if(!txtMensaje.getText().toString().isEmpty()){
+                    databaseReference.push().setValue(new MensajeEnviar(txtMensaje.getText().toString(),nombreConductor.toString(),mperfilConducUrl,"1", ServerValue.TIMESTAMP));
+                    txtMensaje.setText("");
 
-                DatabaseReference tokenmecanico = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_ID);
-                tokenmecanico.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists() ) {
-                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                            if (map.get("token") != null) {
-                                token2 =map.get("token").toString();
-                                titulo2 = nombreConductor;
-                                detalle2 = "Te ha enviado un mensaje";
+                    DatabaseReference tokenmecanico = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driver_ID);
+                    tokenmecanico.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists() ) {
+                                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                                if (map.get("token") != null) {
+                                    token2 =map.get("token").toString();
+                                    titulo2 = nombreConductor;
+                                    detalle2 = "Te ha enviado un mensaje";
 
-                                if(token2 != null){
-                                    notificacionChat();
+                                    if(token2 != null){
+                                        notificacionChat();
+                                    }
                                 }
                             }
                         }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+                }
             }
         });
 
