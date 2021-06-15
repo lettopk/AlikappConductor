@@ -582,10 +582,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     mTipoServicioBuscar.setText("BUSCANDO TALLER...");
                                 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 836c057... 15/06/21 4:15
                                 requestBol = true;
 
                                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
@@ -609,25 +605,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
                                 enableReference.updateChildren(usuarioInfo);
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 836c057... 15/06/21 4:15
                                 final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
                                 cardViewInicial.setVisibility(View.GONE);
                                 cardViewBusqueda.setVisibility(View.VISIBLE);
                                 rippleBackgroundEspera.startRippleAnimation();
                             } else {
                                 Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
-<<<<<<< HEAD
 
                             }
                         } catch (Exception e) {Toast.makeText(CustomerMapActivity.this,"Recuerda mantener tu localizacion activa ", Toast.LENGTH_LONG).show(); }
 
-=======
-                            }
-                        } catch (Exception e) {Toast.makeText(CustomerMapActivity.this,"Recuerda mantener tu localizacion activa ", Toast.LENGTH_LONG).show(); }
->>>>>>> 836c057... 15/06/21 4:15
+
                     }
                 } else {
                     Toast.makeText(CustomerMapActivity.this, "No tienes créditos suficientes", Toast.LENGTH_LONG).show();
@@ -635,18 +624,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-<<<<<<< HEAD
             if (myDialog != null && !CustomerMapActivity.this.isFinishing()){
                 myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 myDialog.show();
             } else {
 
-=======
-        if (myDialog != null && !CustomerMapActivity.this.isFinishing()){
-            myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            myDialog.show();
-        } else {
->>>>>>> 836c057... 15/06/21 4:15
             reiniciarActivity();
         }
 
