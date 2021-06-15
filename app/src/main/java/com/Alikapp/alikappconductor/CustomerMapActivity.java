@@ -631,6 +631,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 myDialog.show();
             } else {
+
             reiniciarActivity();
         }
 
@@ -2009,6 +2010,33 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
+        DatabaseReference isInRequest =  FirebaseDatabase.getInstance().getReference().child("customerRequest");
+        isInRequest.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+                    if (map.get(conductorUID) != null){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
+                                cardViewInicial.setVisibility(View.GONE);
+                                cardViewBusqueda.setVisibility(View.VISIBLE);
+                                rippleBackgroundEspera.startRippleAnimation();
+                            }
+                        }, 2000);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         mDriverDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -2111,23 +2139,23 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     protected void onStop() {
         if (myDialog!=null){
             myDialog.dismiss();
-            myDialog=null;
+            //myDialog=null;
         }
         if (myDialogTaller!=null){
             myDialogTaller.dismiss();
-            myDialogTaller=null;
+            //myDialogTaller=null;
         }
         if (myDialogRate!=null){
             myDialogRate.dismiss();
-            myDialogRate=null;
+            //myDialogRate=null;
         }
         if (myDialogCancel!=null){
             myDialogCancel.dismiss();
-            myDialogCancel=null;
+            //myDialogCancel=null;
         }
         if (myDialogConfirCancel!=null){
             myDialogConfirCancel.dismiss();
-            myDialogConfirCancel=null;
+            //myDialogConfirCancel=null;
         }
 
         if (mBound) {
