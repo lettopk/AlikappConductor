@@ -2005,7 +2005,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-
                                 cardViewInicial.setVisibility(View.GONE);
                                 cardViewBusqueda.setVisibility(View.VISIBLE);
                                 final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
