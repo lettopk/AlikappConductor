@@ -582,6 +582,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     mTipoServicioBuscar.setText("BUSCANDO TALLER...");
                                 }
 
+
                                 requestBol = true;
 
                                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
@@ -605,14 +606,17 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
                                 enableReference.updateChildren(usuarioInfo);
 
+
                                 final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
                                 cardViewInicial.setVisibility(View.GONE);
                                 cardViewBusqueda.setVisibility(View.VISIBLE);
                                 rippleBackgroundEspera.startRippleAnimation();
                             } else {
                                 Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
+
                             }
                         } catch (Exception e) {Toast.makeText(CustomerMapActivity.this,"Recuerda mantener tu localizacion activa ", Toast.LENGTH_LONG).show(); }
+
                     }
                 } else {
                     Toast.makeText(CustomerMapActivity.this, "No tienes créditos suficientes", Toast.LENGTH_LONG).show();
@@ -2191,7 +2195,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         }
         if (myDialogConfirCancel!=null){
             myDialogConfirCancel.dismiss();
-
         }
 
         if (mBound) {
