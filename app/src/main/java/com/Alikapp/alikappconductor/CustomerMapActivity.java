@@ -866,7 +866,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 if (map.get("token") != null) {
                                                     token1 =map.get("token").toString();
                                                     titulo1 ="Conductor en emergencia mecanica";
-                                                    detalle1 = "Hechale una mano a este conductor";
+                                                    detalle1 = "Échale una mano a este conductor";
                                                     info1 ="pedirservicio";
 
                                                     if(token1 != null){
