@@ -1180,8 +1180,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if(dataSnapshot.child("phone")!=null){
                         mDriverPhone.setText(dataSnapshot.child("phone").getValue().toString());
                     }
-                    if(dataSnapshot.child("car")!=null){
+                    if(dataSnapshot.child("car")!=null && requestService.equals("Taller")){
                         mDriverCar.setText(dataSnapshot.child("car").getValue().toString());
+                    } else {
+                        mDriverCar.setText("");
                     }
                     if(dataSnapshot.child("profileImageUrl").getValue()!=null){
                         com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mecanicoProfileImage);
