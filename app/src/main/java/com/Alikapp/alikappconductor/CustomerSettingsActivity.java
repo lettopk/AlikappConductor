@@ -447,7 +447,14 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                     stringBuilder.deleteCharAt(numCedula.indexOf(" "));
                     numCedula = stringBuilder.toString();
                 }
-                mNameField.setText(G + " " + E);
+                mName = G + " " + E;
+                String nombreedit = mName;
+                String[] nombSeparado = nombreedit.split(" ");
+                if (nombSeparado.length>=3){
+                    nombreedit = nombSeparado[0] + " " + nombSeparado[2];
+                }
+                mNombre1.setText(nombreedit);
+                mNameField.setText(mName);
                 mCedulaCiudadania.setText(numCedula);
             } catch(Exception e) {
                 e.printStackTrace();
