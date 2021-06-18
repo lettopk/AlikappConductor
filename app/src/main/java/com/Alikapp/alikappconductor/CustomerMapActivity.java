@@ -195,7 +195,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private TextView mDireccionTaller;
     private TextView rateTaller;
     private TextView especialidadTaller;
-    private TextView telefonoTaller;
+    private TextView telefonoTaller, tituloPopupTaller;
     private CircleImageView mImagenTaller;
     private CardView mCardViewTaller, mCardViewCarca;
 
@@ -297,6 +297,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         rateTaller = myDialogTaller.findViewById(R.id.rateTaller);
         especialidadTaller = myDialogTaller.findViewById(R.id.especialidadTaller);
         telefonoTaller = myDialogTaller.findViewById(R.id.telefonoTaller);
+        tituloPopupTaller = myDialogTaller.findViewById(R.id.tituloPopupTaller);
 
 
 
@@ -1185,9 +1186,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     } else {
                         mDriverCar.setText("");
                     }
-                    if(dataSnapshot.child("profileImageUrl").getValue()!=null){
-                        com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mecanicoProfileImage);
-                        com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);
+                    if(requestService.equals("Mecanico")){
+                        if(dataSnapshot.child("profileImageUrl").getValue()!=null){
+                            com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mecanicoProfileImage);
+                            com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);
+                        }
+                    } else if (requestService.equals("Taller")){
+                        if(dataSnapshot.child("TallerImageUrl_1").getValue()!=null){
+                            com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("TallerImageUrl_1").getValue().toString()).into(mecanicoProfileImage);
+                            com.bumptech.glide.Glide.with(getApplication()).load(dataSnapshot.child("TallerImageUrl_1").getValue().toString()).into(mDriverProfileImage);
+                        }
                     }
 
                     if (dataSnapshot.child("rating").getValue() != null){
@@ -1427,6 +1435,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 if (marker.getTitle().equals("Taller Mecánico")) {
                     ShowPopupTaller(id);
                 }
+                if(mDriverMarker != null && mDriverMarker.getId().equals(marker.getId())){
+                    ShowPopupTaller(driverFoundID);
+                }
                 return false;
             }
         });
@@ -1441,15 +1452,43 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     java.util.Map<String, Object> map = (java.util.Map<String, Object>) snapshot.getValue();
-                    if(map.get("name") != null) {
-                        mNombreTaller.setText(map.get("name").toString());
-                    }
                     if(map.get("email") != null) {
                         mDireccionTaller.setText(map.get("email").toString());
                     }
-                    if(map.get("profileImageUrl")!=null){
-                        com.bumptech.glide.Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mImagenTaller);
+                    if(requestService.equals("Mecanico")){
+                        tituloPopupTaller.setText("Mecánico");
+                        if(map.get("name") != null) {
+                            String nombre = map.get("name").toString();
+                            String[] nombSeparado = nombre.split(" ");
+                            if (nombSeparado.length>=3){
+                                nombre = nombSeparado[0] + " " + nombSeparado[2];
+                            }
+                            mNombreTaller.setText(nombre);
+                        }
+                        if(snapshot.child("profileImageUrl").getValue()!=null){
+                            com.bumptech.glide.Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mImagenTaller);
+                        }
+                    } else if (requestService.equals("Taller")){
+                        tituloPopupTaller.setText("Taller Mecánico");
+                        if(map.get("car") != null) {
+                            mNombreTaller.setText(map.get("car").toString());
+                        }
+                        if(map.get("TallerImageUrl_1")!=null){
+                            com.bumptech.glide.Glide.with(getApplication()).load(map.get("TallerImageUrl_1").toString()).into(mImagenTaller);
+                        }
+                        // mostrar las demás imágenes del taller
                     }
+
+                    if(map.get("Especialidad") != null){
+                        especialidadTaller.setText(map.get("Especialidad").toString());
+                    } else {
+                        especialidadTaller.setText("");
+                    }
+
+                    if(map.get("phone") != null){
+                        telefonoTaller.setText(map.get("phone").toString());
+                    }
+
                     if (snapshot.child("rating").getValue() != null){
                         float ratingSum = 0;
                         float ratingsTotal = 0;

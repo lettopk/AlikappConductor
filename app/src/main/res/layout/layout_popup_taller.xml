@@ -32,16 +32,17 @@
                 android:layout_height="wrap_content"
                 
                 android:background="@color/colorPrimary">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Taller Mecánico"
-                android:textAlignment="center"
-                android:layout_margin="10dp"
-                android:textColor="@color/white"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                />
+
+                <TextView
+                    android:id="@+id/tituloPopupTaller"
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:layout_margin="10dp"
+                    android:text="Taller Mecánico"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
             </LinearLayout>
             <TextView
                 android:id="@+id/nombreTaller"
