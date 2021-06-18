@@ -1453,11 +1453,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     java.util.Map<String, Object> map = (java.util.Map<String, Object>) snapshot.getValue();
-                    if(map.get("email") != null) {
-                        mDireccionTaller.setText(map.get("email").toString());
-                    }
                     if(requestService.equals("Mecanico")){
                         tituloPopupTaller.setText("Mecánico");
+                        if(map.get("email") != null) {
+                            mDireccionTaller.setText(map.get("email").toString());
+                        }
                         if(map.get("name") != null) {
                             String nombre = map.get("name").toString();
                             String[] nombSeparado = nombre.split(" ");
@@ -1471,6 +1471,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         }
                     } else if (requestService.equals("Taller")){
                         tituloPopupTaller.setText("Taller Mecánico");
+                        if(map.get("DireccionTaller") != null) {
+                            mDireccionTaller.setText(map.get("DireccionTaller").toString());
+                        }
                         if(map.get("car") != null) {
                             mNombreTaller.setText(map.get("car").toString());
                         }

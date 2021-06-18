@@ -36,7 +36,7 @@
                 <TextView
                     android:id="@+id/tituloPopupTaller"
                     android:layout_width="match_parent"
-                    android:layout_height="14dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="Taller Mecánico"
                     android:textAlignment="center"
