@@ -138,7 +138,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private SupportMapFragment mapFragment;
 
-    private String destination, requestService;
+    private String destination, requestService = "Taller";
 
     private LatLng destinationLatLng, tallerLatLng;
 
@@ -1252,6 +1252,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         temporizador.reIniciarConteo();
         tiempoServicio.setDetenido(true);
         service.removeLocationUpdates();
+        requestService = "Taller";
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), ZOOM_CAMARA));
         try {
             geoQuery.removeAllListeners();
