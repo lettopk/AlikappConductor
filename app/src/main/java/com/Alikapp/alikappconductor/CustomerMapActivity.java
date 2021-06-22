@@ -584,11 +584,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                 requestBol = true;
 
-                                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
                                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                                 GeoFire geoFire = new GeoFire(ref);
-                                geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                                geoFire.setLocation(conductorUID, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
                                 //poner un try catch con un mensaje de permitir hubicación en el dispositivo
                                 pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                                 if (pickupMarker == null) {
@@ -850,9 +848,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     driverFoundID = dataSnapshot.getKey();
 
                                     DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
-                                    String customerId = conductorUID;
                                     HashMap<String, Object> map = new HashMap<String, Object>();
-                                    map.put("customerRideId", customerId);
+                                    map.put("customerRideId", conductorUID);
                                     map.put("destination", destination);
                                     map.put("destinationLat", destinationLatLng.latitude);
                                     map.put("destinationLng", destinationLatLng.longitude);
@@ -971,16 +968,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 requestService = "Taller";
                             }
 
-                           /* int selectId = mRadioGroup.getCheckedRadioButtonId();
-                           final RadioButton radioButton = (RadioButton) findViewById(selectId);
-                           if (radioButton.getText() == null){
-                                return;
-                            }
-                            requestService = radioButton.getText().toString(); */
-                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
                             GeoFire geoFire = new GeoFire(ref);
-                            geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                            geoFire.setLocation(conductorUID, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
                             pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                             if (pickupMarker == null) {
                                 pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
@@ -1133,9 +1123,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
 
                     if(!hasSpeed){
-                        speed = (float) 4.0;
+                        if (distance >= 1000){
+                            speed = (float) 4.0;
+                        } else if (distance < 1000 && distance >= 50){
+                            speed = (float) 2.0;
+                        } else {
+                            speed = (float) 1.0;
+                        }
                     }
-                    int time = (int) ((distance/speed)/60);
+                    BigDecimal time = new BigDecimal(((distance/speed)/60)).setScale(0, RoundingMode.HALF_UP);
                     mDriverTime.setText(time + " min");
 
                     if (mDriverMarker == null) {
@@ -1543,6 +1539,19 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             for(Location location : locationResult.getLocations()){
                 if(getApplicationContext()!=null){
                     mLastLocation = location;
+
+                    if(isOnService && !driverFoundID.isEmpty()){
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                        GeoFire geoFire = new GeoFire(ref);
+                        geoFire.setLocation(conductorUID, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                        if(pickupMarker != null){
+                            pickupMarker.remove();
+                            pickupMarker = null;
+                        }
+                        if (pickupMarker == null) {
+                                pickupMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
+                        }
+                    }
 
                     LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
                     float lat = (float) location.getLatitude();
