@@ -537,6 +537,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onClick(View v) {
                 try {
                     popupController("cancelUser");
+                    endRide();
                     romper = true;
                     Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
@@ -581,6 +582,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     requestService = "Taller";
                                     mTipoServicioBuscar.setText("BUSCANDO TALLER...");
                                 }
+
+                                driverFoundID = "";
 
                                 requestBol = true;
 
@@ -1114,16 +1117,20 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     float speed = (float) 0.0;
                     boolean hasSpeed = false;
+                    if(polylines != null && polylines.size() > 0){
+                        erasePolylines();
+                        polylines = new ArrayList<>();
+                    }
                     if(requestService.equals("Taller")){
                         speed = loc1.getSpeed();
                         hasSpeed = loc1.hasSpeed();
-                        getRouteToMarker(new LatLng(DriverlocationLat, DriverlocationLng),
+                        getRouteToMarker(new LatLng(driverLatLng.latitude, driverLatLng.longitude),
                                 new  LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
                     } else {
                         speed = loc2.getSpeed();
                         hasSpeed = loc2.hasSpeed();
                         getRouteToMarker( new  LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()),
-                                new LatLng(DriverlocationLat, DriverlocationLng));
+                                new LatLng(driverLatLng.latitude, driverLatLng.longitude));
                     }
 
                     if(!hasSpeed){
@@ -2108,7 +2115,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        descontarCredito();
                                         showPopupCalificacion();
                                         descontarCredito();
                                     }
@@ -2257,9 +2263,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
                 }
             }
-            /*if (distance < 30 && tiempoServicio.getSegundosTotal() == 0){
-                descontarCredito();
-            }*/
             endRide();
 
         }
