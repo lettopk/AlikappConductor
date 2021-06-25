@@ -697,7 +697,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         if(!romper){
             endRide();
             romper = true;
-            Toast.makeText(this,"No hay mecánicos cerca",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"No hay mecánicos cerca, inténtalo nuevamente en un ratoc",Toast.LENGTH_LONG).show();
         }
     }
     private Boolean calificacionDone = false;
