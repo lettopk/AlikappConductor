@@ -1,5 +1,6 @@
 package com.Alikapp.alikappconductor;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -24,6 +25,13 @@ import java.util.Map;
 
 public class LegalActivity extends AppCompatActivity {
 
+    private String Terminos;
+    private TextView mTerminos;
+    private ConstraintLayout carga;
+    private ConstraintLayout scroll;
+    private Button mAcpeto;
+    private String email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,32 +39,92 @@ public class LegalActivity extends AppCompatActivity {
 
         Intent mPv = getIntent();
         boolean isPrimeraVez = mPv.getBooleanExtra("PrimeraVez",false);
-        String Terminos = mPv.getStringExtra("Terminos");
+        if(mPv.getStringExtra("Terminos") != null && !mPv.getStringExtra("Terminos").isEmpty()){
+            Terminos = mPv.getStringExtra("Terminos");
+        } else {
+            getTermininos();
+        }
+        if(mPv.getStringExtra("email") != null && !mPv.getStringExtra("email").isEmpty()){
+            email = mPv.getStringExtra("email");
+        } else {
+            getEmail();
+        }
 
-        TextView mTerminos = findViewById(R.id.terminos);
-        ConstraintLayout carga = findViewById(R.id.carga);
-        ConstraintLayout scroll = findViewById(R.id.scroll);
-        Button mAcpeto = findViewById(R.id.acepto);
+        mTerminos = findViewById(R.id.terminos);
+        carga = findViewById(R.id.carga);
+        scroll = findViewById(R.id.scroll);
+        mAcpeto = findViewById(R.id.acepto);
 
         if (!isPrimeraVez){
             mAcpeto.setText("OK");
         }
 
-        if(Terminos != null){
-            mTerminos.setText(Terminos);
-            scroll.setVisibility(View.VISIBLE);
-            carga.setVisibility(View.GONE);
-        }
         System.out.println(Terminos);
+        String finalEmail = email;
         mAcpeto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isPrimeraVez){
                     Intent intent = new Intent(LegalActivity.this, CustomerSettingsActivity.class);
                     intent.putExtra("PrimeraVez", true);
+                    if(finalEmail != null && !finalEmail.isEmpty()){
+                        intent.putExtra("email", finalEmail);
+                    }
                     startActivity(intent);
                 }
                 finish();
+            }
+        });
+        setearTerminsPantalla();
+    }
+
+    private void getEmail() {
+        String conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        mDriverDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if (map.get("email") != null) {
+                        email = map.get("email").toString();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void setearTerminsPantalla() {
+        if(Terminos!= null && !Terminos.isEmpty()){
+            mTerminos.setText(Terminos);
+            scroll.setVisibility(View.VISIBLE);
+            carga.setVisibility(View.GONE);
+        } else {
+            getTermininos();
+        }
+    }
+
+    private void getTermininos() {
+        DatabaseReference m = FirebaseDatabase.getInstance().getReference().child("TerminosCondiciones");
+        m.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("Driver")!=null){
+                        Terminos = map.get("Driver").toString();
+                        setearTerminsPantalla();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NotNull DatabaseError databaseError) {
             }
         });
     }

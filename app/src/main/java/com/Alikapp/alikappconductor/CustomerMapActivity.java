@@ -225,11 +225,17 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION}, 106);
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CALL_PHONE}, 106);
             }
         }
 
@@ -496,7 +502,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 startActivity(intent);
             }
         });
-
+        lastLocation();
         isOnService();
     }
     //Finaliza el onCreate
@@ -612,7 +618,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             } else {
                                 Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
                             }
-                        } catch (Exception e) {Toast.makeText(CustomerMapActivity.this,"Recuerda mantener tu localizacion activa ", Toast.LENGTH_LONG).show(); }
+                        } catch (Exception e) {Toast.makeText(CustomerMapActivity.this,"Recuerda mantener tu localizacion activa ", Toast.LENGTH_LONG).show(); lastLocation();}
                     }
                 } else {
                     Toast.makeText(CustomerMapActivity.this, "No tienes créditos suficientes", Toast.LENGTH_LONG).show();
@@ -694,13 +700,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             Toast.makeText(this,"No hay mecánicos cerca",Toast.LENGTH_LONG).show();
         }
     }
-
-       private void showPopupCalificacion() {
-
+    private Boolean calificacionDone = false;
+    private void showPopupCalificacion() {
         btnEnviarRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 rateDib = ratingBarDib.getRating();
+                calificacionDone = true;
                 saveRating();
                 myDialogRate.dismiss();
             }
@@ -724,9 +730,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
             }
         });
-        if (myDialogRate != null && !CustomerMapActivity.this.isFinishing()){
+        if (myDialogRate != null && !CustomerMapActivity.this.isFinishing() && !myDialogRate.isShowing() && !calificacionDone){
             myDialogRate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             myDialogRate.show();
+            descontarCredito();
         } else {
             reiniciarActivity();
         }
@@ -1095,7 +1102,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if (distance >= 1000){
                         BigDecimal distanceShort = new BigDecimal((distance)/1000).setScale(1, RoundingMode.HALF_UP);
                         mDriverDistance.setText(String.valueOf(distanceShort)+" Km");
-                    } else if (distance < 1000 && distance >= 50){
+                    } else if (distance < 1000 && distance >= 100){
+                        BigDecimal distanceShort = new BigDecimal(distance).setScale(0, RoundingMode.HALF_UP);
+                        mDriverDistance.setText(String.valueOf((distanceShort))+" m");
+                    }  else if (distance < 100 && distance >= 50){
                         BigDecimal distanceShort = new BigDecimal(distance).setScale(1, RoundingMode.HALF_UP);
                         mDriverDistance.setText(String.valueOf((distanceShort))+" m");
                     } else {
@@ -1110,6 +1120,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     float speed = (float) 0.0;
                     boolean hasSpeed = false;
+                    if(polylines != null && polylines.size()>0){
+                        erasePolylines();
+                        polylines = new ArrayList<>();
+                    }
                     if(requestService.equals("Taller")){
                         speed = loc1.getSpeed();
                         hasSpeed = loc1.hasSpeed();
@@ -1135,7 +1149,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     mDriverTime.setText(time + " min");
 
                     if (mDriverMarker == null) {
-                        mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Su Mecanico")
+                        mDriverMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(driverLatLng.latitude, driverLatLng.longitude)).title("Su Mecanico")
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.pointmecanico)));
                     }
                 }
@@ -1533,41 +1547,44 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
-    LocationCallback mLocationCallback = new LocationCallback(){
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            for(Location location : locationResult.getLocations()){
-                if(getApplicationContext()!=null){
-                    mLastLocation = location;
+    LocationCallback mLocationCallback;
+    private void lastLocation(){
+        mLocationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                for(Location location : locationResult.getLocations()){
+                    if(getApplicationContext()!=null){
+                        mLastLocation = location;
 
-                    if(isOnService && !driverFoundID.isEmpty()){
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-                        GeoFire geoFire = new GeoFire(ref);
-                        geoFire.setLocation(conductorUID, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-                        if(pickupMarker != null){
-                            pickupMarker.remove();
-                            pickupMarker = null;
-                        }
-                        if (pickupMarker == null) {
+                        if(isOnService && !driverFoundID.isEmpty()){
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                            GeoFire geoFire = new GeoFire(ref);
+                            geoFire.setLocation(conductorUID, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                            if(pickupMarker != null){
+                                pickupMarker.remove();
+                                pickupMarker = null;
+                            }
+                            if (pickupMarker == null) {
                                 pickupMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("Estoy Aquí").icon(BitmapDescriptorFactory.fromResource(R.drawable.pointaveriado)));
+                            }
                         }
-                    }
 
-                    LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-                    float lat = (float) location.getLatitude();
-                    float lon = (float) location.getLongitude();
-                    if (!(lat < 4.832224338445363 && lat > 4.484097960049635 && lon < -74.0104303881526 && lon > -74.21255730092525) && !outSideRequest) {
-                        isOutSide = true;
-                        cardViewBusqueda.setVisibility(View.GONE);
-                        cardViewOutSide.setVisibility(View.VISIBLE);
-                        ShowPopup();
+                        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                        float lat = (float) location.getLatitude();
+                        float lon = (float) location.getLongitude();
+                        if (!(lat < 4.832224338445363 && lat > 4.484097960049635 && lon < -74.0104303881526 && lon > -74.21255730092525) && !outSideRequest) {
+                            isOutSide = true;
+                            cardViewBusqueda.setVisibility(View.GONE);
+                            cardViewOutSide.setVisibility(View.VISIBLE);
+                            ShowPopup();
+                        }
+                        if(!getDriversAroundStarted)
+                            getDriversAround();
                     }
-                    if(!getDriversAroundStarted)
-                        getDriversAround();
                 }
             }
-        }
-    };
+        };
+    }
 
     /*-------------------------------------------- onRequestPermissionsResult -----
     |  Function onRequestPermissionsResult
@@ -2104,9 +2121,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        descontarCredito();
                                         showPopupCalificacion();
-                                        descontarCredito();
                                     }
                                 }, 4000);
                             }
@@ -2254,9 +2269,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
                 }
             }
-            /*if (distance < 30 && tiempoServicio.getSegundosTotal() == 0){
-                descontarCredito();
-            }*/
             endRide();
 
         }
