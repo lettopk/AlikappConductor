@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -26,8 +27,8 @@ import java.util.Map;
 
 public class LegalActivity extends AppCompatActivity {
 
-    private String Terminos;
-    private TextView mTerminos;
+    private String Terminos, UrlTerm, UrlPolPri, UrlPolDat;
+    private TextView mTerminos, mUrlTerminos, mUrlPoliticas, mUrlTratamientoDatos;
     private ConstraintLayout carga;
     private ConstraintLayout scroll;
     private Button mAcpeto;
@@ -42,8 +43,14 @@ public class LegalActivity extends AppCompatActivity {
 
         Intent mPv = getIntent();
         boolean isPrimeraVez = mPv.getBooleanExtra("PrimeraVez",false);
-        if(mPv.getStringExtra("Terminos") != null && !mPv.getStringExtra("Terminos").isEmpty()){
+        if(mPv.getStringExtra("Terminos") != null && !mPv.getStringExtra("Terminos").isEmpty() &&
+                mPv.getStringExtra("UrlPoliticasDatos") != null && !mPv.getStringExtra("UrlPoliticasDatos").isEmpty() &&
+                mPv.getStringExtra("UrlPoliticasPriv") != null && !mPv.getStringExtra("UrlPoliticasPriv").isEmpty() &&
+                mPv.getStringExtra("UrlTerminos") != null && !mPv.getStringExtra("UrlTerminos").isEmpty()){
             Terminos = mPv.getStringExtra("Terminos");
+            UrlPolDat = mPv.getStringExtra("UrlPoliticasDatos");
+            UrlPolPri = mPv.getStringExtra("UrlPoliticasPriv");
+            UrlTerm = mPv.getStringExtra("UrlTerminos");
         } else {
             getTermininos();
         }
@@ -57,6 +64,9 @@ public class LegalActivity extends AppCompatActivity {
         carga = findViewById(R.id.carga);
         scroll = findViewById(R.id.scroll);
         mAcpeto = findViewById(R.id.acepto);
+        mUrlTerminos = findViewById(R.id.urlTerminos);
+        mUrlPoliticas = findViewById(R.id.urlPoliticas);
+        mUrlTratamientoDatos = findViewById(R.id.urlTratamientoDatos);
 
         if (!isPrimeraVez){
             mAcpeto.setText("OK");
@@ -79,6 +89,31 @@ public class LegalActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        mUrlTerminos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(UrlTerm));
+                startActivity(intent);
+            }
+        });
+
+        mUrlPoliticas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(UrlPolPri));
+                startActivity(intent);
+            }
+        });
+
+        mUrlTratamientoDatos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (Intent.ACTION_VIEW, Uri.parse(UrlPolDat));
+                startActivity(intent);
+            }
+        });
+
         setearTerminsPantalla();
     }
 
@@ -86,6 +121,8 @@ public class LegalActivity extends AppCompatActivity {
         DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         Map usuarioInfo = new HashMap();
         usuarioInfo.put("AceptaTerminosYCondiciones", true);
+        usuarioInfo.put("AceptaPoliticaPrivacidad", true);
+        usuarioInfo.put("AceptaPoliticaTratamientoDatos", true);
         enableReference.updateChildren(usuarioInfo);
     }
 
@@ -120,15 +157,24 @@ public class LegalActivity extends AppCompatActivity {
     }
 
     private void getTermininos() {
-        DatabaseReference m = FirebaseDatabase.getInstance().getReference().child("TerminosCondiciones");
+        DatabaseReference m = FirebaseDatabase.getInstance().getReference().child("TerminosCondiciones").child("Customer");
         m.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if(map.get("Driver")!=null){
-                        Terminos = map.get("Driver").toString();
+                    if(map.get("Text")!=null){
+                        Terminos = map.get("Text").toString();
                         setearTerminsPantalla();
+                    }
+                    if(map.get("UrlPoliticasDatos")!=null){
+                        UrlPolDat = map.get("UrlPoliticasDatos").toString();
+                    }
+                    if(map.get("UrlPoliticasPriv")!=null){
+                        UrlPolPri = map.get("UrlPoliticasPriv").toString();
+                    }
+                    if(map.get("UrlTerminos")!=null){
+                        UrlTerm = map.get("UrlTerminos").toString();
                     }
                 }
             }

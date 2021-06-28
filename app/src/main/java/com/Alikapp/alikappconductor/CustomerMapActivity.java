@@ -2183,6 +2183,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         Intent intent = new Intent(CustomerMapActivity.this, LegalActivity.class);
                         intent.putExtra("PrimeraVez", true);
                         intent.putExtra("Terminos", Terminos);
+                        intent.putExtra("UrlPoliticasDatos", UrlPolDat);
+                        intent.putExtra("UrlPoliticasPriv", UrlPolPri);
+                        intent.putExtra("UrlTerminos", UrlTerm);
+                        intent.putExtra("email", map.get("email").toString());
                         startActivity(intent);
                         finish();
                     }
@@ -2195,16 +2199,25 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         });
     }
 
-    private String Terminos;
+    private String Terminos, UrlTerm, UrlPolPri, UrlPolDat;
     private void getTerminos() {
-        DatabaseReference m = FirebaseDatabase.getInstance().getReference().child("TerminosCondiciones");
+        DatabaseReference m = FirebaseDatabase.getInstance().getReference().child("TerminosCondiciones").child("Customer");
         m.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NotNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if(map.get("Customer")!=null){
-                        Terminos = map.get("Customer").toString();
+                    if(map.get("Text")!=null){
+                        Terminos = map.get("Text").toString();
+                    }
+                    if(map.get("UrlPoliticasDatos")!=null){
+                        UrlPolDat = map.get("UrlPoliticasDatos").toString();
+                    }
+                    if(map.get("UrlPoliticasPriv")!=null){
+                        UrlPolPri = map.get("UrlPoliticasPriv").toString();
+                    }
+                    if(map.get("UrlTerminos")!=null){
+                        UrlTerm = map.get("UrlTerminos").toString();
                     }
                 }
             }
