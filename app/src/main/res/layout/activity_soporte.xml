@@ -4,39 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/AlikappGris"
-    tools:context=".LegalActivity">
+    tools:context=".SoporteActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/carga"
-        android:visibility="visible">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CARGANDO TÉRMINOS Y CONDICIONES"
-                android:textSize="30dp"
-                android:gravity="center"
-                android:paddingBottom="20dp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="POR FAVOR ESPERE..."
-                android:textSize="30dp"
-                android:gravity="center"/>
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scroll"
-        android:visibility="gone">
+        android:id="@+id/scroll">
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
@@ -54,7 +27,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Términos y condiciones de uso de la App"
+                    android:text="Soporte de uso de la App"
                     android:textSize="30sp"
                     android:textColor="@color/black"
                     android:gravity="center"
@@ -62,46 +35,63 @@
                     android:paddingBottom="40dp"
                     android:paddingTop="40dp"/>
                 <TextView
-                    android:id="@+id/terminos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="loremipsum"
-                    android:justificationMode="inter_word"
-                    android:textSize="15dp"
-                    android:paddingBottom="50dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Para mayor información diríjase a los siguientes links"
+                    android:text="En caso de presentar errores o conflictos de la plataforma, contactate al siguiente correo electrónico:"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:gravity="center"
-                    android:paddingBottom="40dp"
-                    android:paddingTop="40dp"/>
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"/>
                 <TextView
-                    android:id="@+id/urlTerminos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Leer todos los términos y condiciones"
-                    android:textColor="#1D13B3"
-                    android:textSize="15dp"
-                    android:paddingBottom="5dp"/>
+                    android:text="soporte@alikapp.com"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"/>
                 <TextView
-                    android:id="@+id/urlPoliticas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Leer políticas de privacidad"
-                    android:textColor="#1D13B3"
-                    android:textSize="15dp"
-                    android:paddingBottom="5dp"/>
-                <TextView
-                    android:id="@+id/urlTratamientoDatos"
+                    android:text="Como también puedes dirigirte a nuestras redes sociales:"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"/>
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Leer políticas de tratamientos de datos"
-                    android:textColor="#1D13B3"
-                    android:textSize="15dp"
-                    android:paddingBottom="60dp"/>
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" @alikapp_um"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" @Alikapp_UM"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Las respuestas a las solicitudes enviadas a través de los canales anteriormente descritos serán resueltas con la mayor brevedad posible de conformidad con los términos y condiciones de la App"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:paddingBottom="60dp"
+                    android:paddingTop="10dp"/>
             </LinearLayout>
         </ScrollView>
         <LinearLayout
@@ -113,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/acepto"
-                android:text="ACEPTO TÉRMINOS Y CONDICIONES, POLÍTICAS DE PRIVACIDAD Y DE TRATAMIENTO DE DATOS"
+                android:text="volver"
                 android:textColor="@color/white"
                 android:background="@drawable/btn_recargar"
                 android:layout_gravity="bottom"/>

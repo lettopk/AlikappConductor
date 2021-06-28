@@ -20,5 +20,10 @@
             android:icon="@drawable/ic_creditos"
             android:title="@string/menu_slideshow"
             android:iconTint="@color/AlikappBlue"/>
+        <item
+            android:id="@+id/nav_soporte"
+            android:icon="@drawable/ic_creditos"
+            android:title="@string/menu_soporte"
+            android:iconTint="@color/AlikappBlue"/>
     </group>
 </menu>

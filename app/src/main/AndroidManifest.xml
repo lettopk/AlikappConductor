@@ -26,7 +26,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DetailTransactionActivity"></activity>
+        <activity android:name=".SoporteActivity"></activity>
+        <activity android:name=".DetailTransactionActivity" />
         <activity android:name=".HistoryTransactionActivity" />
         <activity android:name=".LayoutWebview" />
         <activity android:name=".LegalActivity" />
@@ -81,17 +82,18 @@
             android:name=".CustomerMapActivity"
             android:screenOrientation="locked"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
-        <activity android:name=".CostumerRegistroActivity"
-            android:screenOrientation="locked"
-            />
-        <activity android:name=".CustomerSettingsActivity"
-            android:screenOrientation="locked"
-            />
-
-        <activity android:name=".HistoryActivity"
-            android:screenOrientation="locked"/>
-        <activity android:name=".HistorySingleActivity"
-            android:screenOrientation="locked"/>
+        <activity
+            android:name=".CostumerRegistroActivity"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".CustomerSettingsActivity"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".HistoryActivity"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".HistorySingleActivity"
+            android:screenOrientation="locked" />
         <activity
             android:name=".ActivityBilletera"
             android:screenOrientation="locked"

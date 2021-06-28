@@ -29,10 +29,9 @@
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
 
-     <fragment
-         android:id="@+id/nav_billetera"
-         android:name="com.Alikapp.alikappconductor.ui.billetera.BilleteraFragment"
-         android:label="billetera"
-         tools:layout="@layout/fragment_billetera"
-        />
+    <fragment
+        android:id="@+id/nav_soporte"
+        android:name="com.Alikapp.alikappconductor.ui.soporte.SoporteFragment"
+        android:label="@string/menu_soporte"
+        tools:layout="@layout/soporte_fragment" />
 </navigation>
