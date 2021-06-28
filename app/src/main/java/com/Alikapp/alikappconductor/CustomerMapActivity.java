@@ -115,17 +115,17 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     LocationRequest mLocationRequest;
     final static float ZOOM_CAMARA = (float) 15.5;
 
-    private Dialog myDialog, myDialogTaller, myDialogRate, myDialogCancel, myDialogConfirCancel;
+    private Dialog myDialog, myDialogTaller, myDialogRate, myDialogCancel, myDialogConfirCancel, myDialogAlert;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mRequest, mRequestt, mChat, mCancelar, mLogout, btnoOkCanelService, btnConfCancelServ, btnNoCancel;
+    private Button mRequest, mRequestt, mChat, mCancelar, mLogout, btnoOkCanelService, btnConfCancelServ, btnNoCancel, mAceptaAlert;
 
     private FloatingActionButton mDesplegar;
 
     private EditText mDescripcion;
 
-    private TextView mLongDescrip, mTipoServicioBuscar, mMenuNombre, mTerminosCondiciones, descuentaCredito;
+    private TextView mLongDescrip, mTipoServicioBuscar, mMenuNombre, mTerminosCondiciones, descuentaCredito, mTextAlert;
 
     private LatLng pickupLocation;
 
@@ -322,6 +322,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         btnNoCancel = (Button) myDialogConfirCancel.findViewById(R.id.btnNoCancel);
         btnConfCancelServ = (Button) myDialogConfirCancel.findViewById(R.id.btnConfCancelServ);
         descuentaCredito = myDialogConfirCancel.findViewById(R.id.descuentaCredito);
+
+        myDialogAlert = new Dialog(this);
+        myDialogAlert.setContentView(R.layout.layout_popup_alert);
+        mAceptaAlert = myDialogAlert.findViewById(R.id.btnOkAlert);
+        mTextAlert = myDialogAlert.findViewById(R.id.textAlert);
 
         conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseMessaging.getInstance().getToken()
@@ -544,12 +549,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 try {
                     popupController("cancelUser");
                     romper = true;
-                    Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
+                    showPopupAlert("Solicitud Cancelada");
                 } catch (Exception e) {
                     romper = true;
                     endRide();
                     CustomerMapActivity.super.onRestart();
-                    Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
+                    showPopupAlert("Solicitud Cancelada");
                 }
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
@@ -568,7 +573,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             romper = true;
                             endRide();
                             CustomerMapActivity.super.onRestart();
-                            Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
+                            showPopupAlert("Solicitud Cancelada");
                         }
                         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     }else{
@@ -618,10 +623,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             } else {
                                 Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
                             }
-                        } catch (Exception e) {Toast.makeText(CustomerMapActivity.this,"Recuerda mantener tu localizacion activa ", Toast.LENGTH_LONG).show(); lastLocation();}
+                        } catch (Exception e) {
+                            showPopupAlert("Recuerda mantener tu localizacion activa");
+                            lastLocation();}
                     }
                 } else {
-                    Toast.makeText(CustomerMapActivity.this, "No tienes créditos suficientes", Toast.LENGTH_LONG).show();
+                    showPopupAlert("No tienes créditos suficientes");
                 }
             }
         });
@@ -697,7 +704,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         if(!romper){
             endRide();
             romper = true;
-            Toast.makeText(this,"No hay mecánicos cerca, inténtalo nuevamente en un ratoc",Toast.LENGTH_LONG).show();
+            showPopupAlert("No hay mecánicos cerca, inténtalo nuevamente en un rato");
         }
     }
     private Boolean calificacionDone = false;
@@ -783,12 +790,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         popupController("cancelUser");
                         myDialogConfirCancel.dismiss();
                         romper = true;
-                        Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
+                        showPopupAlert("Solicitud Cancelada");
                     } catch (Exception e) {
                         romper = true;
                         popupController("cancelUser");
                         CustomerMapActivity.super.onRestart();
-                        Toast.makeText(CustomerMapActivity.this, "Solicitud Cancelada", Toast.LENGTH_SHORT).show();
+                        showPopupAlert("Solicitud Cancelada");
                     }
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }
@@ -798,6 +805,39 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         if (myDialogConfirCancel != null && !CustomerMapActivity.this.isFinishing()){
             myDialogConfirCancel.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             myDialogConfirCancel.show();
+        } else {
+            reiniciarActivity();
+        }
+    }
+
+    private void showPopupAlert(String AlertMessage){
+        mTextAlert.setText(AlertMessage);
+        mAceptaAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialogAlert.dismiss();
+            }
+        });
+
+        if (myDialog.isShowing()){
+            myDialog.dismiss();
+        }
+        if (myDialogTaller.isShowing()){
+            myDialogTaller.dismiss();
+        }
+        if (myDialogRate.isShowing()){
+            myDialogRate.dismiss();
+        }
+        if (myDialogCancel.isShowing()){
+            myDialogCancel.dismiss();
+        }
+        if (myDialogConfirCancel.isShowing()){
+            myDialogConfirCancel.dismiss();
+        }
+
+        if(myDialogAlert != null && !CustomerMapActivity.this.isFinishing()) {
+            myDialogAlert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            myDialogAlert.show();
         } else {
             reiniciarActivity();
         }
@@ -2206,7 +2246,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         }
         if (myDialogConfirCancel!=null){
             myDialogConfirCancel.dismiss();
-
+        }
+        if (myDialogAlert!=null){
+            myDialogAlert.dismiss();
         }
 
         if (mBound) {

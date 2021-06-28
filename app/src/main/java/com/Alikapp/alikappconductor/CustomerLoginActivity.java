@@ -1,9 +1,12 @@
 package com.Alikapp.alikappconductor;
 
+import android.app.Dialog;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
@@ -34,6 +37,11 @@ public class CustomerLoginActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private LinearLayout login;
     private LinearLayout splash;
+
+    private Dialog myDialogAlert;
+    private Button mAceptaAlert;
+    private TextView mTextAlert;
+
     @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +58,11 @@ public class CustomerLoginActivity extends AppCompatActivity {
 
         tvalikapp.setAnimation(animacion2);
         logoAlikapp.setAnimation(animacion1);
+
+        myDialogAlert = new Dialog(this);
+        myDialogAlert.setContentView(R.layout.layout_popup_alert);
+        mAceptaAlert = myDialogAlert.findViewById(R.id.btnOkAlert);
+        mTextAlert = myDialogAlert.findViewById(R.id.textAlert);
 
         mAuth = FirebaseAuth.getInstance();
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -90,7 +103,7 @@ public class CustomerLoginActivity extends AppCompatActivity {
                         public void onComplete(@androidx.annotation.NonNull com.google.android.gms.tasks.Task<AuthResult> task) {
                             if(!task.isSuccessful()){
                                 transitionButton.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
-                                Toast.makeText(CustomerLoginActivity.this, "sign in error", Toast.LENGTH_SHORT).show();
+                                showPopupAlert("Usuario o contraseña incorrectos, intente nuevamente");
                             }
                         }
                     });
@@ -113,6 +126,20 @@ public class CustomerLoginActivity extends AppCompatActivity {
         });
     }
 
+    private void showPopupAlert(String AlertMessage){
+        mTextAlert.setText(AlertMessage);
+        mAceptaAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialogAlert.dismiss();
+            }
+        });
+
+        if(myDialogAlert != null && !CustomerLoginActivity.this.isFinishing()) {
+            myDialogAlert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            myDialogAlert.show();
+        }
+    }
 
     @Override
     protected void onStart() {

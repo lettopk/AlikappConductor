@@ -2,10 +2,13 @@ package com.Alikapp.alikappconductor;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -96,6 +99,9 @@ public class CustomerSettingsActivity extends AppCompatActivity {
     private Boolean isPerfil = false;
     private Boolean isPrimeraVez;
 
+    private Dialog myDialogAlert;
+    private Button mAceptaAlert;
+    private TextView mTextAlert;
 
     @Override
     protected void onCreate(android.os.Bundle savedInstanceState) {
@@ -125,6 +131,10 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         mBack = (Button) findViewById(R.id.back);
         mConfirm = (Button) findViewById(R.id.confirm);
 
+        myDialogAlert = new Dialog(this);
+        myDialogAlert.setContentView(R.layout.layout_popup_alert);
+        mAceptaAlert = myDialogAlert.findViewById(R.id.btnOkAlert);
+        mTextAlert = myDialogAlert.findViewById(R.id.textAlert);
 
         mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getCurrentUser().getUid();
@@ -217,7 +227,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 } else {
-                    Toast.makeText(CustomerSettingsActivity.this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show();
+                    showPopupAlert("Por favor completa todos los campos");
                 }
             }
         });
@@ -234,6 +244,21 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         if(isPrimeraVez){
             mBack.setVisibility(View.GONE);
             dineroObseqio();
+        }
+    }
+
+    private void showPopupAlert(String AlertMessage){
+        mTextAlert.setText(AlertMessage);
+        mAceptaAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialogAlert.dismiss();
+            }
+        });
+
+        if(myDialogAlert != null && !CustomerSettingsActivity.this.isFinishing()) {
+            myDialogAlert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            myDialogAlert.show();
         }
     }
 
@@ -316,8 +341,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
         Boolean boolPasado = false;
         List<FirebaseVisionText.TextBlock> blocks = texts.getTextBlocks();
         if(blocks.size() == 0){
-            Toast.makeText(CustomerSettingsActivity.this, "No se pudo identificar la imagen, intente nuevamente", Toast.LENGTH_SHORT).show();
-            Toast.makeText(CustomerSettingsActivity.this, "La imagen debe encontrarse al derecho y visualizarse con claridad", Toast.LENGTH_SHORT).show();
+            showPopupAlert("No se pudo identificar la imagen, intente nuevamente." + " " +"La imagen debe encontrarse al derecho y visualizarse con claridad");
         } else {
             for(int i = 0; i < blocks.size(); i++) {
                 List<FirebaseVisionText.Line> lines = blocks.get(i).getLines();
@@ -389,7 +413,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                 }
             }
             if (!isCorrect) {
-                Toast.makeText(CustomerSettingsActivity.this, "El certificado no corresponde con el número de cédula", Toast.LENGTH_SHORT).show();
+                showPopupAlert("El certificado no corresponde con el número de cédula");
             } else {
                 Toast.makeText(CustomerSettingsActivity.this, "correcto", Toast.LENGTH_SHORT).show();
                 mPasadoJudicialImage.setEnabled(false);
@@ -398,7 +422,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             }
 
         }else {
-            Toast.makeText(CustomerSettingsActivity.this, "La imagen cargada no Corresponde a un certificado de pasado judicial, intente con una nueva imagen", Toast.LENGTH_SHORT).show();
+            showPopupAlert("La imagen cargada no corresponde a un certificado de pasado judicial, intente con una nueva imagen");
 
         }
         checkDocumentos();
@@ -466,7 +490,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             mPasadoJudicialImage.setImageResource(R.mipmap.ic_default_user);
             Toast.makeText(CustomerSettingsActivity.this, "correcto", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(CustomerSettingsActivity.this, "La imagen cargada no Corresponde a una cédula de ciudadanía colombiana, intente con una nueva imagen", Toast.LENGTH_SHORT).show();
+            showPopupAlert("La imagen cargada no corresponde a una cédula de ciudadanía Colombiana, intente con una nueva imagen");
         }
         checkDocumentos();
     }
@@ -512,7 +536,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
             isPropiedad = true;
 
         }else {
-            Toast.makeText(CustomerSettingsActivity.this, "La imagen cargada no Corresponde a una tarjeta de propiedad, intente con una nueva imagen", Toast.LENGTH_SHORT).show();
+            showPopupAlert("La imagen cargada no corresponde a una tarjeta de propiedad, intente con una nueva imagen");
 
         }
         checkDocumentos();
