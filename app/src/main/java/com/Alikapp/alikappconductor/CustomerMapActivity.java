@@ -138,7 +138,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private SupportMapFragment mapFragment;
 
-    private String destination, requestService = "Taller";
+    private String destination, requestService = "";
 
     private LatLng destinationLatLng, tallerLatLng;
 
@@ -697,7 +697,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         if(!romper){
             endRide();
             romper = true;
-            Toast.makeText(this,"No hay mecánicos cerca",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"No hay mecánicos cerca, inténtalo nuevamente en un ratoc",Toast.LENGTH_LONG).show();
         }
     }
     private Boolean calificacionDone = false;
@@ -1088,9 +1088,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mDriverMarker = null;
                     }
                     Location loc1 = new Location("");
-                    if(pickupLocation != null){
-                        loc1.setLatitude(pickupLocation.latitude);
-                        loc1.setLongitude(pickupLocation.longitude);
+                    if(mLastLocation != null){
+                        loc1.setLatitude(mLastLocation.getLatitude());
+                        loc1.setLongitude(mLastLocation.getLongitude());
                     }
 
                     Location loc2 = new Location("");
@@ -1103,7 +1103,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         BigDecimal distanceShort = new BigDecimal((distance)/1000).setScale(1, RoundingMode.HALF_UP);
                         mDriverDistance.setText(String.valueOf(distanceShort)+" Km");
                     } else if (distance < 1000 && distance >= 100){
-                        BigDecimal distanceShort = new BigDecimal(distance).setScale(0, RoundingMode.HALF_UP);
+                        int distanceShort = (int) ((distance)/1000);
                         mDriverDistance.setText(String.valueOf((distanceShort))+" m");
                     }  else if (distance < 100 && distance >= 50){
                         BigDecimal distanceShort = new BigDecimal(distance).setScale(1, RoundingMode.HALF_UP);
