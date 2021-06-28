@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class LegalActivity extends AppCompatActivity {
@@ -31,6 +32,8 @@ public class LegalActivity extends AppCompatActivity {
     private ConstraintLayout scroll;
     private Button mAcpeto;
     private String email;
+
+    private String conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class LegalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isPrimeraVez){
+                    saveConfirmation();
                     Intent intent = new Intent(LegalActivity.this, CustomerSettingsActivity.class);
                     intent.putExtra("PrimeraVez", true);
                     if(finalEmail != null && !finalEmail.isEmpty()){
@@ -78,8 +82,14 @@ public class LegalActivity extends AppCompatActivity {
         setearTerminsPantalla();
     }
 
+    private void saveConfirmation() {
+        DatabaseReference enableReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
+        Map usuarioInfo = new HashMap();
+        usuarioInfo.put("AceptaTerminosYCondiciones", true);
+        enableReference.updateChildren(usuarioInfo);
+    }
+
     private void getEmail() {
-        String conductorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(conductorUID);
         mDriverDatabase.addValueEventListener(new ValueEventListener() {
             @Override
