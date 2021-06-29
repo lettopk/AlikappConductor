@@ -18,82 +18,99 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:layout_margin="25dp"
+                >
+
                 <ImageView
 
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:src="@mipmap/logo_alikapp" />
+                    android:layout_height="150dp"
+                    android:src="@mipmap/logo_alikapp"
+                    android:layout_marginTop="20dp"/>
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Soporte de uso de la App"
-                    android:textSize="30sp"
+                    android:textSize="18dp"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:layout_gravity="center"
-                    android:paddingBottom="40dp"
-                    android:paddingTop="40dp"/>
+                    android:layout_margin="20dp"
+                    android:textStyle="bold"/>
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="En caso de presentar errores o conflictos de la plataforma, contactate al siguiente correo electrónico:"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"/>
+                    android:textSize="15dp" />
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="soporte@alikapp.com"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"/>
+                    android:layout_margin="10dp"
+                    android:textSize="15dp"/>
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Como también puedes dirigirte a nuestras redes sociales:"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"/>
+                    android:textSize="15dp"
+                    android:layout_marginTop="10dp"/>
+
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/icono_facebook"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=" @alikapp_um"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="10dp"/>
+                        android:textSize="15dp"
+                        android:layout_gravity="center"/>
+
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_margin="10dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icono_instagram"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=" @Alikapp_UM"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="10dp"/>
+                        android:textSize="15dp"
+                        android:layout_gravity="center"/>
                 </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Las respuestas a las solicitudes enviadas a través de los canales anteriormente descritos serán resueltas con la mayor brevedad posible de conformidad con los términos y condiciones de la App"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:paddingBottom="60dp"
-                    android:paddingTop="10dp"/>
+                    android:textSize="15dp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
         </ScrollView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
