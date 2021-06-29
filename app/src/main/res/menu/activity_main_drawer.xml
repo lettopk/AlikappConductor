@@ -10,19 +10,22 @@
             android:title="@string/menu_history"
             android:iconTint="@color/AlikappBlue"
             android:iconTintMode="add"/>
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_perfil"
-            android:title="@string/menu_gallery"
-            android:iconTint="@color/AlikappBlue"/>
+
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_creditos"
             android:title="@string/menu_slideshow"
             android:iconTint="@color/AlikappBlue"/>
+
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_perfil"
+            android:title="@string/menu_gallery"
+            android:iconTint="@color/AlikappBlue"/>
+
         <item
             android:id="@+id/nav_soporte"
-            android:icon="@drawable/ic_creditos"
+            android:icon="@drawable/ic_soporte"
             android:title="@string/menu_soporte"
             android:iconTint="@color/AlikappBlue"/>
     </group>
