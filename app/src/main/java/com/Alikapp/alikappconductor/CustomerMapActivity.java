@@ -616,13 +616,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
                                 enableReference.updateChildren(usuarioInfo);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> f8bdbd7... 28/06/21 3:48 2
                                 final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
                                 cardViewInicial.setVisibility(View.GONE);
                                 cardViewBusqueda.setVisibility(View.VISIBLE);
                                 rippleBackgroundEspera.startRippleAnimation();
                             } else {
                                 Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
-
 
                             }
 
