@@ -548,6 +548,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onClick(View v) {
                 try {
                     popupController("cancelUser");
+                    endRide();
                     romper = true;
                     showPopupAlert("Solicitud Cancelada");
                 } catch (Exception e) {
@@ -593,6 +594,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     mTipoServicioBuscar.setText("BUSCANDO TALLER...");
                                 }
 
+                                driverFoundID = "";
+
                                 requestBol = true;
 
                                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
@@ -616,10 +619,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
                                 enableReference.updateChildren(usuarioInfo);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> f8bdbd7... 28/06/21 3:48 2
                                 final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
                                 cardViewInicial.setVisibility(View.GONE);
                                 cardViewBusqueda.setVisibility(View.VISIBLE);
@@ -1169,19 +1168,20 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     float speed = (float) 0.0;
                     boolean hasSpeed = false;
                     if(polylines != null && polylines.size()>0){
+
                         erasePolylines();
                         polylines = new ArrayList<>();
                     }
                     if(requestService.equals("Taller")){
                         speed = loc1.getSpeed();
                         hasSpeed = loc1.hasSpeed();
-                        getRouteToMarker(new LatLng(DriverlocationLat, DriverlocationLng),
+                        getRouteToMarker(new LatLng(driverLatLng.latitude, driverLatLng.longitude),
                                 new  LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
                     } else {
                         speed = loc2.getSpeed();
                         hasSpeed = loc2.hasSpeed();
                         getRouteToMarker( new  LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()),
-                                new LatLng(DriverlocationLat, DriverlocationLng));
+                                new LatLng(driverLatLng.latitude, driverLatLng.longitude));
                     }
 
                     if(!hasSpeed){
