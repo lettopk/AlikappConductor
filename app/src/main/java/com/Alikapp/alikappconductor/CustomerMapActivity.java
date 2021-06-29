@@ -619,6 +619,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 usuarioInfo.put("Descripcion", "" + mDescripcion.getText());
                                 enableReference.updateChildren(usuarioInfo);
 
+
                                 final RippleBackground rippleBackgroundEspera = (RippleBackground)myDialog.findViewById(R.id.espera);
                                 cardViewInicial.setVisibility(View.GONE);
                                 cardViewBusqueda.setVisibility(View.VISIBLE);
@@ -627,7 +628,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 Toast.makeText(CustomerMapActivity.this  , "Escribe una breve descripción del problema", Toast.LENGTH_SHORT).show();
 
                             }
-
                         } catch (Exception e) {
                             showPopupAlert("Recuerda mantener tu localizacion activa");
                             lastLocation();}
@@ -1168,7 +1168,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     float speed = (float) 0.0;
                     boolean hasSpeed = false;
                     if(polylines != null && polylines.size()>0){
-
                         erasePolylines();
                         polylines = new ArrayList<>();
                     }
